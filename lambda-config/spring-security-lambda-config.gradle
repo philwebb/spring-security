@@ -1,0 +1,28 @@
+apply plugin: 'io.spring.convention.spring-module'
+apply plugin: 'trang'
+
+dependencies {
+	// NB: Don't add other compile time dependencies to the config module as this breaks tooling
+	compile project(':spring-security-core')
+	compile 'org.springframework:spring-aop'
+	compile 'org.springframework:spring-beans'
+	compile 'org.springframework:spring-context'
+	compile 'org.springframework:spring-core'
+
+	optional project(':spring-security-ldap')
+	optional project(':spring-security-messaging')
+	optional project(':spring-security-oauth2-client')
+	optional project(':spring-security-oauth2-jose')
+	optional project(':spring-security-openid')
+	optional project(':spring-security-web')
+	optional 'io.projectreactor:reactor-core'
+	optional 'org.aspectj:aspectjweaver'
+	optional 'org.springframework:spring-jdbc'
+	optional 'org.springframework:spring-tx'
+	optional 'org.springframework:spring-webmvc'
+	optional'org.springframework:spring-web'
+	optional'org.springframework:spring-webflux'
+	optional'org.springframework:spring-websocket'
+
+	provided 'javax.servlet:javax.servlet-api'
+}
