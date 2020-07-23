@@ -44,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Joe Grandja
  */
 public class EnableWebSecurityTests {
+
 	@Rule
 	public final SpringTestRule spring = new SpringTestRule();
 
@@ -55,12 +56,14 @@ public class EnableWebSecurityTests {
 		this.spring.register(SecurityConfig.class).autowire();
 
 		AuthenticationManager authenticationManager = this.spring.getContext().getBean(AuthenticationManager.class);
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("user", "password"));
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken("user", "password"));
 		assertThat(authentication.isAuthenticated()).isTrue();
 	}
 
 	@EnableWebSecurity
 	static class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			// @formatter:off
@@ -86,6 +89,7 @@ public class EnableWebSecurityTests {
 				.formLogin();
 			// @formatter:on
 		}
+
 	}
 
 	@Test
@@ -96,10 +100,12 @@ public class EnableWebSecurityTests {
 
 	@Configuration
 	static class ChildSecurityConfig extends DebugSecurityConfig {
+
 	}
 
-	@EnableWebSecurity(debug=true)
+	@EnableWebSecurity(debug = true)
 	static class DebugSecurityConfig extends WebSecurityConfigurerAdapter {
+
 	}
 
 	@Test
@@ -107,12 +113,13 @@ public class EnableWebSecurityTests {
 		this.spring.register(AuthenticationPrincipalConfig.class).autowire();
 
 		this.mockMvc.perform(get("/").with(authentication(new TestingAuthenticationToken("user1", "password"))))
-			.andExpect(content().string("user1"));
+				.andExpect(content().string("user1"));
 	}
 
 	@EnableWebSecurity
 	@EnableWebMvc
 	static class AuthenticationPrincipalConfig extends WebSecurityConfigurerAdapter {
+
 		@Override
 		protected void configure(HttpSecurity http) {
 		}
@@ -124,7 +131,9 @@ public class EnableWebSecurityTests {
 			String principal(@AuthenticationPrincipal String principal) {
 				return principal;
 			}
+
 		}
+
 	}
 
 	@Test
@@ -139,6 +148,7 @@ public class EnableWebSecurityTests {
 
 	@EnableWebSecurity
 	static class BeanProxyEnabledByDefaultConfig extends WebSecurityConfigurerAdapter {
+
 		@Bean
 		public Child child() {
 			return new Child();
@@ -148,6 +158,7 @@ public class EnableWebSecurityTests {
 		public Parent parent() {
 			return new Parent(child());
 		}
+
 	}
 
 	@Test
@@ -163,6 +174,7 @@ public class EnableWebSecurityTests {
 	@Configuration(proxyBeanMethods = false)
 	@EnableWebSecurity
 	static class BeanProxyDisabledConfig extends WebSecurityConfigurerAdapter {
+
 		@Bean
 		public Child child() {
 			return new Child();
@@ -172,9 +184,11 @@ public class EnableWebSecurityTests {
 		public Parent parent() {
 			return new Parent(child());
 		}
+
 	}
 
 	static class Parent {
+
 		private Child child;
 
 		Parent(Child child) {
@@ -184,10 +198,14 @@ public class EnableWebSecurityTests {
 		public Child getChild() {
 			return child;
 		}
+
 	}
 
 	static class Child {
+
 		Child() {
 		}
+
 	}
+
 }

@@ -23,7 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * This {@code Saml2AuthenticationRequestContextResolver} formulates a
- * <a href="https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf">SAML 2.0 AuthnRequest</a> (line 1968)
+ * <a href="https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf">SAML 2.0
+ * AuthnRequest</a> (line 1968)
  *
  * @author Shazin Sadakath
  * @since 5.4
@@ -31,13 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 public interface Saml2AuthenticationRequestContextResolver {
 
 	/**
-	 * This {@code resolve} method is defined to create a {@link Saml2AuthenticationRequestContext}
-	 *
-	 *
+	 * This {@code resolve} method is defined to create a
+	 * {@link Saml2AuthenticationRequestContext}
 	 * @param request the current request
 	 * @param relyingParty the relying party responsible for saml2 sso authentication
-	 * @return the created {@link Saml2AuthenticationRequestContext} for request/relying party combination
+	 * @return the created {@link Saml2AuthenticationRequestContext} for request/relying
+	 * party combination
 	 */
-	Saml2AuthenticationRequestContext resolve(HttpServletRequest request,
-			RelyingPartyRegistration relyingParty);
+	Saml2AuthenticationRequestContext resolve(HttpServletRequest request, RelyingPartyRegistration relyingParty);
+
 }

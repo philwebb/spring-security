@@ -27,6 +27,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 @RunWith(PowerMockRunner.class)
 @PrepareOnlyThisForTest(ParserContext.class)
 public class WebConfigUtilsTest {
+
 	public final static String URL = "/url";
 
 	@Mock
@@ -35,9 +36,9 @@ public class WebConfigUtilsTest {
 	// SEC-1980
 	@Test
 	public void validateHttpRedirectSpELNoParserWarning() {
-		WebConfigUtils.validateHttpRedirect(
-				"#{T(org.springframework.security.config.http.WebConfigUtilsTest).URL}",
+		WebConfigUtils.validateHttpRedirect("#{T(org.springframework.security.config.http.WebConfigUtilsTest).URL}",
 				parserContext, "fakeSource");
 		verifyZeroInteractions(parserContext);
 	}
+
 }

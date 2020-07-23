@@ -32,21 +32,18 @@ public class TestRelyingPartyRegistrations {
 
 		String rpEntityId = "{baseUrl}/saml2/service-provider-metadata/{registrationId}";
 		Saml2X509Credential signingCredential = relyingPartySigningCredential();
-		String assertionConsumerServiceLocation = "{baseUrl}" + Saml2WebSsoAuthenticationFilter.DEFAULT_FILTER_PROCESSES_URI;
+		String assertionConsumerServiceLocation = "{baseUrl}"
+				+ Saml2WebSsoAuthenticationFilter.DEFAULT_FILTER_PROCESSES_URI;
 
 		String apEntityId = "https://simplesaml-for-spring-saml.cfapps.io/saml2/idp/metadata.php";
 		Saml2X509Credential verificationCertificate = relyingPartyVerifyingCredential();
 		String singleSignOnServiceLocation = "https://simplesaml-for-spring-saml.cfapps.io/saml2/idp/SSOService.php";
 
-		return RelyingPartyRegistration.withRegistrationId(registrationId)
-				.entityId(rpEntityId)
+		return RelyingPartyRegistration.withRegistrationId(registrationId).entityId(rpEntityId)
 				.assertionConsumerServiceLocation(assertionConsumerServiceLocation)
 				.credentials(c -> c.add(signingCredential))
-				.providerDetails(c -> c
-						.entityId(apEntityId)
-						.webSsoUrl(singleSignOnServiceLocation))
-						.credentials(c -> c.add(verificationCertificate));
+				.providerDetails(c -> c.entityId(apEntityId).webSsoUrl(singleSignOnServiceLocation))
+				.credentials(c -> c.add(verificationCertificate));
 	}
-
 
 }

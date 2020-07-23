@@ -34,11 +34,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * An implementation of an {@link OAuth2UserService} that supports custom {@link OAuth2User} types.
+ * An implementation of an {@link OAuth2UserService} that supports custom
+ * {@link OAuth2User} types.
  * <p>
- * The custom user type(s) is supplied via the constructor,
- * using a {@code Map} of {@link OAuth2User} type(s) keyed by {@code String},
- * which represents the {@link ClientRegistration#getRegistrationId() Registration Id} of the Client.
+ * The custom user type(s) is supplied via the constructor, using a {@code Map} of
+ * {@link OAuth2User} type(s) keyed by {@code String}, which represents the
+ * {@link ClientRegistration#getRegistrationId() Registration Id} of the Client.
  *
  * @author Joe Grandja
  * @since 5.0
@@ -48,6 +49,7 @@ import java.util.Map;
  * @see ClientRegistration
  */
 public class CustomUserTypesOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
 	private static final String INVALID_USER_INFO_RESPONSE_ERROR_CODE = "invalid_user_info_response";
 
 	private final Map<String, Class<? extends OAuth2User>> customUserTypes;
@@ -57,9 +59,10 @@ public class CustomUserTypesOAuth2UserService implements OAuth2UserService<OAuth
 	private RestOperations restOperations;
 
 	/**
-	 * Constructs a {@code CustomUserTypesOAuth2UserService} using the provided parameters.
-	 *
-	 * @param customUserTypes a {@code Map} of {@link OAuth2User} type(s) keyed by {@link ClientRegistration#getRegistrationId() Registration Id}
+	 * Constructs a {@code CustomUserTypesOAuth2UserService} using the provided
+	 * parameters.
+	 * @param customUserTypes a {@code Map} of {@link OAuth2User} type(s) keyed by
+	 * {@link ClientRegistration#getRegistrationId() Registration Id}
 	 */
 	public CustomUserTypesOAuth2UserService(Map<String, Class<? extends OAuth2User>> customUserTypes) {
 		Assert.notEmpty(customUserTypes, "customUserTypes cannot be empty");
@@ -83,7 +86,8 @@ public class CustomUserTypesOAuth2UserService implements OAuth2UserService<OAuth
 		ResponseEntity<? extends OAuth2User> response;
 		try {
 			response = this.restOperations.exchange(request, customUserType);
-		} catch (RestClientException ex) {
+		}
+		catch (RestClientException ex) {
 			OAuth2Error oauth2Error = new OAuth2Error(INVALID_USER_INFO_RESPONSE_ERROR_CODE,
 					"An error occurred while attempting to retrieve the UserInfo Resource: " + ex.getMessage(), null);
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), ex);
@@ -95,11 +99,12 @@ public class CustomUserTypesOAuth2UserService implements OAuth2UserService<OAuth
 	}
 
 	/**
-	 * Sets the {@link Converter} used for converting the {@link OAuth2UserRequest}
-	 * to a {@link RequestEntity} representation of the UserInfo Request.
+	 * Sets the {@link Converter} used for converting the {@link OAuth2UserRequest} to a
+	 * {@link RequestEntity} representation of the UserInfo Request.
 	 *
 	 * @since 5.1
-	 * @param requestEntityConverter the {@link Converter} used for converting to a {@link RequestEntity} representation of the UserInfo Request
+	 * @param requestEntityConverter the {@link Converter} used for converting to a
+	 * {@link RequestEntity} representation of the UserInfo Request
 	 */
 	public final void setRequestEntityConverter(Converter<OAuth2UserRequest, RequestEntity<?>> requestEntityConverter) {
 		Assert.notNull(requestEntityConverter, "requestEntityConverter cannot be null");
@@ -110,16 +115,19 @@ public class CustomUserTypesOAuth2UserService implements OAuth2UserService<OAuth
 	 * Sets the {@link RestOperations} used when requesting the UserInfo resource.
 	 *
 	 * <p>
-	 * <b>NOTE:</b> At a minimum, the supplied {@code restOperations} must be configured with the following:
+	 * <b>NOTE:</b> At a minimum, the supplied {@code restOperations} must be configured
+	 * with the following:
 	 * <ol>
-	 *  <li>{@link ResponseErrorHandler} - {@link OAuth2ErrorResponseErrorHandler}</li>
+	 * <li>{@link ResponseErrorHandler} - {@link OAuth2ErrorResponseErrorHandler}</li>
 	 * </ol>
 	 *
 	 * @since 5.1
-	 * @param restOperations the {@link RestOperations} used when requesting the UserInfo resource
+	 * @param restOperations the {@link RestOperations} used when requesting the UserInfo
+	 * resource
 	 */
 	public final void setRestOperations(RestOperations restOperations) {
 		Assert.notNull(restOperations, "restOperations cannot be null");
 		this.restOperations = restOperations;
 	}
+
 }

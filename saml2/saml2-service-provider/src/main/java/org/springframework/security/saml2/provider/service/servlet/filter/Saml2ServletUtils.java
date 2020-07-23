@@ -43,9 +43,7 @@ final class Saml2ServletUtils {
 		String entityId = relyingParty.getAssertingPartyDetails().getEntityId();
 		String registrationId = relyingParty.getRegistrationId();
 		Map<String, String> uriVariables = new HashMap<>();
-		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(baseUrl)
-				.replaceQuery(null)
-				.fragment(null)
+		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(baseUrl).replaceQuery(null).fragment(null)
 				.build();
 		String scheme = uriComponents.getScheme();
 		uriVariables.put("baseScheme", scheme == null ? "" : scheme);
@@ -65,17 +63,13 @@ final class Saml2ServletUtils {
 		uriVariables.put("entityId", StringUtils.hasText(entityId) ? entityId : "");
 		uriVariables.put("registrationId", StringUtils.hasText(registrationId) ? registrationId : "");
 
-		return UriComponentsBuilder.fromUriString(template)
-				.buildAndExpand(uriVariables)
-				.toUriString();
+		return UriComponentsBuilder.fromUriString(template).buildAndExpand(uriVariables).toUriString();
 	}
 
 	static String getApplicationUri(HttpServletRequest request) {
-		UriComponents uriComponents = fromHttpUrl(buildFullRequestUrl(request))
-				.replacePath(request.getContextPath())
-				.replaceQuery(null)
-				.fragment(null)
-				.build();
+		UriComponents uriComponents = fromHttpUrl(buildFullRequestUrl(request)).replacePath(request.getContextPath())
+				.replaceQuery(null).fragment(null).build();
 		return uriComponents.toUriString();
 	}
+
 }

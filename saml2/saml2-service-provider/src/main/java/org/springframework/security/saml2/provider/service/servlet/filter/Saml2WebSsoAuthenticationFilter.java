@@ -44,13 +44,16 @@ import static org.springframework.util.StringUtils.hasText;
 public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	public static final String DEFAULT_FILTER_PROCESSES_URI = "/login/saml2/sso/{registrationId}";
+
 	private final RequestMatcher matcher;
+
 	private final RelyingPartyRegistrationRepository relyingPartyRegistrationRepository;
 
 	/**
-	 * Creates a {@code Saml2WebSsoAuthenticationFilter} authentication filter that is configured
-	 * to use the {@link #DEFAULT_FILTER_PROCESSES_URI} processing URL
-	 * @param relyingPartyRegistrationRepository - repository of configured SAML 2 entities. Required.
+	 * Creates a {@code Saml2WebSsoAuthenticationFilter} authentication filter that is
+	 * configured to use the {@link #DEFAULT_FILTER_PROCESSES_URI} processing URL
+	 * @param relyingPartyRegistrationRepository - repository of configured SAML 2
+	 * entities. Required.
 	 */
 	public Saml2WebSsoAuthenticationFilter(RelyingPartyRegistrationRepository relyingPartyRegistrationRepository) {
 		this(relyingPartyRegistrationRepository, DEFAULT_FILTER_PROCESSES_URI);
@@ -58,19 +61,18 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 
 	/**
 	 * Creates a {@code Saml2WebSsoAuthenticationFilter} authentication filter
-	 * @param relyingPartyRegistrationRepository - repository of configured SAML 2 entities. Required.
-	 * @param filterProcessesUrl the processing URL, must contain a {registrationId} variable. Required.
+	 * @param relyingPartyRegistrationRepository - repository of configured SAML 2
+	 * entities. Required.
+	 * @param filterProcessesUrl the processing URL, must contain a {registrationId}
+	 * variable. Required.
 	 */
-	public Saml2WebSsoAuthenticationFilter(
-			RelyingPartyRegistrationRepository relyingPartyRegistrationRepository,
+	public Saml2WebSsoAuthenticationFilter(RelyingPartyRegistrationRepository relyingPartyRegistrationRepository,
 			String filterProcessesUrl) {
 		super(filterProcessesUrl);
 		Assert.notNull(relyingPartyRegistrationRepository, "relyingPartyRegistrationRepository cannot be null");
 		Assert.hasText(filterProcessesUrl, "filterProcessesUrl must contain a URL pattern");
-		Assert.isTrue(
-				filterProcessesUrl.contains("{registrationId}"),
-				"filterProcessesUrl must contain a {registrationId} match variable"
-		);
+		Assert.isTrue(filterProcessesUrl.contains("{registrationId}"),
+				"filterProcessesUrl must contain a {registrationId} match variable");
 		this.matcher = new AntPathRequestMatcher(filterProcessesUrl);
 		setRequiresAuthenticationRequestMatcher(this.matcher);
 		this.relyingPartyRegistrationRepository = relyingPartyRegistrationRepository;
@@ -91,8 +93,7 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 
 		String responseXml = inflateIfRequired(request, b);
 		String registrationId = this.matcher.matcher(request).getVariables().get("registrationId");
-		RelyingPartyRegistration rp =
-				this.relyingPartyRegistrationRepository.findByRegistrationId(registrationId);
+		RelyingPartyRegistration rp = this.relyingPartyRegistrationRepository.findByRegistrationId(registrationId);
 		if (rp == null) {
 			Saml2Error saml2Error = new Saml2Error(RELYING_PARTY_REGISTRATION_NOT_FOUND,
 					"Relying Party Registration not found with ID: " + registrationId);
@@ -100,14 +101,12 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 		}
 		String applicationUri = Saml2ServletUtils.getApplicationUri(request);
 		String relyingPartyEntityId = Saml2ServletUtils.resolveUrlTemplate(rp.getEntityId(), applicationUri, rp);
-		String assertionConsumerServiceLocation = Saml2ServletUtils.resolveUrlTemplate(
-				rp.getAssertionConsumerServiceLocation(), applicationUri, rp);
+		String assertionConsumerServiceLocation = Saml2ServletUtils
+				.resolveUrlTemplate(rp.getAssertionConsumerServiceLocation(), applicationUri, rp);
 		RelyingPartyRegistration relyingPartyRegistration = withRelyingPartyRegistration(rp)
-				.entityId(relyingPartyEntityId)
-				.assertionConsumerServiceLocation(assertionConsumerServiceLocation)
+				.entityId(relyingPartyEntityId).assertionConsumerServiceLocation(assertionConsumerServiceLocation)
 				.build();
-		Saml2AuthenticationToken authentication = new Saml2AuthenticationToken(
-				relyingPartyRegistration, responseXml);
+		Saml2AuthenticationToken authentication = new Saml2AuthenticationToken(relyingPartyRegistration, responseXml);
 		return getAuthenticationManager().authenticate(authentication);
 	}
 
@@ -119,4 +118,5 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 			return new String(b, UTF_8);
 		}
 	}
+
 }

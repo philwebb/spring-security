@@ -36,21 +36,25 @@ import static org.springframework.security.saml2.credentials.TestSaml2X509Creden
 public class DefaultSaml2AuthenticationRequestContextResolverTests {
 
 	private static final String ASSERTING_PARTY_SSO_URL = "https://idp.example.com/sso";
+
 	private static final String RELYING_PARTY_SSO_URL = "https://sp.example.com/sso";
+
 	private static final String ASSERTING_PARTY_ENTITY_ID = "asserting-party-entity-id";
+
 	private static final String RELYING_PARTY_ENTITY_ID = "relying-party-entity-id";
+
 	private static final String REGISTRATION_ID = "registration-id";
 
 	private MockHttpServletRequest request;
+
 	private RelyingPartyRegistration.Builder relyingPartyBuilder;
-	private Saml2AuthenticationRequestContextResolver authenticationRequestContextResolver
-			= new DefaultSaml2AuthenticationRequestContextResolver();
+
+	private Saml2AuthenticationRequestContextResolver authenticationRequestContextResolver = new DefaultSaml2AuthenticationRequestContextResolver();
 
 	@Before
 	public void setup() {
 		this.request = new MockHttpServletRequest();
-		this.relyingPartyBuilder = RelyingPartyRegistration
-				.withRegistrationId(REGISTRATION_ID)
+		this.relyingPartyBuilder = RelyingPartyRegistration.withRegistrationId(REGISTRATION_ID)
 				.localEntityIdTemplate(RELYING_PARTY_ENTITY_ID)
 				.providerDetails(c -> c.entityId(ASSERTING_PARTY_ENTITY_ID))
 				.providerDetails(c -> c.webSsoUrl(ASSERTING_PARTY_SSO_URL))
@@ -62,8 +66,8 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 	public void resolveWhenRequestAndRelyingPartyNotNullThenCreateSaml2AuthenticationRequestContext() {
 		this.request.addParameter("RelayState", "relay-state");
 		RelyingPartyRegistration relyingParty = this.relyingPartyBuilder.build();
-		Saml2AuthenticationRequestContext context =
-				this.authenticationRequestContextResolver.resolve(this.request, relyingParty);
+		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(this.request,
+				relyingParty);
 
 		assertThat(context).isNotNull();
 		assertThat(context.getAssertionConsumerServiceUrl()).isEqualTo(RELYING_PARTY_SSO_URL);
@@ -76,10 +80,9 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 	@Test
 	public void resolveWhenAssertionConsumerServiceUrlTemplateContainsRegistrationIdThenResolves() {
 		RelyingPartyRegistration relyingParty = this.relyingPartyBuilder
-				.assertionConsumerServiceUrlTemplate("/saml2/authenticate/{registrationId}")
-				.build();
-		Saml2AuthenticationRequestContext context =
-				this.authenticationRequestContextResolver.resolve(this.request, relyingParty);
+				.assertionConsumerServiceUrlTemplate("/saml2/authenticate/{registrationId}").build();
+		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(this.request,
+				relyingParty);
 
 		assertThat(context.getAssertionConsumerServiceUrl()).isEqualTo("/saml2/authenticate/registration-id");
 	}
@@ -87,10 +90,9 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 	@Test
 	public void resolveWhenAssertionConsumerServiceUrlTemplateContainsBaseUrlThenResolves() {
 		RelyingPartyRegistration relyingParty = this.relyingPartyBuilder
-				.assertionConsumerServiceUrlTemplate("{baseUrl}/saml2/authenticate/{registrationId}")
-				.build();
-		Saml2AuthenticationRequestContext context =
-				this.authenticationRequestContextResolver.resolve(this.request, relyingParty);
+				.assertionConsumerServiceUrlTemplate("{baseUrl}/saml2/authenticate/{registrationId}").build();
+		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(this.request,
+				relyingParty);
 
 		assertThat(context.getAssertionConsumerServiceUrl())
 				.isEqualTo("http://localhost/saml2/authenticate/registration-id");
@@ -98,15 +100,14 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 
 	@Test
 	public void resolveWhenRequestNullThenException() {
-		assertThatCode(() ->
-				this.authenticationRequestContextResolver.resolve(this.request, null))
-						.isInstanceOf(IllegalArgumentException.class);
+		assertThatCode(() -> this.authenticationRequestContextResolver.resolve(this.request, null))
+				.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
 	public void resolveWhenRelyingPartyNullThenException() {
-		assertThatCode(() ->
-				this.authenticationRequestContextResolver.resolve(null, this.relyingPartyBuilder.build()))
+		assertThatCode(() -> this.authenticationRequestContextResolver.resolve(null, this.relyingPartyBuilder.build()))
 				.isInstanceOf(IllegalArgumentException.class);
 	}
+
 }

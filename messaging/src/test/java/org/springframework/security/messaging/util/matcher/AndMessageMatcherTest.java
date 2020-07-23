@@ -30,6 +30,7 @@ import org.springframework.messaging.Message;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AndMessageMatcherTest {
+
 	@Mock
 	private MessageMatcher<Object> delegate;
 
@@ -113,4 +114,5 @@ public class AndMessageMatcherTest {
 
 		assertThat(matcher.matches(message)).isFalse();
 	}
+
 }

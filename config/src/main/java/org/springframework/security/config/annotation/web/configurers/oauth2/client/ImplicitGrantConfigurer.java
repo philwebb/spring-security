@@ -53,15 +53,15 @@ import org.springframework.util.Assert;
  * @see OAuth2AuthorizationRequestRedirectFilter
  * @see ClientRegistrationRepository
  */
-public final class ImplicitGrantConfigurer<B extends HttpSecurityBuilder<B>> extends
-	AbstractHttpConfigurer<ImplicitGrantConfigurer<B>, B> {
+public final class ImplicitGrantConfigurer<B extends HttpSecurityBuilder<B>>
+		extends AbstractHttpConfigurer<ImplicitGrantConfigurer<B>, B> {
 
 	private String authorizationRequestBaseUri;
 
 	/**
 	 * Sets the base {@code URI} used for authorization requests.
-	 *
-	 * @param authorizationRequestBaseUri the base {@code URI} used for authorization requests
+	 * @param authorizationRequestBaseUri the base {@code URI} used for authorization
+	 * requests
 	 * @return the {@link ImplicitGrantConfigurer} for further configuration
 	 */
 	public ImplicitGrantConfigurer<B> authorizationRequestBaseUri(String authorizationRequestBaseUri) {
@@ -72,11 +72,11 @@ public final class ImplicitGrantConfigurer<B extends HttpSecurityBuilder<B>> ext
 
 	/**
 	 * Sets the repository of client registrations.
-	 *
 	 * @param clientRegistrationRepository the repository of client registrations
 	 * @return the {@link ImplicitGrantConfigurer} for further configuration
 	 */
-	public ImplicitGrantConfigurer<B> clientRegistrationRepository(ClientRegistrationRepository clientRegistrationRepository) {
+	public ImplicitGrantConfigurer<B> clientRegistrationRepository(
+			ClientRegistrationRepository clientRegistrationRepository) {
 		Assert.notNull(clientRegistrationRepository, "clientRegistrationRepository cannot be null");
 		this.getBuilder().setSharedObject(ClientRegistrationRepository.class, clientRegistrationRepository);
 		return this;
@@ -85,13 +85,14 @@ public final class ImplicitGrantConfigurer<B extends HttpSecurityBuilder<B>> ext
 	@Override
 	public void configure(B http) {
 		OAuth2AuthorizationRequestRedirectFilter authorizationRequestFilter = new OAuth2AuthorizationRequestRedirectFilter(
-			OAuth2ClientConfigurerUtils.getClientRegistrationRepository(this.getBuilder()), this.getAuthorizationRequestBaseUri());
+				OAuth2ClientConfigurerUtils.getClientRegistrationRepository(this.getBuilder()),
+				this.getAuthorizationRequestBaseUri());
 		http.addFilter(this.postProcess(authorizationRequestFilter));
 	}
 
 	private String getAuthorizationRequestBaseUri() {
-		return this.authorizationRequestBaseUri != null ?
-			this.authorizationRequestBaseUri :
-			OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI;
+		return this.authorizationRequestBaseUri != null ? this.authorizationRequestBaseUri
+				: OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI;
 	}
+
 }

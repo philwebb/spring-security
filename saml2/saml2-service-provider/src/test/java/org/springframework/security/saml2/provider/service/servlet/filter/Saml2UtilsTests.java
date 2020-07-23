@@ -30,7 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Saml2UtilsTests {
 
-	private static Base64 UNCHUNKED_ENCODER = new Base64(0, new byte[]{'\n'});
+	private static Base64 UNCHUNKED_ENCODER = new Base64(0, new byte[] { '\n' });
+
 	private static final Base64 CHUNKED_ENCODER = new Base64(76, new byte[] { '\n' });
 
 	@Test
@@ -55,8 +56,7 @@ public class Saml2UtilsTests {
 	}
 
 	private void validateSsoCircleXml(String xml) {
-		assertThat(xml)
-				.contains("InResponseTo=\"ARQ9a73ead-7dcf-45a8-89eb-26f3c9900c36\"")
+		assertThat(xml).contains("InResponseTo=\"ARQ9a73ead-7dcf-45a8-89eb-26f3c9900c36\"")
 				.contains(" ID=\"s246d157446618e90e43fb79bdd4d9e9e19cf2c7c4\"")
 				.contains("<saml:Issuer>https://idp.ssocircle.com</saml:Issuer>");
 	}

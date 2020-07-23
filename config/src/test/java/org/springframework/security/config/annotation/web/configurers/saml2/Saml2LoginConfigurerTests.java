@@ -97,10 +97,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class Saml2LoginConfigurerTests {
 
-	private static final Converter<Assertion, Collection<? extends GrantedAuthority>>
-			AUTHORITIES_EXTRACTOR = a -> Arrays.asList(new SimpleGrantedAuthority("TEST"));
-	private static final GrantedAuthoritiesMapper AUTHORITIES_MAPPER =
-			authorities -> Arrays.asList(new SimpleGrantedAuthority("TEST CONVERTED"));
+	private static final Converter<Assertion, Collection<? extends GrantedAuthority>> AUTHORITIES_EXTRACTOR = a -> Arrays
+			.asList(new SimpleGrantedAuthority("TEST"));
+
+	private static final GrantedAuthoritiesMapper AUTHORITIES_MAPPER = authorities -> Arrays
+			.asList(new SimpleGrantedAuthority("TEST CONVERTED"));
+
 	private static final Duration RESPONSE_TIME_VALIDATION_SKEW = Duration.ZERO;
 
 	@Autowired
@@ -122,7 +124,9 @@ public class Saml2LoginConfigurerTests {
 	MockMvc mvc;
 
 	private MockHttpServletRequest request;
+
 	private MockHttpServletResponse response;
+
 	private MockFilterChain filterChain;
 
 	@Before
@@ -148,7 +152,8 @@ public class Saml2LoginConfigurerTests {
 	}
 
 	@Test
-	public void saml2LoginWhenConfiguringAuthenticationDefaultsUsingCustomizerThenTheProviderIsConfigured() throws Exception {
+	public void saml2LoginWhenConfiguringAuthenticationDefaultsUsingCustomizerThenTheProviderIsConfigured()
+			throws Exception {
 		// setup application context
 		this.spring.register(Saml2LoginConfigWithAuthenticationDefaultsWithPostProcessor.class).autowire();
 		validateSaml2WebSsoAuthenticationFilterConfiguration();
@@ -159,12 +164,9 @@ public class Saml2LoginConfigurerTests {
 		this.spring.register(CustomAuthenticationRequestContextResolver.class).autowire();
 
 		Saml2AuthenticationRequestContext context = authenticationRequestContext().build();
-		Saml2AuthenticationRequestContextResolver resolver =
-				CustomAuthenticationRequestContextResolver.resolver;
-		when(resolver.resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class)))
-				.thenReturn(context);
-		this.mvc.perform(get("/saml2/authenticate/registration-id"))
-				.andExpect(status().isFound());
+		Saml2AuthenticationRequestContextResolver resolver = CustomAuthenticationRequestContextResolver.resolver;
+		when(resolver.resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class))).thenReturn(context);
+		this.mvc.perform(get("/saml2/authenticate/registration-id")).andExpect(status().isFound());
 		verify(resolver).resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class));
 	}
 
@@ -172,10 +174,8 @@ public class Saml2LoginConfigurerTests {
 	public void authenticationRequestWhenAuthnRequestConsumerResolverThenUses() throws Exception {
 		this.spring.register(CustomAuthnRequestConsumerResolver.class).autowire();
 
-		MvcResult result = this.mvc.perform(get("/saml2/authenticate/registration-id"))
-				.andReturn();
-		UriComponents components = UriComponentsBuilder
-				.fromHttpUrl(result.getResponse().getRedirectedUrl()).build();
+		MvcResult result = this.mvc.perform(get("/saml2/authenticate/registration-id")).andReturn();
+		UriComponents components = UriComponentsBuilder.fromHttpUrl(result.getResponse().getRedirectedUrl()).build();
 		String samlRequest = components.getQueryParams().getFirst("SAMLRequest");
 		String decoded = URLDecoder.decode(samlRequest, "UTF-8");
 		String inflated = samlInflate(samlDecode(decoded));
@@ -185,50 +185,38 @@ public class Saml2LoginConfigurerTests {
 	private void validateSaml2WebSsoAuthenticationFilterConfiguration() {
 		// get the OpenSamlAuthenticationProvider
 		Saml2WebSsoAuthenticationFilter filter = getSaml2SsoFilter(this.springSecurityFilterChain);
-		AuthenticationManager manager =
-				(AuthenticationManager) ReflectionTestUtils.getField(filter, "authenticationManager");
+		AuthenticationManager manager = (AuthenticationManager) ReflectionTestUtils.getField(filter,
+				"authenticationManager");
 		ProviderManager pm = (ProviderManager) manager;
-		AuthenticationProvider provider = pm.getProviders()
-				.stream()
-				.filter(p -> p instanceof OpenSamlAuthenticationProvider)
-				.findFirst()
-				.get();
+		AuthenticationProvider provider = pm.getProviders().stream()
+				.filter(p -> p instanceof OpenSamlAuthenticationProvider).findFirst().get();
 		Assert.assertSame(AUTHORITIES_EXTRACTOR, ReflectionTestUtils.getField(provider, "authoritiesExtractor"));
 		Assert.assertSame(AUTHORITIES_MAPPER, ReflectionTestUtils.getField(provider, "authoritiesMapper"));
-		Assert.assertSame(RESPONSE_TIME_VALIDATION_SKEW, ReflectionTestUtils.getField(provider, "responseTimeValidationSkew"));
+		Assert.assertSame(RESPONSE_TIME_VALIDATION_SKEW,
+				ReflectionTestUtils.getField(provider, "responseTimeValidationSkew"));
 	}
 
 	private Saml2WebSsoAuthenticationFilter getSaml2SsoFilter(FilterChainProxy chain) {
-		return (Saml2WebSsoAuthenticationFilter) chain.getFilters("/login/saml2/sso/test")
-				.stream()
-				.filter(f -> f instanceof Saml2WebSsoAuthenticationFilter)
-				.findFirst()
-				.get();
+		return (Saml2WebSsoAuthenticationFilter) chain.getFilters("/login/saml2/sso/test").stream()
+				.filter(f -> f instanceof Saml2WebSsoAuthenticationFilter).findFirst().get();
 	}
 
 	private void performSaml2Login(String expected) throws IOException, ServletException {
 		// setup authentication parameters
-		this.request.setParameter(
-				"SAMLResponse",
-				Base64.getEncoder().encodeToString(
-						"saml2-xml-response-object".getBytes()
-				)
-		);
-
+		this.request.setParameter("SAMLResponse",
+				Base64.getEncoder().encodeToString("saml2-xml-response-object".getBytes()));
 
 		// perform test
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 
 		// assertions
 		Authentication authentication = this.securityContextRepository
-				.loadContext(new HttpRequestResponseHolder(this.request, this.response))
-				.getAuthentication();
+				.loadContext(new HttpRequestResponseHolder(this.request, this.response)).getAuthentication();
 		Assert.assertNotNull("Expected a valid authentication object.", authentication);
 		assertThat(authentication.getAuthorities()).hasSize(1);
-		assertThat(authentication.getAuthorities()).first()
-				.isInstanceOf(SimpleGrantedAuthority.class).hasToString(expected);
+		assertThat(authentication.getAuthorities()).first().isInstanceOf(SimpleGrantedAuthority.class)
+				.hasToString(expected);
 	}
-
 
 	@EnableWebSecurity
 	@Import(Saml2LoginConfigBeans.class)
@@ -236,12 +224,10 @@ public class Saml2LoginConfigurerTests {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.saml2Login()
-				.authenticationManager(
-						getAuthenticationManagerMock("ROLE_AUTH_MANAGER")
-				);
+			http.saml2Login().authenticationManager(getAuthenticationManagerMock("ROLE_AUTH_MANAGER"));
 			super.configure(http);
 		}
+
 	}
 
 	@EnableWebSecurity
@@ -250,8 +236,7 @@ public class Saml2LoginConfigurerTests {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			ObjectPostProcessor<OpenSamlAuthenticationProvider> processor
-					= new ObjectPostProcessor<OpenSamlAuthenticationProvider>() {
+			ObjectPostProcessor<OpenSamlAuthenticationProvider> processor = new ObjectPostProcessor<OpenSamlAuthenticationProvider>() {
 				@Override
 				public <O extends OpenSamlAuthenticationProvider> O postProcess(O provider) {
 					provider.setResponseTimeValidationSkew(RESPONSE_TIME_VALIDATION_SKEW);
@@ -261,23 +246,22 @@ public class Saml2LoginConfigurerTests {
 				}
 			};
 
-			http.saml2Login()
-					.addObjectPostProcessor(processor)
-			;
+			http.saml2Login().addObjectPostProcessor(processor);
 			super.configure(http);
 		}
+
 	}
 
 	@EnableWebSecurity
 	@Import(Saml2LoginConfigBeans.class)
 	static class CustomAuthenticationRequestContextResolver extends WebSecurityConfigurerAdapter {
-		private static final Saml2AuthenticationRequestContextResolver resolver =
-				mock(Saml2AuthenticationRequestContextResolver.class);
+
+		private static final Saml2AuthenticationRequestContextResolver resolver = mock(
+				Saml2AuthenticationRequestContextResolver.class);
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			ObjectPostProcessor<Saml2WebSsoAuthenticationRequestFilter> processor
-					= new ObjectPostProcessor<Saml2WebSsoAuthenticationRequestFilter>() {
+			ObjectPostProcessor<Saml2WebSsoAuthenticationRequestFilter> processor = new ObjectPostProcessor<Saml2WebSsoAuthenticationRequestFilter>() {
 				@Override
 				public <O extends Saml2WebSsoAuthenticationRequestFilter> O postProcess(O filter) {
 					filter.setAuthenticationRequestContextResolver(resolver);
@@ -299,6 +283,7 @@ public class Saml2LoginConfigurerTests {
 		Saml2AuthenticationRequestContextResolver resolver() {
 			return resolver;
 		}
+
 	}
 
 	@EnableWebSecurity
@@ -318,30 +303,24 @@ public class Saml2LoginConfigurerTests {
 
 		@Bean
 		Saml2AuthenticationRequestFactory authenticationRequestFactory() {
-			OpenSamlAuthenticationRequestFactory authenticationRequestFactory =
-					new OpenSamlAuthenticationRequestFactory();
-			authenticationRequestFactory.setAuthnRequestConsumerResolver(
-					context -> authnRequest -> authnRequest.setForceAuthn(true));
+			OpenSamlAuthenticationRequestFactory authenticationRequestFactory = new OpenSamlAuthenticationRequestFactory();
+			authenticationRequestFactory
+					.setAuthnRequestConsumerResolver(context -> authnRequest -> authnRequest.setForceAuthn(true));
 			return authenticationRequestFactory;
 		}
+
 	}
 
 	private static AuthenticationManager getAuthenticationManagerMock(String role) {
 		return new AuthenticationManager() {
 
 			@Override
-			public Authentication authenticate(Authentication authentication)
-					throws AuthenticationException {
+			public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 				if (!supports(authentication.getClass())) {
 					throw new AuthenticationServiceException("not supported");
 				}
-				return new Saml2Authentication(
-						() -> "auth principal",
-						"saml2 response",
-						Collections.singletonList(
-								new SimpleGrantedAuthority(role)
-						)
-				);
+				return new Saml2Authentication(() -> "auth principal", "saml2 response",
+						Collections.singletonList(new SimpleGrantedAuthority(role)));
 			}
 
 			public boolean supports(Class<?> authentication) {
@@ -360,14 +339,14 @@ public class Saml2LoginConfigurerTests {
 		@Bean
 		RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
 			RelyingPartyRegistrationRepository repository = mock(RelyingPartyRegistrationRepository.class);
-			when(repository.findByRegistrationId(anyString()))
-					.thenReturn(relyingPartyRegistration().build());
+			when(repository.findByRegistrationId(anyString())).thenReturn(relyingPartyRegistration().build());
 			return repository;
 		}
+
 	}
 
-	private static org.apache.commons.codec.binary.Base64 BASE64 =
-			new org.apache.commons.codec.binary.Base64(0, new byte[]{'\n'});
+	private static org.apache.commons.codec.binary.Base64 BASE64 = new org.apache.commons.codec.binary.Base64(0,
+			new byte[] { '\n' });
 
 	private static byte[] samlDecode(String s) {
 		return BASE64.decode(s);
@@ -385,4 +364,5 @@ public class Saml2LoginConfigurerTests {
 			throw new Saml2Exception("Unable to inflate string", e);
 		}
 	}
+
 }
