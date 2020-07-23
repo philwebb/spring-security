@@ -284,7 +284,7 @@ public class Saml2LoginConfigurerTests {
 					return filter;
 				}
 			};
-
+			// @formatter:off
 			http
 				.authorizeRequests(authz -> authz
 						.anyRequest().authenticated()
@@ -292,6 +292,7 @@ public class Saml2LoginConfigurerTests {
 				.saml2Login(saml2 -> saml2
 						.addObjectPostProcessor(processor)
 				);
+			// @formatter:on
 		}
 
 		@Bean
@@ -306,11 +307,13 @@ public class Saml2LoginConfigurerTests {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
+			// @formatter:off
 			http
 				.authorizeRequests(authz -> authz
 					.anyRequest().authenticated()
 				)
 				.saml2Login(saml2 -> {});
+			// @formatter:on
 		}
 
 		@Bean
