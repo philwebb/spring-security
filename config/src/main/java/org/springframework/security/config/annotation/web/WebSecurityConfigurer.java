@@ -30,9 +30,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * {@link WebSecurityConfigurerAdapter} which will automatically be applied to the
  * {@link WebSecurity} by the {@link EnableWebSecurity} annotation.
  *
- * @see WebSecurityConfigurerAdapter
  * @author Rob Winch
  * @since 3.2
+ * @see WebSecurityConfigurerAdapter
  */
 public interface WebSecurityConfigurer<T extends SecurityBuilder<Filter>> extends SecurityConfigurer<Filter, T> {
 

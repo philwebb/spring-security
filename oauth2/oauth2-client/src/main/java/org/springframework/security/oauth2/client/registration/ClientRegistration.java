@@ -209,10 +209,9 @@ public final class ClientRegistration implements Serializable {
 		/**
 		 * Returns the issuer identifier uri for the OpenID Connect 1.0 provider or the
 		 * OAuth 2.0 Authorization Server.
-		 *
-		 * @since 5.4
 		 * @return the issuer identifier uri for the OpenID Connect 1.0 provider or the
 		 * OAuth 2.0 Authorization Server
+		 * @since 5.4
 		 */
 		public String getIssuerUri() {
 			return this.issuerUri;
@@ -220,9 +219,8 @@ public final class ClientRegistration implements Serializable {
 
 		/**
 		 * Returns a {@code Map} of the metadata describing the provider's configuration.
-		 *
-		 * @since 5.1
 		 * @return a {@code Map} of the metadata describing the provider's configuration
+		 * @since 5.1
 		 */
 		public Map<String, Object> getConfigurationMetadata() {
 			return this.configurationMetadata;
@@ -254,9 +252,8 @@ public final class ClientRegistration implements Serializable {
 
 			/**
 			 * Returns the authentication method for the user info endpoint.
-			 *
-			 * @since 5.1
 			 * @return the {@link AuthenticationMethod} for the user info endpoint.
+			 * @since 5.1
 			 */
 			public AuthenticationMethod getAuthenticationMethod() {
 				return this.authenticationMethod;
@@ -481,11 +478,10 @@ public final class ClientRegistration implements Serializable {
 
 		/**
 		 * Sets the authentication method for the user info endpoint.
-		 *
-		 * @since 5.1
 		 * @param userInfoAuthenticationMethod the authentication method for the user info
 		 * endpoint
 		 * @return the {@link Builder}
+		 * @since 5.1
 		 */
 		public Builder userInfoAuthenticationMethod(AuthenticationMethod userInfoAuthenticationMethod) {
 			this.userInfoAuthenticationMethod = userInfoAuthenticationMethod;
@@ -517,11 +513,10 @@ public final class ClientRegistration implements Serializable {
 		/**
 		 * Sets the issuer identifier uri for the OpenID Connect 1.0 provider or the OAuth
 		 * 2.0 Authorization Server.
-		 *
-		 * @since 5.4
 		 * @param issuerUri the issuer identifier uri for the OpenID Connect 1.0 provider
 		 * or the OAuth 2.0 Authorization Server
 		 * @return the {@link Builder}
+		 * @since 5.4
 		 */
 		public Builder issuerUri(String issuerUri) {
 			this.issuerUri = issuerUri;
@@ -530,11 +525,10 @@ public final class ClientRegistration implements Serializable {
 
 		/**
 		 * Sets the metadata describing the provider's configuration.
-		 *
-		 * @since 5.1
 		 * @param configurationMetadata the metadata describing the provider's
 		 * configuration
 		 * @return the {@link Builder}
+		 * @since 5.1
 		 */
 		public Builder providerConfigurationMetadata(Map<String, Object> configurationMetadata) {
 			if (configurationMetadata != null) {
