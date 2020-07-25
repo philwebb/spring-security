@@ -16,14 +16,15 @@
 
 package org.springframework.security.saml2.provider.service.servlet.filter;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.util.UriUtils;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;

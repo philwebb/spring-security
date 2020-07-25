@@ -18,6 +18,7 @@ package org.springframework.security.saml2.provider.service.servlet.filter;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;

@@ -16,10 +16,10 @@
 
 package org.springframework.security.saml2.provider.service.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationRequestContext;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This {@code Saml2AuthenticationRequestContextResolver} formulates a
