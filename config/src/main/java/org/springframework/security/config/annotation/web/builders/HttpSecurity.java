@@ -239,6 +239,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * supported by <code>spring-security-oauth2</code>.
 	 * @see OpenIDLoginConfigurer
 	 */
+	@Deprecated
 	public OpenIDLoginConfigurer<HttpSecurity> openidLogin() throws Exception {
 		return getOrApply(new OpenIDLoginConfigurer<>());
 	}
@@ -362,6 +363,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * supported by <code>spring-security-oauth2</code>.
 	 * @see OpenIDLoginConfigurer
 	 */
+	@Deprecated
 	public HttpSecurity openidLogin(Customizer<OpenIDLoginConfigurer<HttpSecurity>> openidLoginCustomizer)
 			throws Exception {
 		openidLoginCustomizer.customize(getOrApply(new OpenIDLoginConfigurer<>()));
@@ -2507,6 +2509,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 		return HttpSecurity.this;
 	}
 
+	@Override
 	public <C> void setSharedObject(Class<C> sharedType, C object) {
 		super.setSharedObject(sharedType, object);
 	}
@@ -2518,8 +2521,8 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 
 	@Override
 	protected DefaultSecurityFilterChain performBuild() {
-		filters.sort(comparator);
-		return new DefaultSecurityFilterChain(requestMatcher, filters);
+		this.filters.sort(this.comparator);
+		return new DefaultSecurityFilterChain(this.requestMatcher, this.filters);
 	}
 
 	/*
@@ -2529,6 +2532,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * authenticationProvider
 	 * (org.springframework.security.authentication.AuthenticationProvider)
 	 */
+	@Override
 	public HttpSecurity authenticationProvider(AuthenticationProvider authenticationProvider) {
 		getAuthenticationRegistry().authenticationProvider(authenticationProvider);
 		return this;
@@ -2541,6 +2545,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * userDetailsService
 	 * (org.springframework.security.core.userdetails.UserDetailsService)
 	 */
+	@Override
 	public HttpSecurity userDetailsService(UserDetailsService userDetailsService) throws Exception {
 		getAuthenticationRegistry().userDetailsService(userDetailsService);
 		return this;
@@ -2556,8 +2561,9 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @see org.springframework.security.config.annotation.web.HttpSecurityBuilder#
 	 * addFilterAfter(javax .servlet.Filter, java.lang.Class)
 	 */
+	@Override
 	public HttpSecurity addFilterAfter(Filter filter, Class<? extends Filter> afterFilter) {
-		comparator.registerAfter(filter.getClass(), afterFilter);
+		this.comparator.registerAfter(filter.getClass(), afterFilter);
 		return addFilter(filter);
 	}
 
@@ -2567,8 +2573,9 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @see org.springframework.security.config.annotation.web.HttpSecurityBuilder#
 	 * addFilterBefore( javax.servlet.Filter, java.lang.Class)
 	 */
+	@Override
 	public HttpSecurity addFilterBefore(Filter filter, Class<? extends Filter> beforeFilter) {
-		comparator.registerBefore(filter.getClass(), beforeFilter);
+		this.comparator.registerBefore(filter.getClass(), beforeFilter);
 		return addFilter(filter);
 	}
 
@@ -2579,9 +2586,10 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * org.springframework.security.config.annotation.web.HttpSecurityBuilder#addFilter(
 	 * javax. servlet.Filter)
 	 */
+	@Override
 	public HttpSecurity addFilter(Filter filter) {
 		Class<? extends Filter> filterClass = filter.getClass();
-		if (!comparator.isRegistered(filterClass)) {
+		if (!this.comparator.isRegistered(filterClass)) {
 			throw new IllegalArgumentException("The Filter class " + filterClass.getName()
 					+ " does not have a registered order and cannot be added without a specified order. Consider using addFilterBefore or addFilterAfter instead.");
 		}
@@ -2720,7 +2728,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @return the {@link RequestMatcherConfigurer} for further customizations
 	 */
 	public RequestMatcherConfigurer requestMatchers() {
-		return requestMatcherConfigurer;
+		return this.requestMatcherConfigurer;
 	}
 
 	/**
@@ -2819,7 +2827,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @return the {@link HttpSecurity} for further customizations
 	 */
 	public HttpSecurity requestMatchers(Customizer<RequestMatcherConfigurer> requestMatcherCustomizer) {
-		requestMatcherCustomizer.customize(requestMatcherConfigurer);
+		requestMatcherCustomizer.customize(this.requestMatcherConfigurer);
 		return HttpSecurity.this;
 	}
 
@@ -2942,10 +2950,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 
 		protected List<RequestMatcher> matchers = new ArrayList<>();
 
-		/**
-		 * @param context
-		 */
-		private RequestMatcherConfigurer(ApplicationContext context) {
+		RequestMatcherConfigurer(ApplicationContext context) {
 			setApplicationContext(context);
 		}
 

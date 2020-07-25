@@ -100,7 +100,7 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 	 * @return the {@link ExpressionUrlAuthorizationConfigurer} for further customizations
 	 */
 	public StandardInterceptUrlRegistry getRegistry() {
-		return REGISTRY;
+		return this.REGISTRY;
 	}
 
 	/**
@@ -108,12 +108,13 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 	 * @param objectPostProcessor
 	 * @return the {@link UrlAuthorizationConfigurer} for further customizations
 	 */
+	@Override
 	public UrlAuthorizationConfigurer<H> withObjectPostProcessor(ObjectPostProcessor<?> objectPostProcessor) {
 		addObjectPostProcessor(objectPostProcessor);
 		return this;
 	}
 
-	public class StandardInterceptUrlRegistry extends
+	public final class StandardInterceptUrlRegistry extends
 			ExpressionUrlAuthorizationConfigurer<H>.AbstractInterceptUrlRegistry<StandardInterceptUrlRegistry, AuthorizedUrl> {
 
 		/**
@@ -134,7 +135,7 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 		}
 
 		@Override
-		protected final AuthorizedUrl chainRequestMatchersInternal(List<RequestMatcher> requestMatchers) {
+		protected AuthorizedUrl chainRequestMatchersInternal(List<RequestMatcher> requestMatchers) {
 			return new AuthorizedUrl(requestMatchers);
 		}
 
@@ -176,7 +177,7 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 	 */
 	@Override
 	FilterInvocationSecurityMetadataSource createMetadataSource(H http) {
-		return new DefaultFilterInvocationSecurityMetadataSource(REGISTRY.createRequestMap());
+		return new DefaultFilterInvocationSecurityMetadataSource(this.REGISTRY.createRequestMap());
 	}
 
 	/**
@@ -191,10 +192,10 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 	private StandardInterceptUrlRegistry addMapping(Iterable<? extends RequestMatcher> requestMatchers,
 			Collection<ConfigAttribute> configAttributes) {
 		for (RequestMatcher requestMatcher : requestMatchers) {
-			REGISTRY.addMapping(
+			this.REGISTRY.addMapping(
 					new AbstractConfigAttributeRequestMatcherRegistry.UrlMapping(requestMatcher, configAttributes));
 		}
-		return REGISTRY;
+		return this.REGISTRY;
 	}
 
 	/**
@@ -275,7 +276,7 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 		 * @param requestMatchers the {@link RequestMatcher} instances to map to some
 		 * {@link ConfigAttribute} instances.
 		 */
-		private AuthorizedUrl(List<? extends RequestMatcher> requestMatchers) {
+		AuthorizedUrl(List<? extends RequestMatcher> requestMatchers) {
 			Assert.notEmpty(requestMatchers, "requestMatchers must contain at least one value");
 			this.requestMatchers = requestMatchers;
 		}
@@ -334,7 +335,7 @@ public final class UrlAuthorizationConfigurer<H extends HttpSecurityBuilder<H>>
 		 * @return the {@link UrlAuthorizationConfigurer} for further customization
 		 */
 		public StandardInterceptUrlRegistry access(String... attributes) {
-			addMapping(requestMatchers, SecurityConfig.createList(attributes));
+			addMapping(this.requestMatchers, SecurityConfig.createList(attributes));
 			return UrlAuthorizationConfigurer.this.REGISTRY;
 		}
 
