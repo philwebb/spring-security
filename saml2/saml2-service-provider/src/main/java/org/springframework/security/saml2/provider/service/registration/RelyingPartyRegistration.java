@@ -28,6 +28,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.security.saml2.core.Saml2X509Credential;
+import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration.AssertingPartyDetails;
+import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration.ProviderDetails;
 import org.springframework.security.saml2.provider.service.servlet.filter.Saml2WebSsoAuthenticationFilter;
 import org.springframework.util.Assert;
 
@@ -375,6 +377,51 @@ public final class RelyingPartyRegistration {
 								registration.getAssertingPartyDetails().getSingleSignOnServiceLocation())
 						.singleSignOnServiceBinding(
 								registration.getAssertingPartyDetails().getSingleSignOnServiceBinding()));
+	}
+
+	private static Saml2X509Credential fromDeprecated(
+			org.springframework.security.saml2.credentials.Saml2X509Credential credential) {
+		PrivateKey privateKey = credential.getPrivateKey();
+		X509Certificate certificate = credential.getCertificate();
+		Set<Saml2X509Credential.Saml2X509CredentialType> credentialTypes = new HashSet<>();
+		if (credential.isSigningCredential()) {
+			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.SIGNING);
+		}
+		if (credential.isSignatureVerficationCredential()) {
+			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.VERIFICATION);
+		}
+		if (credential.isEncryptionCredential()) {
+			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.ENCRYPTION);
+		}
+		if (credential.isDecryptionCredential()) {
+			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.DECRYPTION);
+		}
+		return new Saml2X509Credential(privateKey, certificate, credentialTypes);
+	}
+
+	private static org.springframework.security.saml2.credentials.Saml2X509Credential toDeprecated(
+			Saml2X509Credential credential) {
+		PrivateKey privateKey = credential.getPrivateKey();
+		X509Certificate certificate = credential.getCertificate();
+		Set<org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType> credentialTypes = new HashSet<>();
+		if (credential.isSigningCredential()) {
+			credentialTypes.add(
+					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.SIGNING);
+		}
+		if (credential.isVerificationCredential()) {
+			credentialTypes.add(
+					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.VERIFICATION);
+		}
+		if (credential.isEncryptionCredential()) {
+			credentialTypes.add(
+					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.ENCRYPTION);
+		}
+		if (credential.isDecryptionCredential()) {
+			credentialTypes.add(
+					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.DECRYPTION);
+		}
+		return new org.springframework.security.saml2.credentials.Saml2X509Credential(privateKey, certificate,
+				credentialTypes);
 	}
 
 	/**
@@ -998,51 +1045,6 @@ public final class RelyingPartyRegistration {
 					this.signingX509Credentials);
 		}
 
-	}
-
-	private static Saml2X509Credential fromDeprecated(
-			org.springframework.security.saml2.credentials.Saml2X509Credential credential) {
-		PrivateKey privateKey = credential.getPrivateKey();
-		X509Certificate certificate = credential.getCertificate();
-		Set<Saml2X509Credential.Saml2X509CredentialType> credentialTypes = new HashSet<>();
-		if (credential.isSigningCredential()) {
-			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.SIGNING);
-		}
-		if (credential.isSignatureVerficationCredential()) {
-			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.VERIFICATION);
-		}
-		if (credential.isEncryptionCredential()) {
-			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.ENCRYPTION);
-		}
-		if (credential.isDecryptionCredential()) {
-			credentialTypes.add(Saml2X509Credential.Saml2X509CredentialType.DECRYPTION);
-		}
-		return new Saml2X509Credential(privateKey, certificate, credentialTypes);
-	}
-
-	private static org.springframework.security.saml2.credentials.Saml2X509Credential toDeprecated(
-			Saml2X509Credential credential) {
-		PrivateKey privateKey = credential.getPrivateKey();
-		X509Certificate certificate = credential.getCertificate();
-		Set<org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType> credentialTypes = new HashSet<>();
-		if (credential.isSigningCredential()) {
-			credentialTypes.add(
-					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.SIGNING);
-		}
-		if (credential.isVerificationCredential()) {
-			credentialTypes.add(
-					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.VERIFICATION);
-		}
-		if (credential.isEncryptionCredential()) {
-			credentialTypes.add(
-					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.ENCRYPTION);
-		}
-		if (credential.isDecryptionCredential()) {
-			credentialTypes.add(
-					org.springframework.security.saml2.credentials.Saml2X509Credential.Saml2X509CredentialType.DECRYPTION);
-		}
-		return new org.springframework.security.saml2.credentials.Saml2X509Credential(privateKey, certificate,
-				credentialTypes);
 	}
 
 }

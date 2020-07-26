@@ -486,6 +486,22 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 		};
 	}
 
+	private static Saml2Error validationError(String code, String description) {
+		return new Saml2Error(code, description);
+	}
+
+	private static Saml2AuthenticationException authException(String code, String description)
+			throws Saml2AuthenticationException {
+
+		return new Saml2AuthenticationException(validationError(code, description));
+	}
+
+	private static Saml2AuthenticationException authException(String code, String description, Exception cause)
+			throws Saml2AuthenticationException {
+
+		return new Saml2AuthenticationException(validationError(code, description), cause);
+	}
+
 	private static class ResponseSignatureValidator implements
 			Function<Saml2AuthenticationToken, Converter<Response, Map<String, Saml2AuthenticationException>>> {
 
@@ -817,22 +833,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 			return decrypter;
 		}
 
-	}
-
-	private static Saml2Error validationError(String code, String description) {
-		return new Saml2Error(code, description);
-	}
-
-	private static Saml2AuthenticationException authException(String code, String description)
-			throws Saml2AuthenticationException {
-
-		return new Saml2AuthenticationException(validationError(code, description));
-	}
-
-	private static Saml2AuthenticationException authException(String code, String description, Exception cause)
-			throws Saml2AuthenticationException {
-
-		return new Saml2AuthenticationException(validationError(code, description), cause);
 	}
 
 }

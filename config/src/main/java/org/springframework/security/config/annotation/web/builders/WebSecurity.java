@@ -303,6 +303,36 @@ public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter,
 		return result;
 	}
 
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.defaultWebSecurityExpressionHandler.setApplicationContext(applicationContext);
+
+		try {
+			this.defaultWebSecurityExpressionHandler.setRoleHierarchy(applicationContext.getBean(RoleHierarchy.class));
+		}
+		catch (NoSuchBeanDefinitionException e) {
+		}
+
+		try {
+			this.defaultWebSecurityExpressionHandler
+					.setPermissionEvaluator(applicationContext.getBean(PermissionEvaluator.class));
+		}
+		catch (NoSuchBeanDefinitionException e) {
+		}
+
+		this.ignoredRequestRegistry = new IgnoredRequestConfigurer(applicationContext);
+		try {
+			this.httpFirewall = applicationContext.getBean(HttpFirewall.class);
+		}
+		catch (NoSuchBeanDefinitionException e) {
+		}
+		try {
+			this.requestRejectedHandler = applicationContext.getBean(RequestRejectedHandler.class);
+		}
+		catch (NoSuchBeanDefinitionException e) {
+		}
+	}
+
 	/**
 	 * An {@link IgnoredRequestConfigurer} that allows optionally configuring the
 	 * {@link MvcRequestMatcher#setMethod(HttpMethod)}
@@ -365,36 +395,6 @@ public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter,
 			return WebSecurity.this;
 		}
 
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.defaultWebSecurityExpressionHandler.setApplicationContext(applicationContext);
-
-		try {
-			this.defaultWebSecurityExpressionHandler.setRoleHierarchy(applicationContext.getBean(RoleHierarchy.class));
-		}
-		catch (NoSuchBeanDefinitionException e) {
-		}
-
-		try {
-			this.defaultWebSecurityExpressionHandler
-					.setPermissionEvaluator(applicationContext.getBean(PermissionEvaluator.class));
-		}
-		catch (NoSuchBeanDefinitionException e) {
-		}
-
-		this.ignoredRequestRegistry = new IgnoredRequestConfigurer(applicationContext);
-		try {
-			this.httpFirewall = applicationContext.getBean(HttpFirewall.class);
-		}
-		catch (NoSuchBeanDefinitionException e) {
-		}
-		try {
-			this.requestRejectedHandler = applicationContext.getBean(RequestRejectedHandler.class);
-		}
-		catch (NoSuchBeanDefinitionException e) {
-		}
 	}
 
 }
