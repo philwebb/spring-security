@@ -163,7 +163,8 @@ public class Saml2WebSsoAuthenticationRequestFilter extends OncePerRequestFilter
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
-		Saml2AuthenticationRequestContext context = authenticationRequestContextResolver.resolve(request, relyingParty);
+		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(request,
+				relyingParty);
 		if (relyingParty.getAssertingPartyDetails().getSingleSignOnServiceBinding() == Saml2MessageBinding.REDIRECT) {
 			sendRedirect(response, context);
 		}

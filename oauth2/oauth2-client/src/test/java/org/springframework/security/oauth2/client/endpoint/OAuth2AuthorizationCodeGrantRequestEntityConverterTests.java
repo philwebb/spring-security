@@ -67,9 +67,9 @@ public class OAuth2AuthorizationCodeGrantRequestEntityConverterTests {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void convertWhenGrantRequestValidThenConverts() {
-		ClientRegistration clientRegistration = clientRegistrationBuilder.build();
-		OAuth2AuthorizationRequest authorizationRequest = authorizationRequestBuilder.build();
-		OAuth2AuthorizationResponse authorizationResponse = authorizationResponseBuilder.build();
+		ClientRegistration clientRegistration = this.clientRegistrationBuilder.build();
+		OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestBuilder.build();
+		OAuth2AuthorizationResponse authorizationResponse = this.authorizationResponseBuilder.build();
 		OAuth2AuthorizationExchange authorizationExchange = new OAuth2AuthorizationExchange(authorizationRequest,
 				authorizationResponse);
 		OAuth2AuthorizationCodeGrantRequest authorizationCodeGrantRequest = new OAuth2AuthorizationCodeGrantRequest(
@@ -99,7 +99,7 @@ public class OAuth2AuthorizationCodeGrantRequestEntityConverterTests {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void convertWhenPkceGrantRequestValidThenConverts() {
-		ClientRegistration clientRegistration = clientRegistrationBuilder.clientSecret(null).build();
+		ClientRegistration clientRegistration = this.clientRegistrationBuilder.clientSecret(null).build();
 
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put(PkceParameterNames.CODE_VERIFIER, "code-verifier-1234");
@@ -108,10 +108,10 @@ public class OAuth2AuthorizationCodeGrantRequestEntityConverterTests {
 		additionalParameters.put(PkceParameterNames.CODE_CHALLENGE, "code-challenge-1234");
 		additionalParameters.put(PkceParameterNames.CODE_CHALLENGE_METHOD, "S256");
 
-		OAuth2AuthorizationRequest authorizationRequest = authorizationRequestBuilder.attributes(attributes)
+		OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestBuilder.attributes(attributes)
 				.additionalParameters(additionalParameters).build();
 
-		OAuth2AuthorizationResponse authorizationResponse = authorizationResponseBuilder.build();
+		OAuth2AuthorizationResponse authorizationResponse = this.authorizationResponseBuilder.build();
 		OAuth2AuthorizationExchange authorizationExchange = new OAuth2AuthorizationExchange(authorizationRequest,
 				authorizationResponse);
 		OAuth2AuthorizationCodeGrantRequest authorizationCodeGrantRequest = new OAuth2AuthorizationCodeGrantRequest(
