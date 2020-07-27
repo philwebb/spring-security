@@ -85,9 +85,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.saml2.provider.service.authentication.TestSaml2AuthenticationRequestContexts.authenticationRequestContext;
 import static org.springframework.security.saml2.provider.service.registration.TestRelyingPartyRegistrations.relyingPartyRegistration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -166,7 +166,7 @@ public class Saml2LoginConfigurerTests {
 
 		Saml2AuthenticationRequestContext context = authenticationRequestContext().build();
 		Saml2AuthenticationRequestContextResolver resolver = CustomAuthenticationRequestContextResolver.resolver;
-		when(resolver.resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class))).thenReturn(context);
+		given(resolver.resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class))).willReturn(context);
 		this.mvc.perform(get("/saml2/authenticate/registration-id")).andExpect(status().isFound());
 		verify(resolver).resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class));
 	}
@@ -360,7 +360,7 @@ public class Saml2LoginConfigurerTests {
 		@Bean
 		RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
 			RelyingPartyRegistrationRepository repository = mock(RelyingPartyRegistrationRepository.class);
-			when(repository.findByRegistrationId(anyString())).thenReturn(relyingPartyRegistration().build());
+			given(repository.findByRegistrationId(anyString())).willReturn(relyingPartyRegistration().build());
 			return repository;
 		}
 

@@ -60,10 +60,10 @@ import org.springframework.security.saml2.credentials.Saml2X509Credential;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport.getBuilderFactory;
 import static org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport.getMarshallerFactory;
 import static org.springframework.security.saml2.credentials.TestSaml2X509Credentials.assertingPartyEncryptingCredential;
@@ -249,7 +249,7 @@ public class OpenSamlAuthenticationProviderTests {
 
 		Element attributeElement = element("<element>value</element>");
 		Marshaller marshaller = mock(Marshaller.class);
-		when(marshaller.marshall(any(XMLObject.class))).thenReturn(attributeElement);
+		given(marshaller.marshall(any(XMLObject.class))).willReturn(attributeElement);
 
 		try {
 			XMLObjectProviderRegistrySupport.getMarshallerFactory()

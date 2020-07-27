@@ -37,10 +37,10 @@ import org.springframework.web.util.UriUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.saml2.credentials.TestSaml2X509Credentials.assertingPartyPrivateCredential;
 import static org.springframework.security.saml2.provider.service.registration.Saml2MessageBinding.POST;
 
@@ -79,14 +79,14 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenNoRelayStateThenRedirectDoesNotContainParameter() throws ServletException, IOException {
-		when(this.repository.findByRegistrationId("registration-id")).thenReturn(this.rpBuilder.build());
+		given(this.repository.findByRegistrationId("registration-id")).willReturn(this.rpBuilder.build());
 		this.filter.doFilterInternal(this.request, this.response, this.filterChain);
 		assertThat(this.response.getHeader("Location")).doesNotContain("RelayState=").startsWith(IDP_SSO_URL);
 	}
 
 	@Test
 	public void doFilterWhenRelayStateThenRedirectDoesContainParameter() throws ServletException, IOException {
-		when(this.repository.findByRegistrationId("registration-id")).thenReturn(this.rpBuilder.build());
+		given(this.repository.findByRegistrationId("registration-id")).willReturn(this.rpBuilder.build());
 		this.request.setParameter("RelayState", "my-relay-state");
 		this.filter.doFilterInternal(this.request, this.response, this.filterChain);
 		assertThat(this.response.getHeader("Location")).contains("RelayState=my-relay-state").startsWith(IDP_SSO_URL);
@@ -94,7 +94,7 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenRelayStateThatRequiresEncodingThenRedirectDoesContainsEncodedParameter() throws Exception {
-		when(this.repository.findByRegistrationId("registration-id")).thenReturn(this.rpBuilder.build());
+		given(this.repository.findByRegistrationId("registration-id")).willReturn(this.rpBuilder.build());
 		final String relayStateValue = "https://my-relay-state.example.com?with=param&other=param";
 		final String relayStateEncoded = UriUtils.encode(relayStateValue, StandardCharsets.ISO_8859_1);
 		this.request.setParameter("RelayState", relayStateValue);
@@ -105,7 +105,7 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenSimpleSignatureSpecifiedThenSignatureParametersAreInTheRedirectURL() throws Exception {
-		when(this.repository.findByRegistrationId("registration-id")).thenReturn(this.rpBuilder.build());
+		given(this.repository.findByRegistrationId("registration-id")).willReturn(this.rpBuilder.build());
 		final String relayStateValue = "https://my-relay-state.example.com?with=param&other=param";
 		final String relayStateEncoded = UriUtils.encode(relayStateValue, StandardCharsets.ISO_8859_1);
 		this.request.setParameter("RelayState", relayStateValue);
@@ -116,8 +116,8 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenSignatureIsDisabledThenSignatureParametersAreNotInTheRedirectURL() throws Exception {
-		when(this.repository.findByRegistrationId("registration-id"))
-				.thenReturn(this.rpBuilder.providerDetails(c -> c.signAuthNRequest(false)).build());
+		given(this.repository.findByRegistrationId("registration-id"))
+				.willReturn(this.rpBuilder.providerDetails(c -> c.signAuthNRequest(false)).build());
 		final String relayStateValue = "https://my-relay-state.example.com?with=param&other=param";
 		final String relayStateEncoded = UriUtils.encode(relayStateValue, StandardCharsets.ISO_8859_1);
 		this.request.setParameter("RelayState", relayStateValue);
@@ -128,8 +128,8 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenPostFormDataIsPresent() throws Exception {
-		when(this.repository.findByRegistrationId("registration-id"))
-				.thenReturn(this.rpBuilder.providerDetails(c -> c.binding(POST)).build());
+		given(this.repository.findByRegistrationId("registration-id"))
+				.willReturn(this.rpBuilder.providerDetails(c -> c.binding(POST)).build());
 		final String relayStateValue = "https://my-relay-state.example.com?with=param&other=param&javascript{alert('1');}";
 		final String relayStateEncoded = HtmlUtils.htmlEscape(relayStateValue);
 		this.request.setParameter("RelayState", relayStateValue);
@@ -145,11 +145,11 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 	public void doFilterWhenSetAuthenticationRequestFactoryThenUses() throws Exception {
 		RelyingPartyRegistration relyingParty = this.rpBuilder.providerDetails(c -> c.binding(POST)).build();
 		Saml2PostAuthenticationRequest authenticationRequest = mock(Saml2PostAuthenticationRequest.class);
-		when(authenticationRequest.getAuthenticationRequestUri()).thenReturn("uri");
-		when(authenticationRequest.getRelayState()).thenReturn("relay");
-		when(authenticationRequest.getSamlRequest()).thenReturn("saml");
-		when(this.repository.findByRegistrationId("registration-id")).thenReturn(relyingParty);
-		when(this.factory.createPostAuthenticationRequest(any())).thenReturn(authenticationRequest);
+		given(authenticationRequest.getAuthenticationRequestUri()).willReturn("uri");
+		given(authenticationRequest.getRelayState()).willReturn("relay");
+		given(authenticationRequest.getSamlRequest()).willReturn("saml");
+		given(this.repository.findByRegistrationId("registration-id")).willReturn(relyingParty);
+		given(this.factory.createPostAuthenticationRequest(any())).willReturn(authenticationRequest);
 
 		Saml2WebSsoAuthenticationRequestFilter filter = new Saml2WebSsoAuthenticationRequestFilter(this.repository);
 		filter.setAuthenticationRequestFactory(this.factory);
@@ -164,11 +164,11 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 	public void doFilterWhenCustomAuthenticationRequestFactoryThenUses() throws Exception {
 		RelyingPartyRegistration relyingParty = this.rpBuilder.providerDetails(c -> c.binding(POST)).build();
 		Saml2PostAuthenticationRequest authenticationRequest = mock(Saml2PostAuthenticationRequest.class);
-		when(authenticationRequest.getAuthenticationRequestUri()).thenReturn("uri");
-		when(authenticationRequest.getRelayState()).thenReturn("relay");
-		when(authenticationRequest.getSamlRequest()).thenReturn("saml");
-		when(this.repository.findByRegistrationId("registration-id")).thenReturn(relyingParty);
-		when(this.factory.createPostAuthenticationRequest(any())).thenReturn(authenticationRequest);
+		given(authenticationRequest.getAuthenticationRequestUri()).willReturn("uri");
+		given(authenticationRequest.getRelayState()).willReturn("relay");
+		given(authenticationRequest.getSamlRequest()).willReturn("saml");
+		given(this.repository.findByRegistrationId("registration-id")).willReturn(relyingParty);
+		given(this.factory.createPostAuthenticationRequest(any())).willReturn(authenticationRequest);
 
 		Saml2WebSsoAuthenticationRequestFilter filter = new Saml2WebSsoAuthenticationRequestFilter(this.repository,
 				this.factory);
