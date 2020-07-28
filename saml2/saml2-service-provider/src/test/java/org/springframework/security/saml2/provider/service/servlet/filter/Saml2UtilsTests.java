@@ -26,7 +26,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.util.UriUtils;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Saml2UtilsTests {
@@ -38,21 +37,23 @@ public class Saml2UtilsTests {
 	@Test
 	public void decodeWhenUsingApacheCommonsBase64ThenXmlIsValid() throws Exception {
 		String responseUrlDecoded = getSsoCircleEncodedXml();
-		String xml = new String(UNCHUNKED_ENCODER.decode(responseUrlDecoded.getBytes(UTF_8)), UTF_8);
+		String xml = new String(UNCHUNKED_ENCODER.decode(responseUrlDecoded.getBytes(StandardCharsets.UTF_8)),
+				StandardCharsets.UTF_8);
 		validateSsoCircleXml(xml);
 	}
 
 	@Test
 	public void decodeWhenUsingApacheCommonsBase64ChunkedThenXmlIsValid() throws Exception {
 		String responseUrlDecoded = getSsoCircleEncodedXml();
-		String xml = new String(CHUNKED_ENCODER.decode(responseUrlDecoded.getBytes(UTF_8)), UTF_8);
+		String xml = new String(CHUNKED_ENCODER.decode(responseUrlDecoded.getBytes(StandardCharsets.UTF_8)),
+				StandardCharsets.UTF_8);
 		validateSsoCircleXml(xml);
 	}
 
 	@Test
 	public void decodeWhenUsingSamlUtilsBase64ThenXmlIsValid() throws Exception {
 		String responseUrlDecoded = getSsoCircleEncodedXml();
-		String xml = new String(Saml2Utils.samlDecode(responseUrlDecoded), UTF_8);
+		String xml = new String(Saml2Utils.samlDecode(responseUrlDecoded), StandardCharsets.UTF_8);
 		validateSsoCircleXml(xml);
 	}
 
@@ -65,7 +66,7 @@ public class Saml2UtilsTests {
 	private String getSsoCircleEncodedXml() throws IOException {
 		ClassPathResource resource = new ClassPathResource("saml2-response-sso-circle.encoded");
 		String response = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-		return UriUtils.decode(response, UTF_8);
+		return UriUtils.decode(response, StandardCharsets.UTF_8);
 	}
 
 }

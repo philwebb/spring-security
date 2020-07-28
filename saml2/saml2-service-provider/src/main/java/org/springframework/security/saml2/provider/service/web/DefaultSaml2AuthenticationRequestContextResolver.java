@@ -27,13 +27,11 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationRequestContext;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import static org.springframework.security.web.util.UrlUtils.buildFullRequestUrl;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 /**
  * The default implementation for {@link Saml2AuthenticationRequestContextResolver} which
@@ -109,8 +107,8 @@ public final class DefaultSaml2AuthenticationRequestContextResolver
 	}
 
 	private static String getApplicationUri(HttpServletRequest request) {
-		UriComponents uriComponents = fromHttpUrl(buildFullRequestUrl(request)).replacePath(request.getContextPath())
-				.replaceQuery(null).fragment(null).build();
+		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(UrlUtils.buildFullRequestUrl(request))
+				.replacePath(request.getContextPath()).replaceQuery(null).fragment(null).build();
 		return uriComponents.toUriString();
 	}
 

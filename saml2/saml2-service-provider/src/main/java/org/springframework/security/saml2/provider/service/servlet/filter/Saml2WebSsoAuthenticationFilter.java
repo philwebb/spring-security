@@ -16,6 +16,8 @@
 
 package org.springframework.security.saml2.provider.service.servlet.filter;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +25,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.saml2.core.Saml2Error;
+import org.springframework.security.saml2.core.Saml2ErrorCodes;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationException;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationToken;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
@@ -32,11 +35,7 @@ import org.springframework.security.web.authentication.session.ChangeSessionIdAu
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.security.saml2.core.Saml2ErrorCodes.RELYING_PARTY_REGISTRATION_NOT_FOUND;
-import static org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration.withRelyingPartyRegistration;
-import static org.springframework.util.StringUtils.hasText;
+import org.springframework.util.StringUtils;
 
 /**
  * @since 5.2
@@ -82,7 +81,8 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 
 	@Override
 	protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-		return (super.requiresAuthentication(request, response) && hasText(request.getParameter("SAMLResponse")));
+		return (super.requiresAuthentication(request, response)
+				&& StringUtils.hasText(request.getParameter("SAMLResponse")));
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 		String registrationId = this.matcher.matcher(request).getVariables().get("registrationId");
 		RelyingPartyRegistration rp = this.relyingPartyRegistrationRepository.findByRegistrationId(registrationId);
 		if (rp == null) {
-			Saml2Error saml2Error = new Saml2Error(RELYING_PARTY_REGISTRATION_NOT_FOUND,
+			Saml2Error saml2Error = new Saml2Error(Saml2ErrorCodes.RELYING_PARTY_REGISTRATION_NOT_FOUND,
 					"Relying Party Registration not found with ID: " + registrationId);
 			throw new Saml2AuthenticationException(saml2Error);
 		}
@@ -103,7 +103,7 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 		String relyingPartyEntityId = Saml2ServletUtils.resolveUrlTemplate(rp.getEntityId(), applicationUri, rp);
 		String assertionConsumerServiceLocation = Saml2ServletUtils
 				.resolveUrlTemplate(rp.getAssertionConsumerServiceLocation(), applicationUri, rp);
-		RelyingPartyRegistration relyingPartyRegistration = withRelyingPartyRegistration(rp)
+		RelyingPartyRegistration relyingPartyRegistration = RelyingPartyRegistration.withRelyingPartyRegistration(rp)
 				.entityId(relyingPartyEntityId).assertionConsumerServiceLocation(assertionConsumerServiceLocation)
 				.build();
 		Saml2AuthenticationToken authentication = new Saml2AuthenticationToken(relyingPartyRegistration, responseXml);
@@ -115,7 +115,7 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 			return Saml2Utils.samlInflate(b);
 		}
 		else {
-			return new String(b, UTF_8);
+			return new String(b, StandardCharsets.UTF_8);
 		}
 	}
 

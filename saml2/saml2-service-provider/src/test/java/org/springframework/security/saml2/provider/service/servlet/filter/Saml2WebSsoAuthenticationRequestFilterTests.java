@@ -27,10 +27,12 @@ import org.junit.Test;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.saml2.credentials.TestSaml2X509Credentials;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationRequestFactory;
 import org.springframework.security.saml2.provider.service.authentication.Saml2PostAuthenticationRequest;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
+import org.springframework.security.saml2.provider.service.registration.Saml2MessageBinding;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.util.UriUtils;
 
@@ -41,8 +43,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.security.saml2.credentials.TestSaml2X509Credentials.assertingPartyPrivateCredential;
-import static org.springframework.security.saml2.provider.service.registration.Saml2MessageBinding.POST;
 
 public class Saml2WebSsoAuthenticationRequestFilterTests {
 
@@ -74,7 +74,7 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 		this.rpBuilder = RelyingPartyRegistration.withRegistrationId("registration-id")
 				.providerDetails(c -> c.entityId("idp-entity-id")).providerDetails(c -> c.webSsoUrl(IDP_SSO_URL))
 				.assertionConsumerServiceUrlTemplate("template")
-				.credentials(c -> c.add(assertingPartyPrivateCredential()));
+				.credentials(c -> c.add(TestSaml2X509Credentials.assertingPartyPrivateCredential()));
 	}
 
 	@Test
@@ -129,7 +129,7 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 	@Test
 	public void doFilterWhenPostFormDataIsPresent() throws Exception {
 		given(this.repository.findByRegistrationId("registration-id"))
-				.willReturn(this.rpBuilder.providerDetails(c -> c.binding(POST)).build());
+				.willReturn(this.rpBuilder.providerDetails(c -> c.binding(Saml2MessageBinding.POST)).build());
 		final String relayStateValue = "https://my-relay-state.example.com?with=param&other=param&javascript{alert('1');}";
 		final String relayStateEncoded = HtmlUtils.htmlEscape(relayStateValue);
 		this.request.setParameter("RelayState", relayStateValue);
@@ -143,7 +143,8 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenSetAuthenticationRequestFactoryThenUses() throws Exception {
-		RelyingPartyRegistration relyingParty = this.rpBuilder.providerDetails(c -> c.binding(POST)).build();
+		RelyingPartyRegistration relyingParty = this.rpBuilder.providerDetails(c -> c.binding(Saml2MessageBinding.POST))
+				.build();
 		Saml2PostAuthenticationRequest authenticationRequest = mock(Saml2PostAuthenticationRequest.class);
 		given(authenticationRequest.getAuthenticationRequestUri()).willReturn("uri");
 		given(authenticationRequest.getRelayState()).willReturn("relay");
@@ -162,7 +163,8 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 
 	@Test
 	public void doFilterWhenCustomAuthenticationRequestFactoryThenUses() throws Exception {
-		RelyingPartyRegistration relyingParty = this.rpBuilder.providerDetails(c -> c.binding(POST)).build();
+		RelyingPartyRegistration relyingParty = this.rpBuilder.providerDetails(c -> c.binding(Saml2MessageBinding.POST))
+				.build();
 		Saml2PostAuthenticationRequest authenticationRequest = mock(Saml2PostAuthenticationRequest.class);
 		given(authenticationRequest.getAuthenticationRequestUri()).willReturn("uri");
 		given(authenticationRequest.getRelayState()).willReturn("relay");

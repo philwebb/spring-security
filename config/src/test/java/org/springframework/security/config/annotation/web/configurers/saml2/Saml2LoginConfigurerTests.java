@@ -19,6 +19,7 @@ package org.springframework.security.config.annotation.web.configurers.saml2;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Base64;
@@ -66,8 +67,10 @@ import org.springframework.security.saml2.provider.service.authentication.Saml2A
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationRequestContext;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationRequestFactory;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationToken;
+import org.springframework.security.saml2.provider.service.authentication.TestSaml2AuthenticationRequestContexts;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
+import org.springframework.security.saml2.provider.service.registration.TestRelyingPartyRegistrations;
 import org.springframework.security.saml2.provider.service.servlet.filter.Saml2WebSsoAuthenticationFilter;
 import org.springframework.security.saml2.provider.service.servlet.filter.Saml2WebSsoAuthenticationRequestFilter;
 import org.springframework.security.saml2.provider.service.web.Saml2AuthenticationRequestContextResolver;
@@ -81,15 +84,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.springframework.security.saml2.provider.service.authentication.TestSaml2AuthenticationRequestContexts.authenticationRequestContext;
-import static org.springframework.security.saml2.provider.service.registration.TestRelyingPartyRegistrations.relyingPartyRegistration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -164,7 +164,8 @@ public class Saml2LoginConfigurerTests {
 	public void saml2LoginWhenCustomAuthenticationRequestContextResolverThenUses() throws Exception {
 		this.spring.register(CustomAuthenticationRequestContextResolver.class).autowire();
 
-		Saml2AuthenticationRequestContext context = authenticationRequestContext().build();
+		Saml2AuthenticationRequestContext context = TestSaml2AuthenticationRequestContexts
+				.authenticationRequestContext().build();
 		Saml2AuthenticationRequestContextResolver resolver = CustomAuthenticationRequestContextResolver.resolver;
 		given(resolver.resolve(any(HttpServletRequest.class), any(RelyingPartyRegistration.class))).willReturn(context);
 		this.mvc.perform(get("/saml2/authenticate/registration-id")).andExpect(status().isFound());
@@ -232,7 +233,7 @@ public class Saml2LoginConfigurerTests {
 			InflaterOutputStream iout = new InflaterOutputStream(out, new Inflater(true));
 			iout.write(b);
 			iout.finish();
-			return new String(out.toByteArray(), UTF_8);
+			return new String(out.toByteArray(), StandardCharsets.UTF_8);
 		}
 		catch (IOException e) {
 			throw new Saml2Exception("Unable to inflate string", e);
@@ -360,7 +361,8 @@ public class Saml2LoginConfigurerTests {
 		@Bean
 		RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
 			RelyingPartyRegistrationRepository repository = mock(RelyingPartyRegistrationRepository.class);
-			given(repository.findByRegistrationId(anyString())).willReturn(relyingPartyRegistration().build());
+			given(repository.findByRegistrationId(anyString()))
+					.willReturn(TestRelyingPartyRegistrations.relyingPartyRegistration().build());
 			return repository;
 		}
 
