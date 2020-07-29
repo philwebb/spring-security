@@ -180,8 +180,8 @@ public class OpenSamlRelyingPartyRegistrationBuilderHttpMessageConverter
 		try {
 			return KeyInfoSupport.getCertificates(keyDescriptor.getKeyInfo());
 		}
-		catch (CertificateException e) {
-			throw new Saml2Exception(e);
+		catch (CertificateException ex) {
+			throw new Saml2Exception(ex);
 		}
 	}
 
@@ -191,8 +191,8 @@ public class OpenSamlRelyingPartyRegistrationBuilderHttpMessageConverter
 			Element element = document.getDocumentElement();
 			return (EntityDescriptor) this.unmarshaller.unmarshall(element);
 		}
-		catch (Exception e) {
-			throw new Saml2Exception(e);
+		catch (Exception ex) {
+			throw new Saml2Exception(ex);
 		}
 	}
 

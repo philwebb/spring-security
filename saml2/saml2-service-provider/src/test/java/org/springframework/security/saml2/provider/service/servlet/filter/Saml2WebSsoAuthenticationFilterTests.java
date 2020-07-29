@@ -92,9 +92,9 @@ public class Saml2WebSsoAuthenticationFilterTests {
 			this.filter.attemptAuthentication(this.request, this.response);
 			failBecauseExceptionWasNotThrown(Saml2AuthenticationException.class);
 		}
-		catch (Exception e) {
-			assertThat(e).isInstanceOf(Saml2AuthenticationException.class);
-			assertThat(e.getMessage()).isEqualTo("Relying Party Registration not found with ID: non-existent-id");
+		catch (Exception ex) {
+			assertThat(ex).isInstanceOf(Saml2AuthenticationException.class);
+			assertThat(ex.getMessage()).isEqualTo("Relying Party Registration not found with ID: non-existent-id");
 		}
 	}
 
