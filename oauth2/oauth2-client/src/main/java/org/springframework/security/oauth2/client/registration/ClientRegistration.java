@@ -344,7 +344,7 @@ public final class ClientRegistration implements Serializable {
 			this.clientAuthenticationMethod = clientRegistration.clientAuthenticationMethod;
 			this.authorizationGrantType = clientRegistration.authorizationGrantType;
 			this.redirectUriTemplate = clientRegistration.redirectUriTemplate;
-			this.scopes = clientRegistration.scopes == null ? null : new HashSet<>(clientRegistration.scopes);
+			this.scopes = (clientRegistration.scopes != null) ? new HashSet<>(clientRegistration.scopes) : null;
 			this.authorizationUri = clientRegistration.providerDetails.authorizationUri;
 			this.tokenUri = clientRegistration.providerDetails.tokenUri;
 			this.userInfoUri = clientRegistration.providerDetails.userInfoEndpoint.uri;

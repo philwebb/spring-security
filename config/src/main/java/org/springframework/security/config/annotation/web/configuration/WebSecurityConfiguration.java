@@ -202,7 +202,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 				return ((Ordered) obj).getOrder();
 			}
 			if (obj != null) {
-				Class<?> clazz = (obj instanceof Class ? (Class<?>) obj : obj.getClass());
+				Class<?> clazz = ((obj instanceof Class) ? (Class<?>) obj : obj.getClass());
 				Order order = AnnotationUtils.findAnnotation(clazz, Order.class);
 				if (order != null) {
 					return order.value();
