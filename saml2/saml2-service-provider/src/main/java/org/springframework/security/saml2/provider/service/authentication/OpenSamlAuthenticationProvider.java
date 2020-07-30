@@ -764,33 +764,38 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 				});
 			}
 
-			public AssertionValidator.Builder validationContext(
-					Consumer<Map<String, Object>> validationContextParameters) {
+			AssertionValidator.Builder validationContext(Consumer<Map<String, Object>> validationContextParameters) {
 				validationContextParameters.accept(this.validationContextParameters);
 				return this;
 			}
 
-			public AssertionValidator build() {
-				return new AssertionValidator((token) -> new SAML20AssertionValidator(this.conditions, this.subjects,
-						this.statements, null, null) {
+			AssertionValidator build() {
+				return new AssertionValidator(this::buildAssertionValidatorResolver,
+						this::buildvalidationContextResolver);
+			}
+
+			private SAML20AssertionValidator buildAssertionValidatorResolver(Saml2AuthenticationToken token) {
+				return new SAML20AssertionValidator(this.conditions, this.subjects, this.statements, null, null) {
+
 					@Nonnull
 					@Override
 					protected ValidationResult validateSignature(@Nonnull Assertion token,
 							@Nonnull ValidationContext context) {
 						return ValidationResult.VALID;
 					}
-				}, (token) -> {
-					String audience = token.getRelyingPartyRegistration().getEntityId();
-					String recipient = token.getRelyingPartyRegistration().getAssertionConsumerServiceLocation();
-					Map<String, Object> params = new HashMap<>();
-					params.put(SAML2AssertionValidationParameters.CLOCK_SKEW, Duration.ofMinutes(5).toMillis());
-					params.put(SAML2AssertionValidationParameters.COND_VALID_AUDIENCES,
-							Collections.singleton(audience));
-					params.put(SAML2AssertionValidationParameters.SC_VALID_RECIPIENTS,
-							Collections.singleton(recipient));
-					params.putAll(this.validationContextParameters);
-					return new ValidationContext(params);
-				});
+
+				};
+			}
+
+			private ValidationContext buildvalidationContextResolver(Saml2AuthenticationToken token) {
+				String audience = token.getRelyingPartyRegistration().getEntityId();
+				String recipient = token.getRelyingPartyRegistration().getAssertionConsumerServiceLocation();
+				Map<String, Object> params = new HashMap<>();
+				params.put(SAML2AssertionValidationParameters.CLOCK_SKEW, Duration.ofMinutes(5).toMillis());
+				params.put(SAML2AssertionValidationParameters.COND_VALID_AUDIENCES, Collections.singleton(audience));
+				params.put(SAML2AssertionValidationParameters.SC_VALID_RECIPIENTS, Collections.singleton(recipient));
+				params.putAll(this.validationContextParameters);
+				return new ValidationContext(params);
 			}
 
 		}

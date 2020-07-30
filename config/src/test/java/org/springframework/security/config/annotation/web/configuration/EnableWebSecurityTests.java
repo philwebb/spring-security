@@ -162,12 +162,12 @@ public class EnableWebSecurityTests {
 	static class BeanProxyEnabledByDefaultConfig extends WebSecurityConfigurerAdapter {
 
 		@Bean
-		public Child child() {
+		Child child() {
 			return new Child();
 		}
 
 		@Bean
-		public Parent parent() {
+		Parent parent() {
 			return new Parent(child());
 		}
 
@@ -178,12 +178,12 @@ public class EnableWebSecurityTests {
 	static class BeanProxyDisabledConfig extends WebSecurityConfigurerAdapter {
 
 		@Bean
-		public Child child() {
+		Child child() {
 			return new Child();
 		}
 
 		@Bean
-		public Parent parent() {
+		Parent parent() {
 			return new Parent(child());
 		}
 
@@ -197,7 +197,7 @@ public class EnableWebSecurityTests {
 			this.child = child;
 		}
 
-		public Child getChild() {
+		Child getChild() {
 			return this.child;
 		}
 
