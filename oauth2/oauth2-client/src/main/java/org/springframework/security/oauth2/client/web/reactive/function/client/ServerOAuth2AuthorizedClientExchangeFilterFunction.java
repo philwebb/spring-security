@@ -565,20 +565,17 @@ public final class ServerOAuth2AuthorizedClientExchangeFilterFunction implements
 			String clientRegistrationId = authorizeRequest.getClientRegistrationId();
 			Authentication principal = authorizeRequest.getPrincipal();
 
-			return Mono.justOrEmpty(authorizeRequest.getAuthorizedClient())
-					.switchIfEmpty(Mono.defer(() -> this.authorizedClientRepository
-							.loadAuthorizedClient(clientRegistrationId, principal, null)))
-					.flatMap((authorizedClient) -> {
-						// Re-authorize
-						return Mono
-								.just(OAuth2AuthorizationContext.withAuthorizedClient(authorizedClient)
-										.principal(principal).build())
-								.flatMap((authorizationContext) -> authorize(authorizationContext, principal))
-								// Default to the existing authorizedClient if the client
-								// was not re-authorized
-								.defaultIfEmpty(authorizeRequest.getAuthorizedClient() != null
-										? authorizeRequest.getAuthorizedClient() : authorizedClient);
-					}).switchIfEmpty(Mono.deferWithContext(context ->
+			return Mono.justOrEmpty(authorizeRequest.getAuthorizedClient()).switchIfEmpty(Mono.defer(
+					() -> this.authorizedClientRepository.loadAuthorizedClient(clientRegistrationId, principal, null)))
+					.flatMap((authorizedClient) ->
+					// Re-authorize
+					Mono.just(OAuth2AuthorizationContext.withAuthorizedClient(authorizedClient).principal(principal)
+							.build()).flatMap((authorizationContext) -> authorize(authorizationContext, principal))
+							// Default to the existing authorizedClient if the client
+							// was not re-authorized
+							.defaultIfEmpty(authorizeRequest.getAuthorizedClient() != null
+									? authorizeRequest.getAuthorizedClient() : authorizedClient))
+					.switchIfEmpty(Mono.deferWithContext((context) ->
 					// Authorize
 					this.clientRegistrationRepository.findByRegistrationId(clientRegistrationId)
 							.switchIfEmpty(Mono.error(() -> new IllegalArgumentException(
