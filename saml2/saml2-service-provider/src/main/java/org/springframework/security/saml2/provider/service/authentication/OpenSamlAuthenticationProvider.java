@@ -177,10 +177,10 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 	private final ParserPool parserPool;
 
-	private Converter<Assertion, Collection<? extends GrantedAuthority>> authoritiesExtractor = (a -> Collections
+	private Converter<Assertion, Collection<? extends GrantedAuthority>> authoritiesExtractor = ((a) -> Collections
 			.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
-	private GrantedAuthoritiesMapper authoritiesMapper = (a -> a);
+	private GrantedAuthoritiesMapper authoritiesMapper = ((a) -> a);
 
 	private Duration responseTimeValidationSkew = Duration.ofMinutes(5);
 
@@ -194,13 +194,15 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 	private Function<Saml2AuthenticationToken, Converter<EncryptedID, NameID>> principalDecrypter = new PrincipalDecrypter();
 
-	private Function<Saml2AuthenticationToken, Converter<Response, AbstractAuthenticationToken>> authenticationConverter = token -> response -> {
-		Assertion assertion = CollectionUtils.firstElement(response.getAssertions());
-		String username = assertion.getSubject().getNameID().getValue();
-		Map<String, List<Object>> attributes = getAssertionAttributes(assertion);
-		return new Saml2Authentication(new DefaultSaml2AuthenticatedPrincipal(username, attributes),
-				token.getSaml2Response(), this.authoritiesMapper.mapAuthorities(getAssertionAuthorities(assertion)));
-	};
+	private Function<Saml2AuthenticationToken, Converter<Response, AbstractAuthenticationToken>> authenticationConverter = (
+			token) -> (response) -> {
+				Assertion assertion = CollectionUtils.firstElement(response.getAssertions());
+				String username = assertion.getSubject().getNameID().getValue();
+				Map<String, List<Object>> attributes = getAssertionAttributes(assertion);
+				return new Saml2Authentication(new DefaultSaml2AuthenticatedPrincipal(username, attributes),
+						token.getSaml2Response(),
+						this.authoritiesMapper.mapAuthorities(getAssertionAuthorities(assertion)));
+			};
 
 	/**
 	 * Creates an {@link OpenSamlAuthenticationProvider}
@@ -244,7 +246,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 	public void setResponseTimeValidationSkew(Duration responseTimeValidationSkew) {
 		this.responseTimeValidationSkew = responseTimeValidationSkew;
 		this.assertionValidator = validator(Arrays.asList(new AssertionSignatureValidator(),
-				new AssertionValidator.Builder().validationContext(params -> params
+				new AssertionValidator.Builder().validationContext((params) -> params
 						.put(SAML2AssertionValidationParameters.CLOCK_SKEW, responseTimeValidationSkew.toMillis()))
 						.build()));
 	}
@@ -464,7 +466,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 	private static <T extends XMLObject> Function<Saml2AuthenticationToken, Converter<T, Map<String, Saml2AuthenticationException>>> validator(
 			Collection<Function<Saml2AuthenticationToken, Converter<T, Map<String, Saml2AuthenticationException>>>> validators) {
-		return token -> response -> {
+		return (token) -> (response) -> {
 			Map<String, Saml2AuthenticationException> errors = new LinkedHashMap<>();
 			for (Function<Saml2AuthenticationToken, Converter<T, Map<String, Saml2AuthenticationException>>> validator : validators) {
 				errors.putAll(validator.apply(token).convert(response));
@@ -496,7 +498,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		@Override
 		public Converter<Response, Map<String, Saml2AuthenticationException>> apply(Saml2AuthenticationToken token) {
-			return response -> {
+			return (response) -> {
 				Map<String, Saml2AuthenticationException> validationExceptions = new LinkedHashMap<>();
 				String issuer = response.getIssuer().getValue();
 				if (response.isSigned()) {
@@ -554,7 +556,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		@Override
 		public Converter<Response, Map<String, Saml2AuthenticationException>> apply(Saml2AuthenticationToken token) {
-			return response -> {
+			return (response) -> {
 				Map<String, Saml2AuthenticationException> validationExceptions = new LinkedHashMap<>();
 
 				String destination = response.getDestination();
@@ -591,7 +593,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		@Override
 		public Converter<EncryptedAssertion, Assertion> apply(Saml2AuthenticationToken token) {
-			return encrypted -> {
+			return (encrypted) -> {
 				Saml2AuthenticationException last = authException(Saml2ErrorCodes.DECRYPTION_ERROR,
 						"No valid decryption credentials found.");
 				Collection<Saml2X509Credential> keys = token.getRelyingPartyRegistration()
@@ -626,7 +628,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		@Override
 		public Converter<Assertion, Map<String, Saml2AuthenticationException>> apply(Saml2AuthenticationToken token) {
-			return assertion -> {
+			return (assertion) -> {
 				Map<String, Saml2AuthenticationException> validationExceptions = new LinkedHashMap<>();
 				try {
 					ValidationContext context = buildValidationContext();
@@ -716,7 +718,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		@Override
 		public Converter<Assertion, Map<String, Saml2AuthenticationException>> apply(Saml2AuthenticationToken token) {
-			return assertion -> {
+			return (assertion) -> {
 				Map<String, Saml2AuthenticationException> validationExceptions = new LinkedHashMap<>();
 				try {
 					ValidationContext context = this.validationContextResolver.apply(token);
@@ -769,7 +771,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 			}
 
 			public AssertionValidator build() {
-				return new AssertionValidator(token -> new SAML20AssertionValidator(this.conditions, this.subjects,
+				return new AssertionValidator((token) -> new SAML20AssertionValidator(this.conditions, this.subjects,
 						this.statements, null, null) {
 					@Nonnull
 					@Override
@@ -777,7 +779,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 							@Nonnull ValidationContext context) {
 						return ValidationResult.VALID;
 					}
-				}, token -> {
+				}, (token) -> {
 					String audience = token.getRelyingPartyRegistration().getEntityId();
 					String recipient = token.getRelyingPartyRegistration().getAssertionConsumerServiceLocation();
 					Map<String, Object> params = new HashMap<>();
@@ -804,7 +806,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		@Override
 		public Converter<EncryptedID, NameID> apply(Saml2AuthenticationToken token) {
-			return encrypted -> {
+			return (encrypted) -> {
 				Saml2AuthenticationException last = authException(Saml2ErrorCodes.DECRYPTION_ERROR,
 						"No valid decryption credentials found.");
 				Collection<Saml2X509Credential> keys = token.getRelyingPartyRegistration()

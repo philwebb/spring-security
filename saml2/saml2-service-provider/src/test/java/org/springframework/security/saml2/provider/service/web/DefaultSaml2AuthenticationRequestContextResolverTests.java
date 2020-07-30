@@ -56,10 +56,10 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 		this.request = new MockHttpServletRequest();
 		this.relyingPartyBuilder = RelyingPartyRegistration.withRegistrationId(REGISTRATION_ID)
 				.localEntityIdTemplate(RELYING_PARTY_ENTITY_ID)
-				.providerDetails(c -> c.entityId(ASSERTING_PARTY_ENTITY_ID))
-				.providerDetails(c -> c.webSsoUrl(ASSERTING_PARTY_SSO_URL))
+				.providerDetails((c) -> c.entityId(ASSERTING_PARTY_ENTITY_ID))
+				.providerDetails((c) -> c.webSsoUrl(ASSERTING_PARTY_SSO_URL))
 				.assertionConsumerServiceUrlTemplate(RELYING_PARTY_SSO_URL)
-				.credentials(c -> c.add(TestSaml2X509Credentials.relyingPartyVerifyingCredential()));
+				.credentials((c) -> c.add(TestSaml2X509Credentials.relyingPartyVerifyingCredential()));
 	}
 
 	@Test

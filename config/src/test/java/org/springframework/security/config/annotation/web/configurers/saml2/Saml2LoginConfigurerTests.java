@@ -98,10 +98,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class Saml2LoginConfigurerTests {
 
-	private static final Converter<Assertion, Collection<? extends GrantedAuthority>> AUTHORITIES_EXTRACTOR = a -> Arrays
-			.asList(new SimpleGrantedAuthority("TEST"));
+	private static final Converter<Assertion, Collection<? extends GrantedAuthority>> AUTHORITIES_EXTRACTOR = (
+			a) -> Arrays.asList(new SimpleGrantedAuthority("TEST"));
 
-	private static final GrantedAuthoritiesMapper AUTHORITIES_MAPPER = authorities -> Arrays
+	private static final GrantedAuthoritiesMapper AUTHORITIES_MAPPER = (authorities) -> Arrays
 			.asList(new SimpleGrantedAuthority("TEST CONVERTED"));
 
 	private static final Duration RESPONSE_TIME_VALIDATION_SKEW = Duration.ZERO;
@@ -191,7 +191,7 @@ public class Saml2LoginConfigurerTests {
 				"authenticationManager");
 		ProviderManager pm = (ProviderManager) manager;
 		AuthenticationProvider provider = pm.getProviders().stream()
-				.filter(p -> p instanceof OpenSamlAuthenticationProvider).findFirst().get();
+				.filter((p) -> p instanceof OpenSamlAuthenticationProvider).findFirst().get();
 		Assert.assertSame(AUTHORITIES_EXTRACTOR, ReflectionTestUtils.getField(provider, "authoritiesExtractor"));
 		Assert.assertSame(AUTHORITIES_MAPPER, ReflectionTestUtils.getField(provider, "authoritiesMapper"));
 		Assert.assertSame(RESPONSE_TIME_VALIDATION_SKEW,
@@ -200,7 +200,7 @@ public class Saml2LoginConfigurerTests {
 
 	private Saml2WebSsoAuthenticationFilter getSaml2SsoFilter(FilterChainProxy chain) {
 		return (Saml2WebSsoAuthenticationFilter) chain.getFilters("/login/saml2/sso/test").stream()
-				.filter(f -> f instanceof Saml2WebSsoAuthenticationFilter).findFirst().get();
+				.filter((f) -> f instanceof Saml2WebSsoAuthenticationFilter).findFirst().get();
 	}
 
 	private void performSaml2Login(String expected) throws IOException, ServletException {
@@ -310,10 +310,10 @@ public class Saml2LoginConfigurerTests {
 			};
 			// @formatter:off
 			http
-				.authorizeRequests(authz -> authz
+				.authorizeRequests((authz) -> authz
 						.anyRequest().authenticated()
 				)
-				.saml2Login(saml2 -> saml2
+				.saml2Login((saml2) -> saml2
 						.addObjectPostProcessor(processor)
 				);
 			// @formatter:on
@@ -334,10 +334,10 @@ public class Saml2LoginConfigurerTests {
 		protected void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
 			http
-				.authorizeRequests(authz -> authz
+				.authorizeRequests((authz) -> authz
 					.anyRequest().authenticated()
 				)
-				.saml2Login(saml2 -> {});
+				.saml2Login((saml2) -> {});
 			// @formatter:on
 		}
 
@@ -345,7 +345,7 @@ public class Saml2LoginConfigurerTests {
 		Saml2AuthenticationRequestFactory authenticationRequestFactory() {
 			OpenSamlAuthenticationRequestFactory authenticationRequestFactory = new OpenSamlAuthenticationRequestFactory();
 			authenticationRequestFactory
-					.setAuthnRequestConsumerResolver(context -> authnRequest -> authnRequest.setForceAuthn(true));
+					.setAuthnRequestConsumerResolver((context) -> (authnRequest) -> authnRequest.setForceAuthn(true));
 			return authenticationRequestFactory;
 		}
 

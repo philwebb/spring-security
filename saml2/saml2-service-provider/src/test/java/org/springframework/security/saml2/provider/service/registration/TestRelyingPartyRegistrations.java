@@ -42,9 +42,9 @@ public final class TestRelyingPartyRegistrations {
 
 		return RelyingPartyRegistration.withRegistrationId(registrationId).entityId(rpEntityId)
 				.assertionConsumerServiceLocation(assertionConsumerServiceLocation)
-				.credentials(c -> c.add(signingCredential))
-				.providerDetails(c -> c.entityId(apEntityId).webSsoUrl(singleSignOnServiceLocation))
-				.credentials(c -> c.add(verificationCertificate));
+				.credentials((c) -> c.add(signingCredential))
+				.providerDetails((c) -> c.entityId(apEntityId).webSsoUrl(singleSignOnServiceLocation))
+				.credentials((c) -> c.add(verificationCertificate));
 	}
 
 }
