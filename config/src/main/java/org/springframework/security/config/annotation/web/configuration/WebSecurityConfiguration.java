@@ -47,6 +47,7 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Uses a {@link WebSecurity} to create the {@link FilterChainProxy} that performs the web
@@ -94,12 +95,10 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 	 */
 	@Bean(name = AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME)
 	public Filter springSecurityFilterChain() throws Exception {
-		boolean hasConfigurers = this.webSecurityConfigurers != null && !this.webSecurityConfigurers.isEmpty();
-		if (!hasConfigurers) {
-			WebSecurityConfigurerAdapter adapter = this.objectObjectPostProcessor
-					.postProcess(new WebSecurityConfigurerAdapter() {
-					});
-			this.webSecurity.apply(adapter);
+		if (CollectionUtils.isEmpty(this.webSecurityConfigurers)) {
+			WebSecurityConfigurerAdapter adapter = new WebSecurityConfigurerAdapter() {
+			};
+			this.webSecurity.apply(this.objectObjectPostProcessor.postProcess(adapter));
 		}
 		return this.webSecurity.build();
 	}
@@ -133,9 +132,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 		if (this.debugEnabled != null) {
 			this.webSecurity.debug(this.debugEnabled);
 		}
-
 		webSecurityConfigurers.sort(AnnotationAwareOrderComparator.INSTANCE);
-
 		Integer previousOrder = null;
 		Object previousConfig = null;
 		for (SecurityConfigurer<Filter, WebSecurity> config : webSecurityConfigurers) {
