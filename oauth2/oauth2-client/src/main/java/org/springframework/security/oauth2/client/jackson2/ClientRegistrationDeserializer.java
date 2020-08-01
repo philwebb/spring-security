@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistration.Builder;
 import org.springframework.security.oauth2.core.AuthenticationMethod;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -49,33 +50,41 @@ final class ClientRegistrationDeserializer extends JsonDeserializer<ClientRegist
 	@Override
 	public ClientRegistration deserialize(JsonParser parser, DeserializationContext context) throws IOException {
 		ObjectMapper mapper = (ObjectMapper) parser.getCodec();
-		JsonNode clientRegistrationNode = mapper.readTree(parser);
-		JsonNode providerDetailsNode = JsonNodeUtils.findObjectNode(clientRegistrationNode, "providerDetails");
-		JsonNode userInfoEndpointNode = JsonNodeUtils.findObjectNode(providerDetailsNode, "userInfoEndpoint");
+		JsonNode root = mapper.readTree(parser);
+		return deserialize(mapper, root);
+	}
 
-		return ClientRegistration
-				.withRegistrationId(JsonNodeUtils.findStringValue(clientRegistrationNode, "registrationId"))
-				.clientId(JsonNodeUtils.findStringValue(clientRegistrationNode, "clientId"))
-				.clientSecret(JsonNodeUtils.findStringValue(clientRegistrationNode, "clientSecret"))
-				.clientAuthenticationMethod(CLIENT_AUTHENTICATION_METHOD_CONVERTER
-						.convert(JsonNodeUtils.findObjectNode(clientRegistrationNode, "clientAuthenticationMethod")))
-				.authorizationGrantType(AUTHORIZATION_GRANT_TYPE_CONVERTER
-						.convert(JsonNodeUtils.findObjectNode(clientRegistrationNode, "authorizationGrantType")))
-				.redirectUriTemplate(JsonNodeUtils.findStringValue(clientRegistrationNode, "redirectUriTemplate"))
-				.scope(JsonNodeUtils.findValue(clientRegistrationNode, "scopes", JsonNodeUtils.SET_TYPE_REFERENCE,
-						mapper))
-				.clientName(JsonNodeUtils.findStringValue(clientRegistrationNode, "clientName"))
-				.authorizationUri(JsonNodeUtils.findStringValue(providerDetailsNode, "authorizationUri"))
-				.tokenUri(JsonNodeUtils.findStringValue(providerDetailsNode, "tokenUri"))
-				.userInfoUri(JsonNodeUtils.findStringValue(userInfoEndpointNode, "uri"))
-				.userInfoAuthenticationMethod(AUTHENTICATION_METHOD_CONVERTER
-						.convert(JsonNodeUtils.findObjectNode(userInfoEndpointNode, "authenticationMethod")))
-				.userNameAttributeName(JsonNodeUtils.findStringValue(userInfoEndpointNode, "userNameAttributeName"))
-				.jwkSetUri(JsonNodeUtils.findStringValue(providerDetailsNode, "jwkSetUri"))
-				.issuerUri(JsonNodeUtils.findStringValue(providerDetailsNode, "issuerUri"))
-				.providerConfigurationMetadata(JsonNodeUtils.findValue(providerDetailsNode, "configurationMetadata",
-						JsonNodeUtils.MAP_TYPE_REFERENCE, mapper))
-				.build();
+	private ClientRegistration deserialize(ObjectMapper mapper, JsonNode root) {
+		Builder builder = ClientRegistration.withRegistrationId(JsonNodeUtils.findStringValue(root, "registrationId"));
+		builder.clientId(JsonNodeUtils.findStringValue(root, "clientId"));
+		builder.clientSecret(JsonNodeUtils.findStringValue(root, "clientSecret"));
+		builder.clientAuthenticationMethod(CLIENT_AUTHENTICATION_METHOD_CONVERTER
+				.convert(JsonNodeUtils.findObjectNode(root, "clientAuthenticationMethod")));
+		builder.authorizationGrantType(AUTHORIZATION_GRANT_TYPE_CONVERTER
+				.convert(JsonNodeUtils.findObjectNode(root, "authorizationGrantType")));
+		builder.redirectUriTemplate(JsonNodeUtils.findStringValue(root, "redirectUriTemplate"));
+		builder.scope(JsonNodeUtils.findValue(root, "scopes", JsonNodeUtils.STRING_SET, mapper));
+		builder.clientName(JsonNodeUtils.findStringValue(root, "clientName"));
+		deserializeProviderDetails(builder, mapper, JsonNodeUtils.findObjectNode(root, "providerDetails"));
+		deserializeUserInfoEndpoint(builder, JsonNodeUtils
+				.findObjectNode(JsonNodeUtils.findObjectNode(root, "providerDetails"), "userInfoEndpoint"));
+		return builder.build();
+	}
+
+	private void deserializeUserInfoEndpoint(Builder builder, JsonNode node) {
+		builder.userInfoUri(JsonNodeUtils.findStringValue(node, "uri"));
+		builder.userInfoAuthenticationMethod(
+				AUTHENTICATION_METHOD_CONVERTER.convert(JsonNodeUtils.findObjectNode(node, "authenticationMethod")));
+		builder.userNameAttributeName(JsonNodeUtils.findStringValue(node, "userNameAttributeName"));
+	}
+
+	private void deserializeProviderDetails(Builder builder, ObjectMapper mapper, JsonNode node) {
+		builder.jwkSetUri(JsonNodeUtils.findStringValue(node, "jwkSetUri"));
+		builder.authorizationUri(JsonNodeUtils.findStringValue(node, "authorizationUri"));
+		builder.tokenUri(JsonNodeUtils.findStringValue(node, "tokenUri"));
+		builder.issuerUri(JsonNodeUtils.findStringValue(node, "issuerUri"));
+		builder.providerConfigurationMetadata(
+				JsonNodeUtils.findValue(node, "configurationMetadata", JsonNodeUtils.STRING_OBJECT_MAP, mapper));
 	}
 
 }
