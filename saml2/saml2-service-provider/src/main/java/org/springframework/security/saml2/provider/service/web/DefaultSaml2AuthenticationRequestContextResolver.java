@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.springframework.core.log.LogMessage;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticationRequestContext;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
 import org.springframework.security.web.util.UrlUtils;
@@ -48,18 +49,13 @@ public final class DefaultSaml2AuthenticationRequestContextResolver
 
 	private static final char PATH_DELIMITER = '/';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Saml2AuthenticationRequestContext resolve(HttpServletRequest request,
 			RelyingPartyRegistration relyingParty) {
 		Assert.notNull(request, "request cannot be null");
 		Assert.notNull(relyingParty, "relyingParty cannot be null");
-		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("Creating SAML 2.0 Authentication Request for Asserting Party ["
-					+ relyingParty.getRegistrationId() + "]");
-		}
+		this.logger.debug(LogMessage.of(() -> "Creating SAML 2.0 Authentication Request for Asserting Party ["
+				+ relyingParty.getRegistrationId() + "]"));
 		return createRedirectAuthenticationRequestContext(request, relyingParty);
 	}
 
@@ -102,7 +98,6 @@ public final class DefaultSaml2AuthenticationRequestContextResolver
 		uriVariables.put("baseUrl", uriComponents.toUriString());
 		uriVariables.put("entityId", StringUtils.hasText(entityId) ? entityId : "");
 		uriVariables.put("registrationId", StringUtils.hasText(registrationId) ? registrationId : "");
-
 		return UriComponentsBuilder.fromUriString(template).buildAndExpand(uriVariables).toUriString();
 	}
 

@@ -102,6 +102,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.log.LogMessage;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -274,9 +275,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return authentication != null && Saml2AuthenticationToken.class.isAssignableFrom(authentication);
@@ -300,13 +298,9 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 	private void process(Saml2AuthenticationToken token, Response response) {
 		String issuer = response.getIssuer().getValue();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Processing SAML response from " + issuer);
-		}
-
+		logger.debug(LogMessage.format("Processing SAML response from %s", issuer));
 		boolean responseSigned = response.isSigned();
 		Map<String, Saml2AuthenticationException> validationExceptions = validateResponse(token, response);
-
 		List<Assertion> assertions = decryptAssertions(token, response);
 		if (!isSigned(responseSigned, assertions)) {
 			throw authException(Saml2ErrorCodes.INVALID_SIGNATURE,
@@ -314,18 +308,14 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 							+ "Please either sign the response or all of the assertions.");
 		}
 		validationExceptions.putAll(validateAssertions(token, assertions));
-
 		Assertion firstAssertion = CollectionUtils.firstElement(response.getAssertions());
 		NameID nameId = decryptPrincipal(token, firstAssertion);
 		if (nameId == null || nameId.getValue() == null) {
 			validationExceptions.put(Saml2ErrorCodes.SUBJECT_NOT_FOUND, authException(Saml2ErrorCodes.SUBJECT_NOT_FOUND,
 					"Assertion [" + firstAssertion.getID() + "] is missing a subject"));
 		}
-
 		if (validationExceptions.isEmpty()) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Successfully processed SAML Response [" + response.getID() + "]");
-			}
+			logger.debug(LogMessage.of(() -> "Successfully processed SAML Response [" + response.getID() + "]"));
 		}
 		else {
 			if (logger.isTraceEnabled()) {
@@ -337,7 +327,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 						+ response.getID() + "]");
 			}
 		}
-
 		if (!validationExceptions.isEmpty()) {
 			throw validationExceptions.values().iterator().next();
 		}
@@ -345,7 +334,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 	private Map<String, Saml2AuthenticationException> validateResponse(Saml2AuthenticationToken token,
 			Response response) {
-
 		Map<String, Saml2AuthenticationException> validationExceptions = new HashMap<>();
 		validationExceptions.putAll(this.responseValidator.apply(token).convert(response));
 		return validationExceptions;
@@ -366,15 +354,10 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 		if (assertions.isEmpty()) {
 			throw authException(Saml2ErrorCodes.MALFORMED_RESPONSE_DATA, "No assertions found in response.");
 		}
-
 		Map<String, Saml2AuthenticationException> validationExceptions = new LinkedHashMap<>();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Validating " + assertions.size() + " assertions");
-		}
+		logger.debug(LogMessage.of(() -> "Validating " + assertions.size() + " assertions"));
 		for (Assertion assertion : assertions) {
-			if (logger.isTraceEnabled()) {
-				logger.trace("Validating assertion " + assertion.getID());
-			}
+			logger.trace(LogMessage.of(() -> "Validating assertion " + assertion.getID()));
 			validationExceptions.putAll(this.assertionValidator.apply(token).convert(assertion));
 		}
 
@@ -385,13 +368,11 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 		if (responseSigned) {
 			return true;
 		}
-
 		for (Assertion assertion : assertions) {
 			if (!assertion.isSigned()) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -411,7 +392,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 		Map<String, List<Object>> attributeMap = new LinkedHashMap<>();
 		for (AttributeStatement attributeStatement : assertion.getAttributeStatements()) {
 			for (Attribute attribute : attributeStatement.getAttributes()) {
-
 				List<Object> attributeValues = new ArrayList<>();
 				for (XMLObject xmlObject : attribute.getAttributeValues()) {
 					Object attributeValue = getXmlObjectValue(xmlObject);
@@ -420,7 +400,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 					}
 				}
 				attributeMap.put(attribute.getName(), attributeValues);
-
 			}
 		}
 		return attributeMap;
@@ -481,13 +460,11 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 	private static Saml2AuthenticationException authException(String code, String description)
 			throws Saml2AuthenticationException {
-
 		return new Saml2AuthenticationException(validationError(code, description));
 	}
 
 	private static Saml2AuthenticationException authException(String code, String description, Exception cause)
 			throws Saml2AuthenticationException {
-
 		return new Saml2AuthenticationException(validationError(code, description), cause);
 	}
 
@@ -510,7 +487,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 								authException(Saml2ErrorCodes.INVALID_SIGNATURE,
 										"Invalid signature for SAML Response [" + response.getID() + "]: ", ex));
 					}
-
 					try {
 						CriteriaSet criteriaSet = new CriteriaSet();
 						criteriaSet.add(new EvaluableEntityIDCredentialCriterion(new EntityIdCriterion(issuer)));
@@ -529,7 +505,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 										"Invalid signature for SAML Response [" + response.getID() + "]: ", ex));
 					}
 				}
-
 				return validationExceptions;
 			};
 		}
@@ -558,7 +533,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 		public Converter<Response, Map<String, Saml2AuthenticationException>> apply(Saml2AuthenticationToken token) {
 			return (response) -> {
 				Map<String, Saml2AuthenticationException> validationExceptions = new LinkedHashMap<>();
-
 				String destination = response.getDestination();
 				String location = token.getRelyingPartyRegistration().getAssertionConsumerServiceLocation();
 				if (StringUtils.hasText(destination) && !destination.equals(location)) {
@@ -567,7 +541,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 					validationExceptions.put(Saml2ErrorCodes.INVALID_DESTINATION,
 							authException(Saml2ErrorCodes.INVALID_DESTINATION, message));
 				}
-
 				String issuer = response.getIssuer().getValue();
 				String assertingPartyEntityId = token.getRelyingPartyRegistration().getAssertingPartyDetails()
 						.getEntityId();
@@ -577,7 +550,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 					validationExceptions.put(Saml2ErrorCodes.INVALID_ISSUER,
 							authException(Saml2ErrorCodes.INVALID_ISSUER, message));
 				}
-
 				return validationExceptions;
 			};
 		}
@@ -662,6 +634,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 			SignatureTrustEngine signatureTrustEngine = buildSignatureTrustEngine(token);
 			return new SAML20AssertionValidator(Collections.emptyList(), Collections.emptyList(),
 					Collections.emptyList(), signatureTrustEngine, this.signaturePrevalidator) {
+
 				@Nonnull
 				@Override
 				protected ValidationResult validateConditions(@Nonnull Assertion assertion,
@@ -682,6 +655,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 						@Nonnull ValidationContext context) {
 					return ValidationResult.VALID;
 				}
+
 			};
 		}
 
@@ -711,7 +685,6 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 
 		AssertionValidator(Function<Saml2AuthenticationToken, SAML20AssertionValidator> assertionValidatorResolver,
 				Function<Saml2AuthenticationToken, ValidationContext> validationContextResolver) {
-
 			this.validationContextResolver = validationContextResolver;
 			this.assertionValidatorResolver = assertionValidatorResolver;
 		}
@@ -754,6 +727,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 			Builder() {
 				this.conditions.add(new AudienceRestrictionConditionValidator());
 				this.subjects.add(new BearerSubjectConfirmationValidator() {
+
 					@Nonnull
 					@Override
 					protected ValidationResult validateAddress(@Nonnull SubjectConfirmation confirmation,
@@ -761,6 +735,7 @@ public final class OpenSamlAuthenticationProvider implements AuthenticationProvi
 						// skipping address validation - gh-7514
 						return ValidationResult.VALID;
 					}
+
 				});
 			}
 

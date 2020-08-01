@@ -90,7 +90,6 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 			throws AuthenticationException {
 		String saml2Response = request.getParameter("SAMLResponse");
 		byte[] b = Saml2Utils.samlDecode(saml2Response);
-
 		String responseXml = inflateIfRequired(request, b);
 		String registrationId = this.matcher.matcher(request).getVariables().get("registrationId");
 		RelyingPartyRegistration rp = this.relyingPartyRegistrationRepository.findByRegistrationId(registrationId);
@@ -114,9 +113,7 @@ public class Saml2WebSsoAuthenticationFilter extends AbstractAuthenticationProce
 		if (HttpMethod.GET.matches(request.getMethod())) {
 			return Saml2Utils.samlInflate(b);
 		}
-		else {
-			return new String(b, StandardCharsets.UTF_8);
-		}
+		return new String(b, StandardCharsets.UTF_8);
 	}
 
 }
