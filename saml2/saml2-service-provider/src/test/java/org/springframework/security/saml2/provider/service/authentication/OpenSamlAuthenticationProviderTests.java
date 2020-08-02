@@ -88,7 +88,6 @@ public class OpenSamlAuthenticationProviderTests {
 
 	@Test
 	public void supportsWhenSaml2AuthenticationTokenThenReturnTrue() {
-
 		assertThat(this.provider.supports(Saml2AuthenticationToken.class))
 				.withFailMessage(
 						OpenSamlAuthenticationProvider.class + "should support " + Saml2AuthenticationToken.class)
@@ -105,7 +104,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenUnknownDataClassThenThrowAuthenticationException() {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.MALFORMED_RESPONSE_DATA));
-
 		Assertion assertion = (Assertion) XMLObjectProviderRegistrySupport.getBuilderFactory()
 				.getBuilder(Assertion.DEFAULT_ELEMENT_NAME).buildObject(Assertion.DEFAULT_ELEMENT_NAME);
 		this.provider
@@ -115,7 +113,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenXmlErrorThenThrowAuthenticationException() {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.MALFORMED_RESPONSE_DATA));
-
 		Saml2AuthenticationToken token = token("invalid xml",
 				TestSaml2X509Credentials.relyingPartyVerifyingCredential());
 		this.provider.authenticate(token);
@@ -124,7 +121,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenInvalidDestinationThenThrowAuthenticationException() {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.INVALID_DESTINATION));
-
 		Response response = TestOpenSamlObjects.response(DESTINATION + "invalid", ASSERTING_PARTY_ENTITY_ID);
 		response.getAssertions().add(TestOpenSamlObjects.assertion());
 		TestOpenSamlObjects.signed(response, TestSaml2X509Credentials.assertingPartySigningCredential(),
@@ -137,7 +133,6 @@ public class OpenSamlAuthenticationProviderTests {
 	public void authenticateWhenNoAssertionsPresentThenThrowAuthenticationException() {
 		this.exception.expect(
 				authenticationMatcher(Saml2ErrorCodes.MALFORMED_RESPONSE_DATA, "No assertions found in response."));
-
 		Saml2AuthenticationToken token = token(TestOpenSamlObjects.response(),
 				TestSaml2X509Credentials.assertingPartySigningCredential());
 		this.provider.authenticate(token);
@@ -146,7 +141,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenInvalidSignatureOnAssertionThenThrowAuthenticationException() {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.INVALID_SIGNATURE));
-
 		Response response = TestOpenSamlObjects.response();
 		response.getAssertions().add(TestOpenSamlObjects.assertion());
 		Saml2AuthenticationToken token = token(response, TestSaml2X509Credentials.relyingPartyVerifyingCredential());
@@ -156,7 +150,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenOpenSAMLValidationErrorThenThrowAuthenticationException() throws Exception {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.INVALID_ASSERTION));
-
 		Response response = TestOpenSamlObjects.response();
 		Assertion assertion = TestOpenSamlObjects.assertion();
 		assertion.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData()
@@ -171,7 +164,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenMissingSubjectThenThrowAuthenticationException() {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.SUBJECT_NOT_FOUND));
-
 		Response response = TestOpenSamlObjects.response();
 		Assertion assertion = TestOpenSamlObjects.assertion();
 		assertion.setSubject(null);
@@ -185,7 +177,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenUsernameMissingThenThrowAuthenticationException() throws Exception {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.SUBJECT_NOT_FOUND));
-
 		Response response = TestOpenSamlObjects.response();
 		Assertion assertion = TestOpenSamlObjects.assertion();
 		assertion.getSubject().getNameID().setValue(null);
@@ -221,7 +212,6 @@ public class OpenSamlAuthenticationProviderTests {
 		Saml2AuthenticationToken token = token(response, TestSaml2X509Credentials.relyingPartyVerifyingCredential());
 		Authentication authentication = this.provider.authenticate(token);
 		Saml2AuthenticatedPrincipal principal = (Saml2AuthenticatedPrincipal) authentication.getPrincipal();
-
 		Map<String, Object> expected = new LinkedHashMap<>();
 		expected.put("email", Arrays.asList("john.doe@example.com", "doe.john@example.com"));
 		expected.put("name", Collections.singletonList("John Doe"));
@@ -230,7 +220,6 @@ public class OpenSamlAuthenticationProviderTests {
 		expected.put("registered", Collections.singletonList(true));
 		Instant registeredDate = Instant.ofEpochMilli(DateTime.parse("1970-01-01T00:00:00Z").getMillis());
 		expected.put("registeredDate", Collections.singletonList(registeredDate));
-
 		assertThat((String) principal.getFirstAttribute("name")).isEqualTo("John Doe");
 		assertThat(principal.getAttributes()).isEqualTo(expected);
 	}
@@ -245,11 +234,9 @@ public class OpenSamlAuthenticationProviderTests {
 				RELYING_PARTY_ENTITY_ID);
 		response.getAssertions().add(assertion);
 		Saml2AuthenticationToken token = token(response, TestSaml2X509Credentials.relyingPartyVerifyingCredential());
-
 		Element attributeElement = element("<element>value</element>");
 		Marshaller marshaller = mock(Marshaller.class);
 		given(marshaller.marshall(any(XMLObject.class))).willReturn(attributeElement);
-
 		try {
 			XMLObjectProviderRegistrySupport.getMarshallerFactory()
 					.registerMarshaller(AttributeValue.DEFAULT_ELEMENT_NAME, marshaller);
@@ -265,7 +252,6 @@ public class OpenSamlAuthenticationProviderTests {
 	@Test
 	public void authenticateWhenEncryptedAssertionWithoutSignatureThenItFails() throws Exception {
 		this.exception.expect(authenticationMatcher(Saml2ErrorCodes.INVALID_SIGNATURE));
-
 		Response response = TestOpenSamlObjects.response();
 		EncryptedAssertion encryptedAssertion = TestOpenSamlObjects.encrypted(TestOpenSamlObjects.assertion(),
 				TestSaml2X509Credentials.assertingPartyEncryptingCredential());
@@ -321,7 +307,6 @@ public class OpenSamlAuthenticationProviderTests {
 	public void authenticateWhenDecryptionKeysAreMissingThenThrowAuthenticationException() throws Exception {
 		this.exception.expect(
 				authenticationMatcher(Saml2ErrorCodes.DECRYPTION_ERROR, "No valid decryption credentials found."));
-
 		Response response = TestOpenSamlObjects.response();
 		EncryptedAssertion encryptedAssertion = TestOpenSamlObjects.encrypted(TestOpenSamlObjects.assertion(),
 				TestSaml2X509Credentials.assertingPartyEncryptingCredential());
@@ -335,7 +320,6 @@ public class OpenSamlAuthenticationProviderTests {
 	public void authenticateWhenDecryptionKeysAreWrongThenThrowAuthenticationException() throws Exception {
 		this.exception
 				.expect(authenticationMatcher(Saml2ErrorCodes.DECRYPTION_ERROR, "Failed to decrypt EncryptedData"));
-
 		Response response = TestOpenSamlObjects.response();
 		EncryptedAssertion encryptedAssertion = TestOpenSamlObjects.encrypted(TestOpenSamlObjects.assertion(),
 				TestSaml2X509Credentials.assertingPartyEncryptingCredential());
@@ -356,7 +340,6 @@ public class OpenSamlAuthenticationProviderTests {
 		Saml2AuthenticationToken token = token(response, TestSaml2X509Credentials.relyingPartyVerifyingCredential(),
 				TestSaml2X509Credentials.relyingPartyDecryptingCredential());
 		Saml2Authentication authentication = (Saml2Authentication) this.provider.authenticate(token);
-
 		// the following code will throw an exception if authentication isn't serializable
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream(1024);
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteStream);
@@ -402,7 +385,6 @@ public class OpenSamlAuthenticationProviderTests {
 			public void describeTo(Description desc) {
 				String excepting = "Saml2AuthenticationException[code=" + code + "; description=" + description + "]";
 				desc.appendText(excepting);
-
 			}
 		};
 	}

@@ -68,7 +68,6 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 		RelyingPartyRegistration relyingParty = this.relyingPartyBuilder.build();
 		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(this.request,
 				relyingParty);
-
 		assertThat(context).isNotNull();
 		assertThat(context.getAssertionConsumerServiceUrl()).isEqualTo(RELYING_PARTY_SSO_URL);
 		assertThat(context.getRelayState()).isEqualTo("relay-state");
@@ -83,7 +82,6 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 				.assertionConsumerServiceUrlTemplate("/saml2/authenticate/{registrationId}").build();
 		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(this.request,
 				relyingParty);
-
 		assertThat(context.getAssertionConsumerServiceUrl()).isEqualTo("/saml2/authenticate/registration-id");
 	}
 
@@ -93,7 +91,6 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 				.assertionConsumerServiceUrlTemplate("{baseUrl}/saml2/authenticate/{registrationId}").build();
 		Saml2AuthenticationRequestContext context = this.authenticationRequestContextResolver.resolve(this.request,
 				relyingParty);
-
 		assertThat(context.getAssertionConsumerServiceUrl())
 				.isEqualTo("http://localhost/saml2/authenticate/registration-id");
 	}

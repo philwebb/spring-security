@@ -88,7 +88,6 @@ public class ClientRegistrationTests {
 				.scope(SCOPES.toArray(new String[0])).authorizationUri(AUTHORIZATION_URI).tokenUri(TOKEN_URI)
 				.userInfoAuthenticationMethod(AuthenticationMethod.FORM).jwkSetUri(JWK_SET_URI).issuerUri(ISSUER_URI)
 				.providerConfigurationMetadata(PROVIDER_CONFIGURATION_METADATA).clientName(CLIENT_NAME).build();
-
 		assertThat(registration.getRegistrationId()).isEqualTo(REGISTRATION_ID);
 		assertThat(registration.getClientId()).isEqualTo(CLIENT_ID);
 		assertThat(registration.getClientSecret()).isEqualTo(CLIENT_SECRET);
@@ -276,7 +275,6 @@ public class ClientRegistrationTests {
 				.authorizationGrantType(AuthorizationGrantType.IMPLICIT).redirectUriTemplate(REDIRECT_URI)
 				.scope(SCOPES.toArray(new String[0])).authorizationUri(AUTHORIZATION_URI)
 				.userInfoAuthenticationMethod(AuthenticationMethod.FORM).clientName(CLIENT_NAME).build();
-
 		assertThat(registration.getRegistrationId()).isEqualTo(REGISTRATION_ID);
 		assertThat(registration.getClientId()).isEqualTo(CLIENT_ID);
 		assertThat(registration.getAuthorizationGrantType()).isEqualTo(AuthorizationGrantType.IMPLICIT);
@@ -347,7 +345,6 @@ public class ClientRegistrationTests {
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE).redirectUriTemplate(REDIRECT_URI)
 				.scope(SCOPES.toArray(new String[0])).authorizationUri(AUTHORIZATION_URI).tokenUri(TOKEN_URI)
 				.jwkSetUri(JWK_SET_URI).clientName(CLIENT_NAME).build();
-
 		assertThat(registration.getRegistrationId()).isEqualTo(overriddenId);
 	}
 
@@ -357,7 +354,6 @@ public class ClientRegistrationTests {
 				.clientSecret(CLIENT_SECRET).clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
 				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS).scope(SCOPES.toArray(new String[0]))
 				.tokenUri(TOKEN_URI).clientName(CLIENT_NAME).build();
-
 		assertThat(registration.getRegistrationId()).isEqualTo(REGISTRATION_ID);
 		assertThat(registration.getClientId()).isEqualTo(CLIENT_ID);
 		assertThat(registration.getClientSecret()).isEqualTo(CLIENT_SECRET);
@@ -427,7 +423,6 @@ public class ClientRegistrationTests {
 				.clientSecret(CLIENT_SECRET).clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
 				.authorizationGrantType(AuthorizationGrantType.PASSWORD).scope(SCOPES.toArray(new String[0]))
 				.tokenUri(TOKEN_URI).clientName(CLIENT_NAME).build();
-
 		assertThat(registration.getRegistrationId()).isEqualTo(REGISTRATION_ID);
 		assertThat(registration.getClientId()).isEqualTo(CLIENT_ID);
 		assertThat(registration.getClientSecret()).isEqualTo(CLIENT_SECRET);
@@ -485,7 +480,6 @@ public class ClientRegistrationTests {
 				.clientSecret(CLIENT_SECRET).clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
 				.authorizationGrantType(customGrantType).scope(SCOPES.toArray(new String[0])).tokenUri(TOKEN_URI)
 				.clientName(CLIENT_NAME).build();
-
 		assertThat(registration.getRegistrationId()).isEqualTo(REGISTRATION_ID);
 		assertThat(registration.getClientId()).isEqualTo(CLIENT_ID);
 		assertThat(registration.getClientSecret()).isEqualTo(CLIENT_SECRET);
@@ -520,12 +514,10 @@ public class ClientRegistrationTests {
 		assertThat(clientRegistration.getAuthorizationGrantType()).isEqualTo(updated.getAuthorizationGrantType());
 		assertThat(clientRegistration.getRedirectUriTemplate()).isEqualTo(updated.getRedirectUriTemplate());
 		assertThat(clientRegistration.getScopes()).isEqualTo(updated.getScopes());
-
 		ClientRegistration.ProviderDetails providerDetails = clientRegistration.getProviderDetails();
 		ClientRegistration.ProviderDetails updatedProviderDetails = updated.getProviderDetails();
 		assertThat(providerDetails.getAuthorizationUri()).isEqualTo(updatedProviderDetails.getAuthorizationUri());
 		assertThat(providerDetails.getTokenUri()).isEqualTo(updatedProviderDetails.getTokenUri());
-
 		ClientRegistration.ProviderDetails.UserInfoEndpoint userInfoEndpoint = providerDetails.getUserInfoEndpoint();
 		ClientRegistration.ProviderDetails.UserInfoEndpoint updatedUserInfoEndpoint = updatedProviderDetails
 				.getUserInfoEndpoint();
@@ -534,12 +526,10 @@ public class ClientRegistrationTests {
 				.isEqualTo(updatedUserInfoEndpoint.getAuthenticationMethod());
 		assertThat(userInfoEndpoint.getUserNameAttributeName())
 				.isEqualTo(updatedUserInfoEndpoint.getUserNameAttributeName());
-
 		assertThat(providerDetails.getJwkSetUri()).isEqualTo(updatedProviderDetails.getJwkSetUri());
 		assertThat(providerDetails.getIssuerUri()).isEqualTo(updatedProviderDetails.getIssuerUri());
 		assertThat(providerDetails.getConfigurationMetadata())
 				.isEqualTo(updatedProviderDetails.getConfigurationMetadata());
-
 		assertThat(clientRegistration.getClientName()).isEqualTo(updated.getClientName());
 	}
 
@@ -549,7 +539,6 @@ public class ClientRegistrationTests {
 		ClientRegistration updated = ClientRegistration.withClientRegistration(clientRegistration)
 				.clientSecret("a-new-secret").scope("a-new-scope")
 				.providerConfigurationMetadata(Collections.singletonMap("a-new-config", "a-new-value")).build();
-
 		assertThat(clientRegistration.getClientSecret()).isNotEqualTo(updated.getClientSecret());
 		assertThat(updated.getClientSecret()).isEqualTo("a-new-secret");
 		assertThat(clientRegistration.getScopes()).doesNotContain("a-new-scope");

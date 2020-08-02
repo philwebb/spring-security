@@ -68,9 +68,7 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 		this.request = new MockHttpServletRequest();
 		this.response = new MockHttpServletResponse();
 		this.request.setPathInfo("/saml2/authenticate/registration-id");
-
 		this.filterChain = new MockFilterChain();
-
 		this.rpBuilder = RelyingPartyRegistration.withRegistrationId("registration-id")
 				.providerDetails((c) -> c.entityId("idp-entity-id")).providerDetails((c) -> c.webSsoUrl(IDP_SSO_URL))
 				.assertionConsumerServiceUrlTemplate("template")
@@ -151,7 +149,6 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 		given(authenticationRequest.getSamlRequest()).willReturn("saml");
 		given(this.repository.findByRegistrationId("registration-id")).willReturn(relyingParty);
 		given(this.factory.createPostAuthenticationRequest(any())).willReturn(authenticationRequest);
-
 		Saml2WebSsoAuthenticationRequestFilter filter = new Saml2WebSsoAuthenticationRequestFilter(this.repository);
 		filter.setAuthenticationRequestFactory(this.factory);
 		filter.doFilterInternal(this.request, this.response, this.filterChain);
@@ -171,7 +168,6 @@ public class Saml2WebSsoAuthenticationRequestFilterTests {
 		given(authenticationRequest.getSamlRequest()).willReturn("saml");
 		given(this.repository.findByRegistrationId("registration-id")).willReturn(relyingParty);
 		given(this.factory.createPostAuthenticationRequest(any())).willReturn(authenticationRequest);
-
 		Saml2WebSsoAuthenticationRequestFilter filter = new Saml2WebSsoAuthenticationRequestFilter(this.repository,
 				this.factory);
 		filter.doFilterInternal(this.request, this.response, this.filterChain);
