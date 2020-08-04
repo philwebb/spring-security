@@ -25,7 +25,7 @@ import org.springframework.security.saml2.provider.service.authentication.Saml2A
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link DefaultSaml2AuthenticationRequestContextResolver}
@@ -97,14 +97,14 @@ public class DefaultSaml2AuthenticationRequestContextResolverTests {
 
 	@Test
 	public void resolveWhenRequestNullThenException() {
-		assertThatCode(() -> this.authenticationRequestContextResolver.resolve(this.request, null))
-				.isInstanceOf(IllegalArgumentException.class);
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> this.authenticationRequestContextResolver.resolve(this.request, null));
 	}
 
 	@Test
 	public void resolveWhenRelyingPartyNullThenException() {
-		assertThatCode(() -> this.authenticationRequestContextResolver.resolve(null, this.relyingPartyBuilder.build()))
-				.isInstanceOf(IllegalArgumentException.class);
+		assertThatIllegalArgumentException().isThrownBy(
+				() -> this.authenticationRequestContextResolver.resolve(null, this.relyingPartyBuilder.build()));
 	}
 
 }
