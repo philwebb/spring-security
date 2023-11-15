@@ -1,0 +1,155 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.gradle.xsd.CreateVersionlessXsdTask
+import trang.RncToXsd
+
+apply plugin: 'io.spring.convention.spring-module'
+apply plugin: 'trang'
+apply plugin: 'kotlin'
+
+dependencies {
+	management platform(project(":spring-security-dependencies"))
+	// NB: Don't add other compile time dependencies to the config module as this breaks tooling
+	api project(':spring-security-core')
+	api 'org.springframework:spring-aop'
+	api 'org.springframework:spring-beans'
+	api 'org.springframework:spring-context'
+	api 'org.springframework:spring-core'
+
+	optional project(':spring-security-ldap')
+	optional project(':spring-security-messaging')
+	optional project(':spring-security-saml2-service-provider')
+	optional project(':spring-security-oauth2-client')
+	optional project(':spring-security-oauth2-jose')
+	optional project(':spring-security-oauth2-resource-server')
+	optional project(':spring-security-rsocket')
+	optional project(':spring-security-web')
+	optional 'io.projectreactor:reactor-core'
+	optional 'org.aspectj:aspectjweaver'
+	optional 'org.springframework:spring-jdbc'
+	optional 'org.springframework:spring-messaging'
+	optional 'org.springframework:spring-tx'
+	optional 'org.springframework:spring-webmvc'
+	optional'org.springframework:spring-web'
+	optional'org.springframework:spring-webflux'
+	optional'org.springframework:spring-websocket'
+	optional 'org.jetbrains.kotlin:kotlin-reflect'
+	optional 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+	optional 'jakarta.annotation:jakarta.annotation-api'
+
+	provided 'jakarta.servlet:jakarta.servlet-api'
+
+	testImplementation project(':spring-security-aspects')
+	testImplementation project(':spring-security-cas')
+	testImplementation project(':spring-security-test')
+	testImplementation project(path : ':spring-security-core', configuration : 'tests')
+	testImplementation project(path : ':spring-security-ldap', configuration : 'tests')
+	testImplementation project(path : ':spring-security-oauth2-client', configuration : 'tests')
+	testImplementation project(path : ':spring-security-oauth2-resource-server', configuration : 'tests')
+	testImplementation project(':spring-security-saml2-service-provider')
+	testImplementation project(path : ':spring-security-saml2-service-provider', configuration : 'tests')
+	testImplementation project(path : ':spring-security-web', configuration : 'tests')
+	testImplementation "jakarta.inject:jakarta.inject-api"
+	testImplementation "org.assertj:assertj-core"
+	testImplementation "org.junit.jupiter:junit-jupiter-api"
+	testImplementation "org.junit.jupiter:junit-jupiter-params"
+	testImplementation "org.junit.jupiter:junit-jupiter-engine"
+	testImplementation "org.mockito:mockito-core"
+	testImplementation "org.mockito:mockito-junit-jupiter"
+	testImplementation "org.springframework:spring-test"
+	testImplementation 'com.squareup.okhttp3:mockwebserver'
+	testImplementation 'ch.qos.logback:logback-classic'
+	testImplementation 'io.projectreactor.netty:reactor-netty'
+	testImplementation 'io.rsocket:rsocket-transport-netty'
+	testImplementation 'jakarta.annotation:jakarta.annotation-api'
+	testImplementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+	testImplementation 'jakarta.websocket:jakarta.websocket-api'
+	testImplementation 'jakarta.websocket:jakarta.websocket-client-api'
+	testImplementation 'ldapsdk:ldapsdk:4.1'
+	testImplementation('net.sourceforge.htmlunit:htmlunit') {
+		exclude group: 'commons-logging', module: 'commons-logging'
+		exclude group: 'xml-apis', module: 'xml-apis'
+	}
+	testImplementation "org.apache.directory.server:apacheds-core"
+	testImplementation "org.apache.directory.server:apacheds-core-entry"
+	testImplementation "org.apache.directory.server:apacheds-protocol-shared"
+	testImplementation "org.apache.directory.server:apacheds-protocol-ldap"
+	testImplementation "org.apache.directory.server:apacheds-server-jndi"
+	testImplementation 'org.apache.directory.shared:shared-ldap'
+	testImplementation "com.unboundid:unboundid-ldapsdk"
+	testImplementation 'jakarta.persistence:jakarta.persistence-api'
+	testImplementation "org.hibernate.orm:hibernate-core"
+	testImplementation 'org.hsqldb:hsqldb'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation('org.seleniumhq.selenium:htmlunit-driver') {
+		exclude group: 'commons-logging', module: 'commons-logging'
+		exclude group: 'xml-apis', module: 'xml-apis'
+	}
+	testImplementation('org.seleniumhq.selenium:selenium-java') {
+		exclude group: 'commons-logging', module: 'commons-logging'
+		exclude group: 'io.netty', module: 'netty'
+	}
+	testImplementation 'org.springframework.ldap:spring-ldap-core'
+	testImplementation 'org.springframework:spring-expression'
+	testImplementation 'org.springframework:spring-jdbc'
+	testImplementation 'org.springframework:spring-orm'
+	testImplementation 'org.springframework:spring-tx'
+	testImplementation 'org.springframework:spring-core-test'
+	testImplementation ('org.springframework.data:spring-data-jpa') {
+		exclude group: 'org.aspectj', module: 'aspectjrt'
+	}
+	testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core'
+	testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+	testImplementation 'io.mockk:mockk'
+	testImplementation 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.apache.maven.resolver:maven-resolver-connector-basic'
+	testImplementation ('org.apache.maven.resolver:maven-resolver-impl') {
+		exclude(group: "javax.annotation", module: "javax.annotation-api")
+	}
+	testImplementation ('org.apache.maven:maven-resolver-provider') {
+		exclude(group: "javax.inject", module: "javax.inject")
+		exclude(group: "javax.annotation", module: "javax.annotation-api")
+	}
+	testImplementation ('org.apache.maven.resolver:maven-resolver-transport-http') {
+		exclude group: "org.slf4j", module: "jcl-over-slf4j"
+	}
+
+	testRuntimeOnly 'org.hsqldb:hsqldb'
+}
+
+def rncToXsd = tasks.named('rncToXsd', RncToXsd)
+rncToXsd.configure {
+	rncDir = file('src/main/resources/org/springframework/security/config/')
+	xsdDir = rncDir
+	xslFile = new File(rncDir, 'spring-security.xsl')
+}
+
+def versionlessXsd = tasks.register("versionlessXsd", CreateVersionlessXsdTask) {
+	inputFiles.from(rncToXsd.map { task -> project.fileTree(task.xsdDir) })
+	versionlessXsdFile = project.layout.buildDirectory.file("versionlessXsd/spring-security.xsd")
+}
+
+tasks.named('processResources', ProcessResources).configure {
+	from(versionlessXsd) {
+		into 'org/springframework/security/config/'
+	}
+	from(rncToXsd) {
+		duplicatesStrategy DuplicatesStrategy.EXCLUDE
+		into 'org/springframework/security/config/'
+	}
+}
+
+tasks.named('sourcesJar', Jar).configure {
+	from(rncToXsd) {
+		duplicatesStrategy DuplicatesStrategy.EXCLUDE
+		into 'org/springframework/security/config/'
+	}
+}
+
+tasks.withType(KotlinCompile).configureEach {
+	kotlinOptions {
+		languageVersion = "1.7"
+		apiVersion = "1.7"
+		freeCompilerArgs = ["-Xjsr305=strict", "-Xsuppress-version-warnings"]
+		jvmTarget = "17"
+	}
+}

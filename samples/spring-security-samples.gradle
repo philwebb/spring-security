@@ -1,0 +1,11 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	management platform(project(":spring-security-dependencies"))
+	optional project(':spring-security-core')
+	optional project(':spring-security-web')
+	optional project(':spring-security-config')
+	optional project(':spring-security-lambda-config')
+	provided 'jakarta.servlet:jakarta.servlet-api'
+}
+
