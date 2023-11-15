@@ -1,0 +1,66 @@
+/*
+ * Copyright 2023 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.security.lambdaconfig.web;
+
+import java.util.function.Consumer;
+
+import org.springframework.security.web.PortMapper;
+
+/**
+ * @author Rob Winch
+ * @author Phillip Webb
+ */
+public class PortMapperContributor implements SecurityFilterChainContributor<PortMapperContributor.Configurer> {
+
+	private static final PortMapperContributor INSTANCE = new PortMapperContributor();
+
+	public static PortMapperContributor instance() {
+		return INSTANCE;
+	}
+
+	private PortMapperContributor() {
+	}
+
+	@Override
+	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			Consumer<Configurer> portMapper) {
+		return SecurityFilterChainContribution.create(PortMapperContribution::new, contributionContext, portMapper);
+	}
+
+	/**
+	 * Callback for configuring a {@link PortMapperContributor}.
+	 */
+	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+
+		// @formatter:off
+		/* FIXME === DESIGN NOTES ===
+
+		Based on org.springframework.security.config.annotation.web.configurers.
+		PortMapperConfigurer<H>
+
+		- Changed http(...).mapsTo(...) to addHttpToHttpsMapping (can't forget second call)
+
+		*/
+		// @formatter:on
+
+		void addHttpToHttpsMapping(int httpPort, int httpsPort);
+
+		void portMapper(PortMapper portMapper);
+
+	}
+
+}

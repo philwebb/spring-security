@@ -1,0 +1,70 @@
+/*
+ * Copyright 2023 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.security.lambdaconfig.web;
+
+import java.util.function.Consumer;
+
+/**
+ * @author Rob Winch
+ * @author Shazin Sadakath
+ * @author Phillip Webb
+ */
+public class FormLoginContributor implements SecurityFilterChainContributor<FormLoginContributor.Configurer> {
+
+	private static final FormLoginContributor INSTANCE = new FormLoginContributor();
+
+	public static FormLoginContributor instance() {
+		return INSTANCE;
+	}
+
+	private FormLoginContributor() {
+	}
+
+	@Override
+	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			Consumer<Configurer> formLogin) {
+		return SecurityFilterChainContribution.create(FormLoginContribution::new, contributionContext, formLogin);
+	}
+
+	/**
+	 * Callback for configuring a {@link FormLoginContributor}.
+	 */
+	public interface Configurer extends SecurityFilterChainContributor.Configurer, LoginConfigurer {
+
+		// @formatter:off
+		/* FIXME === DESIGN NOTES ===
+
+		Based on org.springframework.security.config.annotation.web.configurers.
+		FormLoginConfigurer<H>
+
+		loginPage renamed to page since the context of loginForm is enough to tell that it's a login page.
+
+		The failureForwardUrl and successForwardUrl with the idea that we could use the
+		MVC style "forward:" prefixes with the successUrl and failureUrl methods.
+
+		*/
+		// @formatter:on
+
+		void page(String page);
+
+		void usernameParameter(String usernameParameter);
+
+		void passwordParameter(String passwordParameter);
+
+	}
+
+}
