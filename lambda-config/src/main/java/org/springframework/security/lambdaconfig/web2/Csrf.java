@@ -22,7 +22,6 @@ import org.springframework.security.lambdaconfig.web2.Csrf.Configurer;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public final class Csrf implements SecurityFilterChainContributor<Configurer> {
 
@@ -36,24 +35,18 @@ public final class Csrf implements SecurityFilterChainContributor<Configurer> {
 	}
 
 	@Override
-	public SecurityContribution<SecurityFilterChainBuilder> contribute(ContributionContext contributionContext,
+	public SecurityFilterChainContribution contribute(ContributionContext contributionContext,
 			Consumer<Configurer> csrf) {
 		CsrfContribution contribution = new CsrfContribution(contributionContext);
 		csrf.accept(contribution);
 		return contribution;
 	}
 
-	interface Configurer {
+	interface Configurer extends SecurityFilterChainContributor.Configurer {
 
-		void disable(); // FIXME pull up?
+		// fixme matchable
 
 		void setTokenRepository(CsrfTokenRepository csrfTokenRepository);
-
-		void whenMatches(RequestMatcher requireCsrfProtectionMatcher);
-
-		void ignore(RequestMatcher... requestMatchers);
-
-		void ignore(String... patterns);
 
 		void tokenRequestHandler(CsrfTokenRequestHandler requestHandler);
 

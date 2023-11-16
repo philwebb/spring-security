@@ -38,6 +38,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
  */
 public class AuthorizationRules {
 
+	// FIXME for servlet path
+
 	public static final AuthorizationDecision DENY = new AuthorizationDecision(false);
 
 	public static final AuthorizationDecision PERMIT = new AuthorizationDecision(true);
@@ -99,6 +101,7 @@ public class AuthorizationRules {
 		return null;
 	}
 
+	// FIXME feels really general purpose. E.g we could use it in csrf, in HstsConfig
 	public static class Rule {
 
 		private RequestMatcherBuilder builder;

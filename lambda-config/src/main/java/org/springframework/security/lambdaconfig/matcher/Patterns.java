@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.matcher;
 
-/**
- * A contribution returned from a {@link SecurityContributor} that is used to apply
- * configuration.
- *
- * @author Phillip Webb
- * @param <T> the type that the contribution supports
- * @see SecurityContributor
- */
-@FunctionalInterface
-public interface SecurityContribution<T> {
+import org.springframework.http.HttpMethod;
 
-	default void prepare(SharedObjects sharedObjects) {
+public record Patterns(HttpMethod method, String... patterns) {
+
+	Patterns(String... patterns) {
+		this(null, patterns);
 	}
-
-	void apply(SharedObjects sharedObjects, T instance);
 
 }

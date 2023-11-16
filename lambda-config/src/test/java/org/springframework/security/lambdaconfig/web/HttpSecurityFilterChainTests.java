@@ -34,6 +34,9 @@ class HttpSecurityFilterChainTests {
 
 		@Bean
 		HttpSecurityFilterChain httpSecurityFilterChain() {
+			HttpSecurityFilterChain.of((chain) -> {
+			});
+
 			return HttpSecurityFilterChain.of((chain) -> {
 				// This might add and item or it might configure an existing one
 				chain.csrf((csrf) -> {

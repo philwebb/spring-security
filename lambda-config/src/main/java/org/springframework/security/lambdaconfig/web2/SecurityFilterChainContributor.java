@@ -16,13 +16,24 @@
 
 package org.springframework.security.lambdaconfig.web2;
 
+import java.util.function.Consumer;
+
 /**
- * A {@link SecurityContributor} used to contribute configuration to a
+ * A {@link Contributor} used to contribute configuration to a
  * {@link SecurityFilterChainBuilder}.
  *
  * @param <C> the type of configurer used by the contributor
  * @author Phillip Webb
  */
-public interface SecurityFilterChainContributor<C> extends SecurityContributor<C, SecurityFilterChainBuilder> {
+public interface SecurityFilterChainContributor<C> extends Contributor<C, SecurityFilterChainBuilder> {
+
+	@Override
+	SecurityFilterChainContribution contribute(ContributionContext context, Consumer<C> customizer);
+
+	interface Configurer {
+
+		void disable(); // FIXME pull up?
+
+	}
 
 }

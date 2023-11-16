@@ -19,9 +19,8 @@ package org.springframework.security.lambdaconfig.web2;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
-final class CsrfContribution implements Csrf.Configurer, SecurityContribution<SecurityFilterChainBuilder> {
+final class CsrfContribution implements SecurityFilterChainContribution, Csrf.Configurer {
 
 	private final ContributionContext contributionContext;
 
@@ -51,49 +50,11 @@ final class CsrfContribution implements Csrf.Configurer, SecurityContribution<Se
 	 * (non-Javadoc)
 	 *
 	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
-	 * requireCsrfProtectionMatcher(org.springframework.security.web.util.matcher.
-	 * RequestMatcher)
-	 */
-	@Override
-	public void setRequireFor(RequestMatcher requireCsrfProtectionMatcher) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
 	 * csrfTokenRequestHandler(org.springframework.security.web.csrf.
 	 * CsrfTokenRequestHandler)
 	 */
 	@Override
 	public void tokenRequestHandler(CsrfTokenRequestHandler requestHandler) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
-	 * ignoringRequestMatchers(org.springframework.security.web.util.matcher.
-	 * RequestMatcher[])
-	 */
-	@Override
-	public void ignore(RequestMatcher... requestMatchers) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
-	 * ignoringRequestMatchers(java.lang.String[])
-	 */
-	@Override
-	public void ignore(String... patterns) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Auto-generated method stub");
 	}

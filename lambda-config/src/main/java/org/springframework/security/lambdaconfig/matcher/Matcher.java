@@ -14,34 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
-
-import java.util.function.Consumer;
-
-import org.springframework.security.lambdaconfig.matcher.Matcher;
+package org.springframework.security.lambdaconfig.matcher;
 
 /**
  * @author pwebb
  */
-public interface HttpSecurityFilterChain {
-
-	static HttpSecurityFilterChain of(Consumer<Configurer> chain) {
-		// create new thing
-		// addDefaults();
-		// chain.accept(thing)
-		// thing.createChain
-		return null;
-	}
-
-	interface Configurer {
-
-		default Matcher csrf(Consumer<Csrf.Configurer> csrf) {
-			customize(Csrf.instance(), csrf);
-			return null;
-		}
-
-		<C> void customize(SecurityFilterChainContributor<C> contributor, Consumer<C> cutomizer);
-
-	}
+public interface Matcher extends Matchable<Matcher> {
 
 }

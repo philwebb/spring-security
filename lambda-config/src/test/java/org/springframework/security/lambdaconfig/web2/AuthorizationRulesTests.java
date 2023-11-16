@@ -66,6 +66,7 @@ SecurityFilterChain web(HttpSecurity http) throws Exception {
 		authorizations.permit().whenMatches("/static/**", "/signup", "/about");
 		authorizations.permitIfHasRole("ADMIN").whenMatches("/admin/**");
 		authorizations.check(allOf(hasAuthority("db"), hasRole("ADMIN"))).whenMatches("/db/**");
+
 		authorizations.deny();
 
 		//@formatter:off
