@@ -16,57 +16,42 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-import java.util.function.Consumer;
-
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
-/**
- * @author pwebb
- */
-class CsrfDunno implements ConfigurerInstance<Csrf>, Csrf {
+final class CsrfContribution extends AbstractSecurityFilterChainContribution implements Csrf.Configurer {
 
-	@Override
-	public void csrfTokenRepository(CsrfTokenRepository csrfTokenRepository) {
-		// update state
+	CsrfContribution(ContributionContext contributionContext) {
+		super(contributionContext);
 	}
 
 	@Override
-	public void requireCsrfProtectionMatcher(RequestMatcher requireCsrfProtectionMatcher) {
-		// update state
+	public void tokenRepository(CsrfTokenRepository csrfTokenRepository) {
+		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
-	public void csrfTokenRequestHandler(CsrfTokenRequestHandler requestHandler) {
-		// update state
-	}
-
-	@Override
-	public void ignoringRequestMatchers(RequestMatcher... requestMatchers) {
-		// update state
-	}
-
-	@Override
-	public void ignoringRequestMatchers(String... patterns) {
-		// update state
+	public void tokenRequestHandler(CsrfTokenRequestHandler requestHandler) {
+		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
 	public void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy) {
-		// update state
+		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
-	public void customize(Consumer<Csrf> configurer) {
-		configurer.accept(this);
+	public RequestMatching apply() {
+		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
-	public void applyTo(DunnoBuilder to) {
-		// shared object etc
-		// add filter etc
+	public void prepare(SharedObjects sharedObjects) {
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder instance) {
 	}
 
 }

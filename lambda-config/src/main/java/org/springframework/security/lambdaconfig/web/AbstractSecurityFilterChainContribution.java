@@ -15,9 +15,27 @@
  */
 
 package org.springframework.security.lambdaconfig.web;
+
 /**
- * @author pwebb
+ * @author Phillip Webb
  */
-public interface DunnoBuilder {
+public class AbstractSecurityFilterChainContribution
+		implements SecurityFilterChainContribution, SecurityFilterChainContributor.Configurer {
+
+	private final ContributionContext contributionContext;
+
+	AbstractSecurityFilterChainContribution(ContributionContext contributionContext) {
+		this.contributionContext = contributionContext;
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder instance) {
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	@Override
+	public void disable() {
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
 
 }

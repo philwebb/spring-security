@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.matcher;
+package org.springframework.security.lambdaconfig.web;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 import jakarta.servlet.DispatcherType;
 
@@ -32,57 +31,48 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
  * @author Phillip Webb
  * @param <R>
  */
-public interface Matchable<R> {
+public interface RequestMatching {
 
-	default R whenMatches(DispatcherType... dispatcherTypes) {
+	default RequestMatching whenMatches(DispatcherType... dispatcherTypes) {
 		return whenMatches(null, dispatcherTypes);
 	}
 
-	default R whenMatches(@Nullable HttpMethod method, DispatcherType... dispatcherTypes) {
+	default RequestMatching whenMatches(@Nullable HttpMethod method, DispatcherType... dispatcherTypes) {
 		return whenMatches(Arrays.stream(dispatcherTypes)
 			.map((dispatcherType) -> new DispatcherTypeRequestMatcher(dispatcherType, method))
 			.toList());
 	}
 
-	default R whenMatches(String... patterns) {
+	default RequestMatching whenMatches(String... patterns) {
 		return whenMatches(new Patterns(patterns));
 	}
 
-	default R whenMatches(HttpMethod method, String... patterns) {
+	default RequestMatching whenMatches(HttpMethod method, String... patterns) {
 		return whenMatches(new Patterns(method, patterns));
 	}
 
-	default R whenMatches(HttpMethod method) {
+	default RequestMatching whenMatches(HttpMethod method) {
 		return whenMatches(new Patterns(method));
 	}
 
-	R whenMatches(Patterns patterns);
+	RequestMatching whenMatches(Patterns patterns);
 
-	default R whenMatches(RequestMatcher... requestMatchers) {
+	default RequestMatching whenMatches(RequestMatcher... requestMatchers) {
 		return whenMatches(List.of(requestMatchers));
 	}
 
-	R whenMatches(Collection<? extends RequestMatcher> matchers);
+	RequestMatching whenMatches(Collection<? extends RequestMatcher> matchers);
 
-	default R ignoring(String... patterns) {
+	default RequestMatching ignoring(String... patterns) {
 		return ignoring(new Patterns(patterns));
 	}
 
-	R ignoring(Patterns patterns);
+	RequestMatching ignoring(Patterns patterns);
 
-	default R ignoring(RequestMatcher... matchers) {
+	default RequestMatching ignoring(RequestMatcher... matchers) {
 		return ignoring(List.of(matchers));
 	}
 
-	R ignoring(Collection<? extends RequestMatcher> matchers);
-
-	static <R> Matchable<R> createWithFixedResult(Function<Patterns, RequestMatcher> requestMatcherFactory, R result) {
-		return create(requestMatcherFactory, (matchable) -> result);
-	}
-
-	static <R> Matchable<R> create(Function<Patterns, RequestMatcher> requestMatcherFactory,
-			Function<Matchable<R>, R> resultSupplier) {
-		return null;
-	}
+	RequestMatching ignoring(Collection<? extends RequestMatcher> matchers);
 
 }

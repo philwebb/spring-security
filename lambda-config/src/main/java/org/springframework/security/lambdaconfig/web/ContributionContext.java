@@ -14,26 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.web;
 
-import java.util.function.Consumer;
+public interface ContributionContext {
 
-/**
- * A {@link Contributor} used to contribute configuration to a
- * {@link SecurityFilterChainBuilder}.
- *
- * @param <C> the type of configurer used by the contributor
- * @author Phillip Webb
- */
-public interface SecurityFilterChainContributor<C> extends Contributor<C, SecurityFilterChainBuilder> {
-
-	@Override
-	SecurityFilterChainContribution contribute(ContributionContext context, Consumer<C> customizer);
-
-	interface Configurer {
-
-		void disable(); // FIXME pull up?
-
-	}
+	void removeContribution();
 
 }

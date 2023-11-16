@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.web;
 
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpMethod;
 
-/**
- * Builder used to create a fully configured {@link SecurityFilterChain}.
- *
- * @author Phillip Webb
- */
-public class SecurityFilterChainBuilder {
+public record Patterns(HttpMethod method, String... patterns) {
+
+	public Patterns(String... patterns) {
+		this(null, patterns);
+	}
 
 }

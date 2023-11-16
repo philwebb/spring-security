@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.matcher;
+package org.springframework.security.lambdaconfig.web;
 
-import org.springframework.http.HttpMethod;
+/**
+ * @author pwebb
+ */
+public interface SecurityFilterChainContribution extends Contribution<SecurityFilterChainBuilder> {
 
-public record Patterns(HttpMethod method, String... patterns) {
-
-	Patterns(String... patterns) {
-		this(null, patterns);
+	static void disable(SecurityFilterChainContributor.Configurer configurer) {
+		configurer.disable();
 	}
 
 }

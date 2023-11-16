@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.web;
 
 import java.util.function.Consumer;
 

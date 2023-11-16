@@ -35,21 +35,30 @@ class HttpSecurityFilterChainTests {
 		@Bean
 		HttpSecurityFilterChain httpSecurityFilterChain() {
 			HttpSecurityFilterChain.of((chain) -> {
+				chain.csrf(SecurityFilterChainContribution::disable);
 			});
 
 			return HttpSecurityFilterChain.of((chain) -> {
 				// This might add and item or it might configure an existing one
 				chain.csrf((csrf) -> {
-					csrf.csrfTokenRepository(null);
+					csrf.disable();
+					csrf.tokenRepository(null);
+					csrf.apply().whenMatches("/**");
+				});
+				chain.authorizeRequests((authorizations) -> {
+					authorizations.permit().whenMatches("/**");
+					authorizations.forSevletPath("/foo", servletAuthorizations -> {
+						servletAuthorizations.permit().whenMatches("/**");
+					});
 				});
 				// chain.add(csrf);
-				chain.add(Csrf.instance());
-				chain.remove(Csrf.instance());
-				chain.customize(Csrf.instance(), (csrf) -> {
-					csrf.csrfTokenRepository(null);
-				});
-
-			}).whenMatches("*");
+				// chain.add(Csrf.instance());
+				// chain.remove(Csrf.instance());
+				// chain.customize(Csrf.instance(), (csrf) -> {
+				// csrf.csrfTokenRepository(null);
+				// });
+				chain.apply().whenMatches("/**");
+			});
 		}
 
 	}

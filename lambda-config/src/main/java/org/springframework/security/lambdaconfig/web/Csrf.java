@@ -16,29 +16,40 @@
 
 package org.springframework.security.lambdaconfig.web;
 
+import java.util.function.Consumer;
+
+import org.springframework.security.lambdaconfig.web.Csrf.Configurer;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
-/**
- */
-public interface Csrf {
+public final class Csrf implements SecurityFilterChainContributor<Configurer> {
 
-	void csrfTokenRepository(CsrfTokenRepository csrfTokenRepository);
+	static final Csrf instance = new Csrf();
 
-	void requireCsrfProtectionMatcher(RequestMatcher requireCsrfProtectionMatcher);
+	private Csrf() {
+	}
 
-	void csrfTokenRequestHandler(CsrfTokenRequestHandler requestHandler);
+	@Override
+	public SecurityFilterChainContribution contribute(ContributionContext contributionContext,
+			Consumer<Configurer> csrf) {
+		CsrfContribution contribution = new CsrfContribution(contributionContext);
+		csrf.accept(contribution);
+		return contribution;
+	}
 
-	void ignoringRequestMatchers(RequestMatcher... requestMatchers);
+	interface Configurer extends SecurityFilterChainContributor.Configurer {
 
-	void ignoringRequestMatchers(String... patterns);
+		// fixme matchable
 
-	void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy);
+		RequestMatching apply();
 
-	static ConfigurerInstance<Csrf> instance() {
-		return null;
+		void tokenRepository(CsrfTokenRepository csrfTokenRepository);
+
+		void tokenRequestHandler(CsrfTokenRequestHandler requestHandler);
+
+		void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy);
+
 	}
 
 }

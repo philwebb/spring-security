@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.web;
+
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * A contribution returned from a {@link Contributor} that is used to apply
- * configuration.
+ * Builder used to create a fully configured {@link SecurityFilterChain}.
  *
  * @author Phillip Webb
- * @param <T> the type that the contribution supports
- * @see Contributor
  */
-@FunctionalInterface
-public interface Contribution<T> {
-
-	default void prepare(SharedObjects sharedObjects) {
-	}
-
-	void apply(SharedObjects sharedObjects, T instance);
+public class SecurityFilterChainBuilder {
 
 }

@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.web;
 
-/**
- * @author pwebb
- */
-public interface SecurityFilterChainContribution extends Contribution<SecurityFilterChainBuilder> {
+public class SharedObjects {
 
 }

@@ -16,38 +16,42 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-import java.util.List;
 import java.util.function.Consumer;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Alternative to
- * org.springframework.security.config.annotation.web.builders.HttpSecurity.
+ * @author pwebb
  */
-public class HttpSecurityFilterChain implements SecurityFilterChain {
+public interface HttpSecurityFilterChain extends SecurityFilterChain {
 
-	@Override
-	public boolean matches(HttpServletRequest request) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	@Override
-	public List<Filter> getFilters() {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	// FIXME we might start with a empty chain or we might start with some defaults
-
-	public HttpSecurityFilterChain whenMatches(String string) {
+	static HttpSecurityFilterChain of(Consumer<Configurer> chain) {
+		// create new thing
+		// addDefaults();
+		// chain.accept(thing)
+		// thing.createChain
 		return null;
 	}
 
-	public static HttpSecurityFilterChain of(Consumer<HttpSecurityFilterChainConfigurer> filterChain) {
-		return null;
+	interface Configurer {
+
+		default void csrf(Consumer<Csrf.Configurer> csrf) {
+			customize(Csrf.instance(), csrf);
+		}
+
+		default void authorizeRequests(Consumer<AuthorizeRequests.Configurer> authorizations) {
+			customize(AuthorizeRequests.instance(), authorizations);
+		}
+
+		default void authorizeRequestsForServletPath(String servletPath,
+				Consumer<AuthorizeRequests.Configurer> servletAuthorizations) {
+			authorizeRequests((authorizations) -> authorizations.forServletPath(servletPath, servletAuthorizations));
+		}
+
+		RequestMatching apply();
+
+		<C> void customize(SecurityFilterChainContributor<C> contributor, Consumer<C> cutomizer);
+
 	}
 
 }

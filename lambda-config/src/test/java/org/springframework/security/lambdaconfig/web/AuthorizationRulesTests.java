@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.security.lambdaconfig.web2;
+package org.springframework.security.lambdaconfig.web;
 
 import jakarta.servlet.DispatcherType;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.security.lambdaconfig.web.XRequestAuthorizations;
 
 import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasRole;
@@ -30,7 +32,7 @@ class AuthorizationRulesTests {
 
 	@Test
 	void test() {
-		AuthorizationRules authorizations = null;
+		XRequestAuthorizations authorizations = null;
 		authorizations.permit().whenMatches(DispatcherType.FORWARD);
 		authorizations.permitIfFullyAuthenticated().whenMatches("/foo");
 		authorizations.deny();

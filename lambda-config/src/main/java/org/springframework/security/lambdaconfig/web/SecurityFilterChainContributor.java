@@ -15,9 +15,25 @@
  */
 
 package org.springframework.security.lambdaconfig.web;
+
+import java.util.function.Consumer;
+
 /**
- * @author pwebb
+ * A {@link Contributor} used to contribute configuration to a
+ * {@link SecurityFilterChainBuilder}.
+ *
+ * @param <C> the type of configurer used by the contributor
+ * @author Phillip Webb
  */
-public class CsrfConfigurerInstance {
+public interface SecurityFilterChainContributor<C> extends Contributor<C, SecurityFilterChainBuilder> {
+
+	@Override
+	SecurityFilterChainContribution contribute(ContributionContext context, Consumer<C> customizer);
+
+	interface Configurer {
+
+		void disable();
+
+	}
 
 }
