@@ -18,40 +18,27 @@ package org.springframework.security.lambdaconfig.web;
 
 import java.util.function.Consumer;
 
-import org.springframework.security.lambdaconfig.web.Csrf.Configurer;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-
 /**
- * @author Phillip Webb
+ * @author pwebb
  */
-public final class Csrf implements SecurityFilterChainContributor<Configurer> {
+public class Oauth2ResourceServer implements SecurityFilterChainContributor<Oauth2ResourceServer.Configurer> {
 
-	private static final Csrf INSTANCE = new Csrf();
+	private static final Oauth2ResourceServer INSTANCE = new Oauth2ResourceServer();
 
-	public static Csrf instance() {
+	public static Oauth2ResourceServer instance() {
 		return INSTANCE;
 	}
 
-	private Csrf() {
+	private Oauth2ResourceServer() {
 	}
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
 			Consumer<Configurer> csrf) {
-		return SecurityFilterChainContribution.create(CsrfContribution::new, contributionContext, csrf);
+		return null;
 	}
 
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
-
-		RequestMatching apply();
-
-		void tokenRepository(CsrfTokenRepository csrfTokenRepository);
-
-		void tokenRequestHandler(CsrfTokenRequestHandler requestHandler);
-
-		void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy);
 
 	}
 

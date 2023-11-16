@@ -20,21 +20,24 @@ import java.util.function.Consumer;
 
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
-import org.springframework.security.lambdaconfig.web.AuthorizeRequests.Configurer;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 /**
- * @author pwebb
+ * @author Phillip Webb
  */
-public class AuthorizeRequests implements SecurityFilterChainContributor<Configurer> {
+public class AuthorizeRequests implements SecurityFilterChainContributor<AuthorizeRequests.Configurer> {
 
-	static final AuthorizeRequests instance = new AuthorizeRequests();
+	private static final AuthorizeRequests INSTANCE = new AuthorizeRequests();
+
+	public static AuthorizeRequests instance() {
+		return INSTANCE;
+	}
 
 	private AuthorizeRequests() {
 	}
 
 	@Override
-	public SecurityFilterChainContribution contribute(ContributionContext contributionContext,
+	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
 			Consumer<Configurer> authorizations) {
 		return null;
 	}

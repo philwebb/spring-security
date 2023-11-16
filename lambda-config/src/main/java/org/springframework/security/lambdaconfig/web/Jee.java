@@ -16,21 +16,30 @@
 
 package org.springframework.security.lambdaconfig.web;
 
+import java.util.function.Consumer;
+
 /**
- * A contribution returned from a {@link Contributor} that is used to apply configuration.
- *
- * @author Phillip Webb
- * @param <T> the type that the contribution supports
- * @see Contributor
+ * @author pwebb
  */
-@FunctionalInterface
-public interface Contribution<T> {
+public class Jee implements SecurityFilterChainContributor<Jee.Configurer> {
 
-	// Might not really need if only used the security chain
+	private static final Jee INSTANCE = new Jee();
 
-	default void prepare(SharedObjects sharedObjects) {
+	public static Jee instance() {
+		return INSTANCE;
 	}
 
-	void contribute(SharedObjects sharedObjects, T instance);
+	private Jee() {
+	}
+
+	@Override
+	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			Consumer<Configurer> csrf) {
+		return null;
+	}
+
+	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+
+	}
 
 }

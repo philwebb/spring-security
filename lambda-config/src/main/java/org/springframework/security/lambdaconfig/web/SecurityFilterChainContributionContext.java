@@ -16,25 +16,8 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-/**
- * @author Phillip Webb
- */
-abstract class AbstractSecurityFilterChainContribution
-		implements SecurityFilterChainContribution, SecurityFilterChainContributor.Configurer {
+public interface SecurityFilterChainContributionContext {
 
-	private final SecurityFilterChainContributionContext contributionContext;
-
-	AbstractSecurityFilterChainContribution(SecurityFilterChainContributionContext contributionContext) {
-		this.contributionContext = contributionContext;
-	}
-
-	protected final SecurityFilterChainContributionContext getContributionContext() {
-		return this.contributionContext;
-	}
-
-	@Override
-	public void disable() {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
+	void removeContribution();
 
 }

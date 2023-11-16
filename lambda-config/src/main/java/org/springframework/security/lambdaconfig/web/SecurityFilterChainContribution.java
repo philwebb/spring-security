@@ -16,13 +16,29 @@
 
 package org.springframework.security.lambdaconfig.web;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 /**
- * @author pwebb
+ * @author Phillip Webb
  */
-public interface SecurityFilterChainContribution extends Contribution<SecurityFilterChainBuilder> {
+public interface SecurityFilterChainContribution {
+
+	default void prepare(SharedObjects sharedObjects) {
+	}
+
+	void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder);
 
 	static void disable(SecurityFilterChainContributor.Configurer configurer) {
 		configurer.disable();
+	}
+
+	static <C extends SecurityFilterChainContribution> C create(
+			Function<SecurityFilterChainContributionContext, C> factory,
+			SecurityFilterChainContributionContext contributionContext, Consumer<? super C> customizer) {
+		C contribution = factory.apply(contributionContext);
+		customizer.accept(contribution);
+		return contribution;
 	}
 
 }

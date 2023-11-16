@@ -16,8 +16,30 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-public interface ContributionContext {
+import java.util.function.Consumer;
 
-	void removeContribution();
+/**
+ * @author pwebb
+ */
+public class RememberMe implements SecurityFilterChainContributor<RememberMe.Configurer> {
+
+	private static final RememberMe INSTANCE = new RememberMe();
+
+	public static RememberMe instance() {
+		return INSTANCE;
+	}
+
+	private RememberMe() {
+	}
+
+	@Override
+	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			Consumer<Configurer> csrf) {
+		return null;
+	}
+
+	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+
+	}
 
 }

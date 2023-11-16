@@ -19,14 +19,27 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * An object that contributes security configuration.
- *
- * @param <C> the type of configurer used by the contributor
- * @param <R> the type that the resulting contribution supports
- * @author Phillip Webb
+ * @author pwebb
  */
-public interface Contributor<C, R> {
+public class Saml2Login implements SecurityFilterChainContributor<Saml2Login.Configurer> {
 
-	Contribution<R> contribute(ContributionContext context, Consumer<C> customizer);
+	private static final Saml2Login INSTANCE = new Saml2Login();
+
+	public static Saml2Login instance() {
+		return INSTANCE;
+	}
+
+	private Saml2Login() {
+	}
+
+	@Override
+	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			Consumer<Configurer> csrf) {
+		return null;
+	}
+
+	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+
+	}
 
 }

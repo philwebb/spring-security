@@ -22,32 +22,25 @@ import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 
 final class CsrfContribution extends AbstractSecurityFilterChainContribution implements Csrf.Configurer {
 
-	CsrfContribution(ContributionContext contributionContext) {
+	CsrfContribution(SecurityFilterChainContributionContext contributionContext) {
 		super(contributionContext);
 	}
 
 	@Override
 	public void tokenRepository(CsrfTokenRepository csrfTokenRepository) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
 	public void tokenRequestHandler(CsrfTokenRequestHandler requestHandler) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
 	public void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
 	public RequestMatching apply() {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	@Override
-	public void prepare(SharedObjects sharedObjects) {
+		return null;
 	}
 
 	@Override

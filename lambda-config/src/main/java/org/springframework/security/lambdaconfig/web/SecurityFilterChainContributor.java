@@ -19,16 +19,12 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * A {@link Contributor} used to contribute configuration to a
- * {@link SecurityFilterChainBuilder}.
- *
- * @param <C> the type of configurer used by the contributor
  * @author Phillip Webb
  */
-public interface SecurityFilterChainContributor<C> extends Contributor<C, SecurityFilterChainBuilder> {
+public interface SecurityFilterChainContributor<C> {
 
-	@Override
-	SecurityFilterChainContribution contribute(ContributionContext context, Consumer<C> customizer);
+	SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			Consumer<C> customizer);
 
 	interface Configurer {
 
