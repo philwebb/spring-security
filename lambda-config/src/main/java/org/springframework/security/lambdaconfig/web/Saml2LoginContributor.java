@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class PasswordManagement implements SecurityFilterChainContributor<PasswordManagement.Configurer> {
+public class Saml2LoginContributor implements SecurityFilterChainContributor<Saml2LoginContributor.Configurer> {
 
-	private static final PasswordManagement INSTANCE = new PasswordManagement();
+	private static final Saml2LoginContributor INSTANCE = new Saml2LoginContributor();
 
-	public static PasswordManagement instance() {
+	public static Saml2LoginContributor instance() {
 		return INSTANCE;
 	}
 
-	private PasswordManagement() {
+	private Saml2LoginContributor() {
 	}
 
 	@Override

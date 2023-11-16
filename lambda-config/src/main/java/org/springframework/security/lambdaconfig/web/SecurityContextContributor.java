@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class OidcLogout implements SecurityFilterChainContributor<OidcLogout.Configurer> {
+public class SecurityContextContributor implements SecurityFilterChainContributor<SecurityContextContributor.Configurer> {
 
-	private static final OidcLogout INSTANCE = new OidcLogout();
+	private static final SecurityContextContributor INSTANCE = new SecurityContextContributor();
 
-	public static OidcLogout instance() {
+	public static SecurityContextContributor instance() {
 		return INSTANCE;
 	}
 
-	private OidcLogout() {
+	private SecurityContextContributor() {
 	}
 
 	@Override

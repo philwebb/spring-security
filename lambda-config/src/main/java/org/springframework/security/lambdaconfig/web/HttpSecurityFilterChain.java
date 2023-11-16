@@ -39,117 +39,115 @@ public interface HttpSecurityFilterChain extends SecurityFilterChain {
 
 	interface Configurer {
 
-		// FIXME can we group some of these. Oauth ? Saml
-
 		RequestMatching apply();
 
-		default void headers(Consumer<Headers.Configurer> authorizations) {
-			customize(Headers.instance(), authorizations);
+		default void headers(Consumer<HeadersContributor.Configurer> headers) {
+			customize(HeadersContributor.instance(), headers);
 		}
 
-		default void cors(Consumer<Cors.Configurer> authorizations) {
-			customize(Cors.instance(), authorizations);
+		default void cors(Consumer<CorsContributor.Configurer> cors) {
+			customize(CorsContributor.instance(), cors);
 		}
 
-		default void sessionManagement(Consumer<SessionManagement.Configurer> authorizations) {
-			customize(SessionManagement.instance(), authorizations);
+		default void sessionManagement(Consumer<SessionManagementContributor.Configurer> sessionManagement) {
+			customize(SessionManagementContributor.instance(), sessionManagement);
 		}
 
-		default void portMapper(Consumer<PortMapper.Configurer> authorizations) {
-			customize(PortMapper.instance(), authorizations);
+		default void portMapper(Consumer<PortMapperContributor.Configurer> portMapper) {
+			customize(PortMapperContributor.instance(), portMapper);
 		}
 
-		default void jee(Consumer<Jee.Configurer> authorizations) {
-			customize(Jee.instance(), authorizations);
+		default void jee(Consumer<JeeContributor.Configurer> jee) {
+			customize(JeeContributor.instance(), jee);
 		}
 
-		default void x509(Consumer<X509.Configurer> authorizations) {
-			customize(X509.instance(), authorizations);
+		default void x509(Consumer<X509Contributor.Configurer> x509) {
+			customize(X509Contributor.instance(), x509);
 		}
 
-		default void rememberMe(Consumer<RememberMe.Configurer> authorizations) {
-			customize(RememberMe.instance(), authorizations);
+		default void rememberMe(Consumer<RememberMeContributor.Configurer> authorizations) {
+			customize(RememberMeContributor.instance(), authorizations);
 		}
 
-		default void authorizeRequests(Consumer<AuthorizeRequests.Configurer> authorizations) {
-			customize(AuthorizeRequests.instance(), authorizations);
+		default void authorizeRequests(Consumer<AuthorizeRequestsContributor.Configurer> authorizeRequests) {
+			customize(AuthorizeRequestsContributor.instance(), authorizeRequests);
 		}
 
 		default void authorizeRequestsForServletPath(String servletPath,
-				Consumer<AuthorizeRequests.Configurer> servletAuthorizations) {
-			authorizeRequests((authorizations) -> authorizations.forServletPath(servletPath, servletAuthorizations));
+				Consumer<AuthorizeRequestsContributor.Configurer> servletAuthorizeRequests) {
+			authorizeRequests((authorizations) -> authorizations.forServletPath(servletPath, servletAuthorizeRequests));
 		}
 
-		default void requestCache(Consumer<RequestCache.Configurer> authorizations) {
-			customize(RequestCache.instance(), authorizations);
+		default void requestCache(Consumer<RequestCacheContributor.Configurer> requestCache) {
+			customize(RequestCacheContributor.instance(), requestCache);
 		}
 
-		default void exceptionHandling(Consumer<ExceptionHandling.Configurer> authorizations) {
-			customize(ExceptionHandling.instance(), authorizations);
+		default void exceptionHandling(Consumer<ExceptionHandlingContributor.Configurer> exceptionHandling) {
+			customize(ExceptionHandlingContributor.instance(), exceptionHandling);
 		}
 
-		default void securityContext(Consumer<SecurityContext.Configurer> authorizations) {
-			customize(SecurityContext.instance(), authorizations);
+		default void securityContext(Consumer<SecurityContextContributor.Configurer> securityContext) {
+			customize(SecurityContextContributor.instance(), securityContext);
 		}
 
-		default void servletApi(Consumer<ServletApi.Configurer> authorizations) {
-			customize(ServletApi.instance(), authorizations);
+		default void servletApi(Consumer<ServletApiContributor.Configurer> servletApi) {
+			customize(ServletApiContributor.instance(), servletApi);
 		}
 
-		default void csrf(Consumer<Csrf.Configurer> csrf) {
-			customize(Csrf.instance(), csrf);
+		default void csrf(Consumer<CsrfContributor.Configurer> csrf) {
+			customize(CsrfContributor.instance(), csrf);
 		}
 
-		default void logout(Consumer<Logout.Configurer> authorizations) {
-			customize(Logout.instance(), authorizations);
+		default void logout(Consumer<LogoutContributor.Configurer> logout) {
+			customize(LogoutContributor.instance(), logout);
 		}
 
-		default void anonymous(Consumer<Anonymous.Configurer> authorizations) {
-			customize(Anonymous.instance(), authorizations);
+		default void anonymous(Consumer<AnonymousContributor.Configurer> anonymous) {
+			customize(AnonymousContributor.instance(), anonymous);
 		}
 
-		default void formLogin(Consumer<FormLogin.Configurer> authorizations) {
-			customize(FormLogin.instance(), authorizations);
+		default void formLogin(Consumer<FormLoginContributor.Configurer> formLogin) {
+			customize(FormLoginContributor.instance(), formLogin);
 		}
 
-		default void saml2Login(Consumer<Saml2Login.Configurer> authorizations) {
-			customize(Saml2Login.instance(), authorizations);
+		default void saml2Login(Consumer<Saml2LoginContributor.Configurer> saml2Login) {
+			customize(Saml2LoginContributor.instance(), saml2Login);
 		}
 
-		default void saml2Logout(Consumer<Saml2Logout.Configurer> authorizations) {
-			customize(Saml2Logout.instance(), authorizations);
+		default void saml2Logout(Consumer<Saml2LogoutContributor.Configurer> saml2Logout) {
+			customize(Saml2LogoutContributor.instance(), saml2Logout);
 		}
 
-		default void saml2Metadata(Consumer<Saml2Metadata.Configurer> authorizations) {
-			customize(Saml2Metadata.instance(), authorizations);
+		default void saml2Metadata(Consumer<Saml2MetadataContributor.Configurer> saml2Metadata) {
+			customize(Saml2MetadataContributor.instance(), saml2Metadata);
 		}
 
-		default void oauth2Login(Consumer<Oauth2Login.Configurer> authorizations) {
-			customize(Oauth2Login.instance(), authorizations);
+		default void oauth2Login(Consumer<Oauth2LoginContributor.Configurer> oauth2Login) {
+			customize(Oauth2LoginContributor.instance(), oauth2Login);
 		}
 
-		default void oidcLogout(Consumer<OidcLogout.Configurer> authorizations) {
-			customize(OidcLogout.instance(), authorizations);
+		default void oidcLogout(Consumer<OidcLogoutContributor.Configurer> oidcLogout) {
+			customize(OidcLogoutContributor.instance(), oidcLogout);
 		}
 
-		default void oauth2Client(Consumer<Oauth2Client.Configurer> authorizations) {
-			customize(Oauth2Client.instance(), authorizations);
+		default void oauth2Client(Consumer<Oauth2ClientContributor.Configurer> oauth2Client) {
+			customize(Oauth2ClientContributor.instance(), oauth2Client);
 		}
 
-		default void oauth2ResourceServer(Consumer<Oauth2ResourceServer.Configurer> authorizations) {
-			customize(Oauth2ResourceServer.instance(), authorizations);
+		default void oauth2ResourceServer(Consumer<Oauth2ResourceServerContributor.Configurer> oauth2ResourceServer) {
+			customize(Oauth2ResourceServerContributor.instance(), oauth2ResourceServer);
 		}
 
-		default void requiresChannel(Consumer<RequiresChannel.Configurer> authorizations) {
-			customize(RequiresChannel.instance(), authorizations);
+		default void requiresChannel(Consumer<RequiresChannelContributor.Configurer> requiresChannel) {
+			customize(RequiresChannelContributor.instance(), requiresChannel);
 		}
 
-		default void httpBasic(Consumer<HttpBasic.Configurer> authorizations) {
-			customize(HttpBasic.instance(), authorizations);
+		default void httpBasic(Consumer<HttpBasicContributor.Configurer> httpBasic) {
+			customize(HttpBasicContributor.instance(), httpBasic);
 		}
 
-		default void passwordManagement(Consumer<PasswordManagement.Configurer> authorizations) {
-			customize(PasswordManagement.instance(), authorizations);
+		default void passwordManagement(Consumer<PasswordManagementContributor.Configurer> passwordManagement) {
+			customize(PasswordManagementContributor.instance(), passwordManagement);
 		}
 
 		<C> void customize(SecurityFilterChainContributor<C> contributor, Consumer<C> cutomizer);

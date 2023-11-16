@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class RememberMe implements SecurityFilterChainContributor<RememberMe.Configurer> {
+public class OidcLogoutContributor implements SecurityFilterChainContributor<OidcLogoutContributor.Configurer> {
 
-	private static final RememberMe INSTANCE = new RememberMe();
+	private static final OidcLogoutContributor INSTANCE = new OidcLogoutContributor();
 
-	public static RememberMe instance() {
+	public static OidcLogoutContributor instance() {
 		return INSTANCE;
 	}
 
-	private RememberMe() {
+	private OidcLogoutContributor() {
 	}
 
 	@Override

@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class ServletApi implements SecurityFilterChainContributor<ServletApi.Configurer> {
+public class CorsContributor implements SecurityFilterChainContributor<CorsContributor.Configurer> {
 
-	private static final ServletApi INSTANCE = new ServletApi();
+	private static final CorsContributor INSTANCE = new CorsContributor();
 
-	public static ServletApi instance() {
+	public static CorsContributor instance() {
 		return INSTANCE;
 	}
 
-	private ServletApi() {
+	private CorsContributor() {
 	}
 
 	@Override

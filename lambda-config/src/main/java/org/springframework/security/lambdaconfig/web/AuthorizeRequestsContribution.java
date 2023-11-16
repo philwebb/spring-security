@@ -21,14 +21,14 @@ import java.util.function.Consumer;
 import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
-import org.springframework.security.lambdaconfig.web.AuthorizeRequests.Configurer;
+import org.springframework.security.lambdaconfig.web.AuthorizeRequestsContributor.Configurer;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 /**
  * @author Phillip Webb
  */
 final class AuthorizeRequestsContribution extends AbstractSecurityFilterChainContribution
-		implements AuthorizeRequests.Configurer {
+		implements AuthorizeRequestsContributor.Configurer {
 
 	AuthorizationDecision DENY = new AuthorizationDecision(false);
 

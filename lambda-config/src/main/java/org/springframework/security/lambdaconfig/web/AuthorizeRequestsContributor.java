@@ -25,15 +25,15 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 /**
  * @author Phillip Webb
  */
-public class AuthorizeRequests implements SecurityFilterChainContributor<AuthorizeRequests.Configurer> {
+public class AuthorizeRequestsContributor implements SecurityFilterChainContributor<AuthorizeRequestsContributor.Configurer> {
 
-	private static final AuthorizeRequests INSTANCE = new AuthorizeRequests();
+	private static final AuthorizeRequestsContributor INSTANCE = new AuthorizeRequestsContributor();
 
-	public static AuthorizeRequests instance() {
+	public static AuthorizeRequestsContributor instance() {
 		return INSTANCE;
 	}
 
-	private AuthorizeRequests() {
+	private AuthorizeRequestsContributor() {
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class AuthorizeRequests implements SecurityFilterChainContributor<Authori
 
 		RequestMatching check(AuthorizationManager<RequestAuthorizationContext> manager);
 
-		void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizations);
+		void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests);
 
 	}
 

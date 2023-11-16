@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 
-final class CsrfContribution extends AbstractSecurityFilterChainContribution implements Csrf.Configurer {
+final class CsrfContribution extends AbstractSecurityFilterChainContribution implements CsrfContributor.Configurer {
 
 	CsrfContribution(SecurityFilterChainContributionContext contributionContext) {
 		super(contributionContext);

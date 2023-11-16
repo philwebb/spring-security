@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class SessionManagement implements SecurityFilterChainContributor<SessionManagement.Configurer> {
+public class PasswordManagementContributor implements SecurityFilterChainContributor<PasswordManagementContributor.Configurer> {
 
-	private static final SessionManagement INSTANCE = new SessionManagement();
+	private static final PasswordManagementContributor INSTANCE = new PasswordManagementContributor();
 
-	public static SessionManagement instance() {
+	public static PasswordManagementContributor instance() {
 		return INSTANCE;
 	}
 
-	private SessionManagement() {
+	private PasswordManagementContributor() {
 	}
 
 	@Override

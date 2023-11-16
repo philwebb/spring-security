@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class X509 implements SecurityFilterChainContributor<X509.Configurer> {
+public class Oauth2ClientContributor implements SecurityFilterChainContributor<Oauth2ClientContributor.Configurer> {
 
-	private static final X509 INSTANCE = new X509();
+	private static final Oauth2ClientContributor INSTANCE = new Oauth2ClientContributor();
 
-	public static X509 instance() {
+	public static Oauth2ClientContributor instance() {
 		return INSTANCE;
 	}
 
-	private X509() {
+	private Oauth2ClientContributor() {
 	}
 
 	@Override

@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Logout implements SecurityFilterChainContributor<Logout.Configurer> {
+public class ExceptionHandlingContributor implements SecurityFilterChainContributor<ExceptionHandlingContributor.Configurer> {
 
-	private static final Logout INSTANCE = new Logout();
+	private static final ExceptionHandlingContributor INSTANCE = new ExceptionHandlingContributor();
 
-	public static Logout instance() {
+	public static ExceptionHandlingContributor instance() {
 		return INSTANCE;
 	}
 
-	private Logout() {
+	private ExceptionHandlingContributor() {
 	}
 
 	@Override

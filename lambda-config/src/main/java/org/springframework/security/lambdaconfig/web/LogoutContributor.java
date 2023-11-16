@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Saml2Metadata implements SecurityFilterChainContributor<Saml2Metadata.Configurer> {
+public class LogoutContributor implements SecurityFilterChainContributor<LogoutContributor.Configurer> {
 
-	private static final Saml2Metadata INSTANCE = new Saml2Metadata();
+	private static final LogoutContributor INSTANCE = new LogoutContributor();
 
-	public static Saml2Metadata instance() {
+	public static LogoutContributor instance() {
 		return INSTANCE;
 	}
 
-	private Saml2Metadata() {
+	private LogoutContributor() {
 	}
 
 	@Override

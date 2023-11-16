@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Saml2Logout implements SecurityFilterChainContributor<Saml2Logout.Configurer> {
+public class Oauth2ResourceServerContributor implements SecurityFilterChainContributor<Oauth2ResourceServerContributor.Configurer> {
 
-	private static final Saml2Logout INSTANCE = new Saml2Logout();
+	private static final Oauth2ResourceServerContributor INSTANCE = new Oauth2ResourceServerContributor();
 
-	public static Saml2Logout instance() {
+	public static Oauth2ResourceServerContributor instance() {
 		return INSTANCE;
 	}
 
-	private Saml2Logout() {
+	private Oauth2ResourceServerContributor() {
 	}
 
 	@Override

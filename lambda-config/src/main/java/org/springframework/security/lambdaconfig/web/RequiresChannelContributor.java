@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Headers implements SecurityFilterChainContributor<Headers.Configurer> {
+public class RequiresChannelContributor implements SecurityFilterChainContributor<RequiresChannelContributor.Configurer> {
 
-	private static final Headers INSTANCE = new Headers();
+	private static final RequiresChannelContributor INSTANCE = new RequiresChannelContributor();
 
-	public static Headers instance() {
+	public static RequiresChannelContributor instance() {
 		return INSTANCE;
 	}
 
-	private Headers() {
+	private RequiresChannelContributor() {
 	}
 
 	@Override

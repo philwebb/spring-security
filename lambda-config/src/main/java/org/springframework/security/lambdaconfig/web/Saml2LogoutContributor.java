@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Cors implements SecurityFilterChainContributor<Cors.Configurer> {
+public class Saml2LogoutContributor implements SecurityFilterChainContributor<Saml2LogoutContributor.Configurer> {
 
-	private static final Cors INSTANCE = new Cors();
+	private static final Saml2LogoutContributor INSTANCE = new Saml2LogoutContributor();
 
-	public static Cors instance() {
+	public static Saml2LogoutContributor instance() {
 		return INSTANCE;
 	}
 
-	private Cors() {
+	private Saml2LogoutContributor() {
 	}
 
 	@Override

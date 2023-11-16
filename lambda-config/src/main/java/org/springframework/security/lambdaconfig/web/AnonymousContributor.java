@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Anonymous implements SecurityFilterChainContributor<Anonymous.Configurer> {
+public class AnonymousContributor implements SecurityFilterChainContributor<AnonymousContributor.Configurer> {
 
-	private static final Anonymous INSTANCE = new Anonymous();
+	private static final AnonymousContributor INSTANCE = new AnonymousContributor();
 
-	public static Anonymous instance() {
+	public static AnonymousContributor instance() {
 		return INSTANCE;
 	}
 
-	private Anonymous() {
+	private AnonymousContributor() {
 	}
 
 	@Override

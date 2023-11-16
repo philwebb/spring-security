@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Oauth2Login implements SecurityFilterChainContributor<Oauth2Login.Configurer> {
+public class RememberMeContributor implements SecurityFilterChainContributor<RememberMeContributor.Configurer> {
 
-	private static final Oauth2Login INSTANCE = new Oauth2Login();
+	private static final RememberMeContributor INSTANCE = new RememberMeContributor();
 
-	public static Oauth2Login instance() {
+	public static RememberMeContributor instance() {
 		return INSTANCE;
 	}
 
-	private Oauth2Login() {
+	private RememberMeContributor() {
 	}
 
 	@Override

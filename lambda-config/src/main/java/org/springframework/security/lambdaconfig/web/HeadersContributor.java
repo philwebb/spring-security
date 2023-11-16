@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class SecurityContext implements SecurityFilterChainContributor<SecurityContext.Configurer> {
+public class HeadersContributor implements SecurityFilterChainContributor<HeadersContributor.Configurer> {
 
-	private static final SecurityContext INSTANCE = new SecurityContext();
+	private static final HeadersContributor INSTANCE = new HeadersContributor();
 
-	public static SecurityContext instance() {
+	public static HeadersContributor instance() {
 		return INSTANCE;
 	}
 
-	private SecurityContext() {
+	private HeadersContributor() {
 	}
 
 	@Override

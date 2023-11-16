@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Saml2Login implements SecurityFilterChainContributor<Saml2Login.Configurer> {
+public class ServletApiContributor implements SecurityFilterChainContributor<ServletApiContributor.Configurer> {
 
-	private static final Saml2Login INSTANCE = new Saml2Login();
+	private static final ServletApiContributor INSTANCE = new ServletApiContributor();
 
-	public static Saml2Login instance() {
+	public static ServletApiContributor instance() {
 		return INSTANCE;
 	}
 
-	private Saml2Login() {
+	private ServletApiContributor() {
 	}
 
 	@Override

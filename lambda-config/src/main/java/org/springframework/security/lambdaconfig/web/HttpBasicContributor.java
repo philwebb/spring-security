@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Jee implements SecurityFilterChainContributor<Jee.Configurer> {
+public class HttpBasicContributor implements SecurityFilterChainContributor<HttpBasicContributor.Configurer> {
 
-	private static final Jee INSTANCE = new Jee();
+	private static final HttpBasicContributor INSTANCE = new HttpBasicContributor();
 
-	public static Jee instance() {
+	public static HttpBasicContributor instance() {
 		return INSTANCE;
 	}
 
-	private Jee() {
+	private HttpBasicContributor() {
 	}
 
 	@Override

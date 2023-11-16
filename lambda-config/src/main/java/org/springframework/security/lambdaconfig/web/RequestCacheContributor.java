@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class HttpBasic implements SecurityFilterChainContributor<HttpBasic.Configurer> {
+public class RequestCacheContributor implements SecurityFilterChainContributor<RequestCacheContributor.Configurer> {
 
-	private static final HttpBasic INSTANCE = new HttpBasic();
+	private static final RequestCacheContributor INSTANCE = new RequestCacheContributor();
 
-	public static HttpBasic instance() {
+	public static RequestCacheContributor instance() {
 		return INSTANCE;
 	}
 
-	private HttpBasic() {
+	private RequestCacheContributor() {
 	}
 
 	@Override

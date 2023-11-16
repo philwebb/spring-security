@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class Oauth2ResourceServer implements SecurityFilterChainContributor<Oauth2ResourceServer.Configurer> {
+public class X509Contributor implements SecurityFilterChainContributor<X509Contributor.Configurer> {
 
-	private static final Oauth2ResourceServer INSTANCE = new Oauth2ResourceServer();
+	private static final X509Contributor INSTANCE = new X509Contributor();
 
-	public static Oauth2ResourceServer instance() {
+	public static X509Contributor instance() {
 		return INSTANCE;
 	}
 
-	private Oauth2ResourceServer() {
+	private X509Contributor() {
 	}
 
 	@Override

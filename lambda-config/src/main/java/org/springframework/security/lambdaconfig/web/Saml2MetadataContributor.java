@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class PortMapper implements SecurityFilterChainContributor<PortMapper.Configurer> {
+public class Saml2MetadataContributor implements SecurityFilterChainContributor<Saml2MetadataContributor.Configurer> {
 
-	private static final PortMapper INSTANCE = new PortMapper();
+	private static final Saml2MetadataContributor INSTANCE = new Saml2MetadataContributor();
 
-	public static PortMapper instance() {
+	public static Saml2MetadataContributor instance() {
 		return INSTANCE;
 	}
 
-	private PortMapper() {
+	private Saml2MetadataContributor() {
 	}
 
 	@Override

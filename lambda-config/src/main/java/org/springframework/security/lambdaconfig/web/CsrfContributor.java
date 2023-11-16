@@ -18,27 +18,40 @@ package org.springframework.security.lambdaconfig.web;
 
 import java.util.function.Consumer;
 
+import org.springframework.security.lambdaconfig.web.CsrfContributor.Configurer;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+
 /**
- * @author pwebb
+ * @author Phillip Webb
  */
-public class FormLogin implements SecurityFilterChainContributor<FormLogin.Configurer> {
+public final class CsrfContributor implements SecurityFilterChainContributor<Configurer> {
 
-	private static final FormLogin INSTANCE = new FormLogin();
+	private static final CsrfContributor INSTANCE = new CsrfContributor();
 
-	public static FormLogin instance() {
+	public static CsrfContributor instance() {
 		return INSTANCE;
 	}
 
-	private FormLogin() {
+	private CsrfContributor() {
 	}
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
 			Consumer<Configurer> csrf) {
-		return null;
+		return SecurityFilterChainContribution.create(CsrfContribution::new, contributionContext, csrf);
 	}
 
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+
+		RequestMatching apply();
+
+		void tokenRepository(CsrfTokenRepository csrfTokenRepository);
+
+		void tokenRequestHandler(CsrfTokenRequestHandler requestHandler);
+
+		void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy);
 
 	}
 

@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class ExceptionHandling implements SecurityFilterChainContributor<ExceptionHandling.Configurer> {
+public class PortMapperContributor implements SecurityFilterChainContributor<PortMapperContributor.Configurer> {
 
-	private static final ExceptionHandling INSTANCE = new ExceptionHandling();
+	private static final PortMapperContributor INSTANCE = new PortMapperContributor();
 
-	public static ExceptionHandling instance() {
+	public static PortMapperContributor instance() {
 		return INSTANCE;
 	}
 
-	private ExceptionHandling() {
+	private PortMapperContributor() {
 	}
 
 	@Override

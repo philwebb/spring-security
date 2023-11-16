@@ -21,15 +21,15 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class RequestCache implements SecurityFilterChainContributor<RequestCache.Configurer> {
+public class SessionManagementContributor implements SecurityFilterChainContributor<SessionManagementContributor.Configurer> {
 
-	private static final RequestCache INSTANCE = new RequestCache();
+	private static final SessionManagementContributor INSTANCE = new SessionManagementContributor();
 
-	public static RequestCache instance() {
+	public static SessionManagementContributor instance() {
 		return INSTANCE;
 	}
 
-	private RequestCache() {
+	private SessionManagementContributor() {
 	}
 
 	@Override
