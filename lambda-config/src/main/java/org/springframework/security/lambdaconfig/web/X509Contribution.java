@@ -17,9 +17,20 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link X509Contributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see X509Contributor
  */
-public class X509Contribution {
+final class X509Contribution extends AbstractSecurityFilterChainContribution implements X509Contributor.Configurer {
+
+	X509Contribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

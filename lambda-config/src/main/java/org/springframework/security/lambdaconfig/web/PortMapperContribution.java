@@ -17,9 +17,21 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link PortMapperContributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see PortMapperContributor
  */
-public class PortMapperContribution {
+final class PortMapperContribution extends AbstractSecurityFilterChainContribution
+		implements PortMapperContributor.Configurer {
+
+	PortMapperContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

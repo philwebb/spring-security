@@ -17,10 +17,22 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link FormLoginContributor}.
+ *
  * @author Rob Winch
  * @author Shazin Sadakath
  * @author Phillip Webb
+ * @see FormLoginContributor
  */
-public class FormLoginContribution {
+final class FormLoginContribution extends AbstractSecurityFilterChainContribution
+		implements FormLoginContributor.Configurer {
+
+	FormLoginContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

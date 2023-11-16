@@ -17,11 +17,24 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the
+ * {@link Oauth2ResourceServerContributor}.
+ *
  * @author Josh Cummings
  * @author Evgeniy Cheban
  * @author Jerome Wacongne
  * @author Phillip Webb
+ * @see Oauth2ResourceServerContributor
  */
-public class Oauth2ResourceServerContribution {
+final class Oauth2ResourceServerContribution extends AbstractSecurityFilterChainContribution
+		implements Oauth2ResourceServerContributor.Configurer {
+
+	Oauth2ResourceServerContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

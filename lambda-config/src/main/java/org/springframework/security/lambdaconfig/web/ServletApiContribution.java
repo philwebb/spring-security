@@ -17,9 +17,21 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link ServletApiContributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see ServletApiContributor
  */
-public class ServletApiContribution {
+final class ServletApiContribution extends AbstractSecurityFilterChainContribution
+		implements ServletApiContributor.Configurer {
+
+	ServletApiContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

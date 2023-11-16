@@ -17,10 +17,22 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link RememberMeContributor}.
+ *
  * @author Rob Winch
  * @author Eddú Meléndez
  * @author Phillip Webb
+ * @see RememberMeContributor
  */
-public class RememberMeContribution {
+final class RememberMeContribution extends AbstractSecurityFilterChainContribution
+		implements RememberMeContributor.Configurer {
+
+	RememberMeContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

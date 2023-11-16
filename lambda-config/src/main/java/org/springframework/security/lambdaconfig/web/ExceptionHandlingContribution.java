@@ -17,9 +17,22 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the
+ * {@link ExceptionHandlingContributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see ExceptionHandlingContributor
  */
-public class ExceptionHandlingContribution {
+final class ExceptionHandlingContribution extends AbstractSecurityFilterChainContribution
+		implements ExceptionHandlingContributor.Configurer {
+
+	ExceptionHandlingContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

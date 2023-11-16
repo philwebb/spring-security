@@ -17,6 +17,8 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link HeadersContributor}.
+ *
  * @author Rob Winch
  * @author Tim Ysewyn
  * @author Joe Grandja
@@ -25,7 +27,17 @@ package org.springframework.security.lambdaconfig.web;
  * @author Ankur Pathak
  * @author Daniel Garnier-Moiroux
  * @author Phillip Webb
+ * @see HeadersContributor
  */
-public class HeadersContribution {
+final class HeadersContribution extends AbstractSecurityFilterChainContribution
+		implements HeadersContributor.Configurer {
+
+	HeadersContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

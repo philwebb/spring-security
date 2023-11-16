@@ -17,10 +17,22 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link Saml2LoginContributor}.
+ *
  * @author Filip Hanik
  * @author Josh Cummings
  * @author Phillip Webb
+ * @see Saml2LoginContributor
  */
-public class Saml2LoginContribution {
+final class Saml2LoginContribution extends AbstractSecurityFilterChainContribution
+		implements Saml2LoginContributor.Configurer {
+
+	Saml2LoginContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

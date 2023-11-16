@@ -17,9 +17,22 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the
+ * {@link PasswordManagementContributor}.
+ *
  * @author Evgeniy Cheban
  * @author Phillip Webb
+ * @see PasswordManagementContributor
  */
-public class PasswordManagementContribution {
+final class PasswordManagementContribution extends AbstractSecurityFilterChainContribution
+		implements PasswordManagementContributor.Configurer {
+
+	PasswordManagementContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

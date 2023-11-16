@@ -17,9 +17,20 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link JeeContributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see JeeContributor
  */
-public class JeeContribution {
+final class JeeContribution extends AbstractSecurityFilterChainContribution implements JeeContributor.Configurer {
+
+	JeeContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

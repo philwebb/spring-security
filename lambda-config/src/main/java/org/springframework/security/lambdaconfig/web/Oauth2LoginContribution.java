@@ -17,10 +17,22 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link Oauth2LoginContributor}.
+ *
  * @author Joe Grandja
  * @author Parikshit Dutta
  * @author Phillip Webb
+ * @see Oauth2LoginContributor
  */
-public class Oauth2LoginContribution {
+final class Oauth2LoginContribution extends AbstractSecurityFilterChainContribution
+		implements Oauth2LoginContributor.Configurer {
+
+	Oauth2LoginContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

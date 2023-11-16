@@ -17,9 +17,21 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link RequestCacheContributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see RequestCacheContributor
  */
-public class RequestCacheContribution {
+final class RequestCacheContribution extends AbstractSecurityFilterChainContribution
+		implements RequestCacheContributor.Configurer {
+
+	RequestCacheContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

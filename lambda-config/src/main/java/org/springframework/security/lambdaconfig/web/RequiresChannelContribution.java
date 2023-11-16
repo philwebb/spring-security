@@ -17,10 +17,23 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the
+ * {@link RequiresChannelContribution}.
+ *
  * @author Rob Winch
  * @author Onur Kagan Ozcan
  * @author Phillip Webb
+ * @see RequiresChannelContribution
  */
-public class RequiresChannelContribution {
+final class RequiresChannelContribution extends AbstractSecurityFilterChainContribution
+		implements RequiresChannelContributor.Configurer {
+
+	RequiresChannelContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

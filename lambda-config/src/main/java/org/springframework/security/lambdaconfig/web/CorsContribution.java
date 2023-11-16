@@ -17,9 +17,20 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link CorsContributor}.
+ *
  * @author Rob Winch
  * @author Phillip Webb
+ * @see CorsContributor
  */
-public class CorsContribution {
+final class CorsContribution extends AbstractSecurityFilterChainContribution implements CorsContributor.Configurer {
+
+	CorsContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

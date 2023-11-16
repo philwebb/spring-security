@@ -17,9 +17,20 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link LogoutContributor}.
+ *
  * @author Rob Winch
  * @author Onur Kagan Ozcan
+ * @see LogoutContributor
  */
-class LogoutContribution {
+final class LogoutContribution extends AbstractSecurityFilterChainContribution implements LogoutContributor.Configurer {
+
+	LogoutContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

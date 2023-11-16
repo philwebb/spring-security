@@ -25,8 +25,12 @@ import org.springframework.security.lambdaconfig.web.AuthorizeRequestsContributo
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the
+ * {@link AuthorizeRequestsContributor}.
+ *
  * @author Evgeniy Cheban
  * @author Phillip Webb
+ * @see AuthorizeRequestsContributor
  */
 final class AuthorizeRequestsContribution extends AbstractSecurityFilterChainContribution
 		implements AuthorizeRequestsContributor.Configurer {

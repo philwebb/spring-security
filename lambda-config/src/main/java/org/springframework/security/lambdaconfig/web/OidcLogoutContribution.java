@@ -17,9 +17,21 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link OidcLogoutContributor}.
+ *
  * @author Josh Cummings
  * @author Phillip Webb
+ * @see OidcLogoutContributor
  */
-public class OidcLogoutContribution {
+final class OidcLogoutContribution extends AbstractSecurityFilterChainContribution
+		implements OidcLogoutContributor.Configurer {
+
+	OidcLogoutContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }

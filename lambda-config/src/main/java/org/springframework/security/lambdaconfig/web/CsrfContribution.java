@@ -21,9 +21,12 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the {@link CsrfContributor}.
+ *
  * @author Rob Winch
  * @author Michael Vitz
  * @author Phillip Webb
+ * @see CsrfContributor
  */
 final class CsrfContribution extends AbstractSecurityFilterChainContribution implements CsrfContributor.Configurer {
 

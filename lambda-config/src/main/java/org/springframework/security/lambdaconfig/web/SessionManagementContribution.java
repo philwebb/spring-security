@@ -17,10 +17,23 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * A {@link SecurityFilterChainContribution} made by the
+ * {@link SessionManagementContributor}.
+ *
  * @author Rob Winch
  * @author Onur Kagan Ozcan
  * @author Phillip Webb
+ * @see SessionManagementContributor
  */
-public class SessionManagementContribution {
+final class SessionManagementContribution extends AbstractSecurityFilterChainContribution
+		implements SessionManagementContributor.Configurer {
+
+	SessionManagementContribution(SecurityFilterChainContributionContext contributionContext) {
+		super(contributionContext);
+	}
+
+	@Override
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+	}
 
 }
