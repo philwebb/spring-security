@@ -24,6 +24,10 @@ import java.util.function.Consumer;
 public interface HttpSecurityFilterChain {
 
 	static HttpSecurityFilterChain of(Consumer<Configurer> chain) {
+		// create new thing
+		// addDefaults();
+		// chain.accept(thing)
+		// thing.createChain
 		return null;
 	}
 

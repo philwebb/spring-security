@@ -19,6 +19,10 @@ package org.springframework.security.lambdaconfig.web2;
 import java.util.function.Consumer;
 
 import org.springframework.security.lambdaconfig.web2.Csrf.Configurer;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public final class Csrf implements SecurityFilterChainContributor<Configurer> {
 
@@ -32,19 +36,28 @@ public final class Csrf implements SecurityFilterChainContributor<Configurer> {
 	}
 
 	@Override
-	public SecurityContribution<SecurityFilterChainBuilder> contribute(Consumer<Configurer> csrf) {
-		CsrfContribution contribution = new CsrfContribution();
+	public SecurityContribution<SecurityFilterChainBuilder> contribute(ContributionContext contributionContext,
+			Consumer<Configurer> csrf) {
+		CsrfContribution contribution = new CsrfContribution(contributionContext);
 		csrf.accept(contribution);
 		return contribution;
 	}
 
 	interface Configurer {
 
-		void setThing1(Object thing1);
+		void disable(); // FIXME pull up?
 
-		void setThing2(Object thing2);
+		void setTokenRepository(CsrfTokenRepository csrfTokenRepository);
 
-		void addThings(Object things);
+		void whenMatches(RequestMatcher requireCsrfProtectionMatcher);
+
+		void ignore(RequestMatcher... requestMatchers);
+
+		void ignore(String... patterns);
+
+		void tokenRequestHandler(CsrfTokenRequestHandler requestHandler);
+
+		void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy);
 
 	}
 

@@ -16,13 +16,8 @@
 
 package org.springframework.security.lambdaconfig.web2;
 
-import org.springframework.security.web.SecurityFilterChain;
+public interface ContributionContext {
 
-/**
- * Builder used to create a fully configured {@link SecurityFilterChain}.
- *
- * @author Phillip Webb
- */
-public class SecurityFilterChainBuilder {
+	void removeContribution();
 
 }

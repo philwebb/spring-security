@@ -16,29 +16,104 @@
 
 package org.springframework.security.lambdaconfig.web2;
 
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
 final class CsrfContribution implements Csrf.Configurer, SecurityContribution<SecurityFilterChainBuilder> {
 
-	CsrfContribution() {
-	}
+	private final ContributionContext contributionContext;
 
-	@Override
-	public void setThing1(Object thing1) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	@Override
-	public void setThing2(Object thing2) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	@Override
-	public void addThings(Object things) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+	CsrfContribution(ContributionContext contributionContext) {
+		this.contributionContext = contributionContext;
 	}
 
 	@Override
 	public void apply(SharedObjects sharedObjects, SecurityFilterChainBuilder instance) {
 		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.springframework.security.lambdaconfig.web2.Csrf.Configurer#csrfTokenRepository(
+	 * org.springframework.security.web.csrf.CsrfTokenRepository)
+	 */
+	@Override
+	public void setTokenRepository(CsrfTokenRepository csrfTokenRepository) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
+	 * requireCsrfProtectionMatcher(org.springframework.security.web.util.matcher.
+	 * RequestMatcher)
+	 */
+	@Override
+	public void setRequireFor(RequestMatcher requireCsrfProtectionMatcher) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
+	 * csrfTokenRequestHandler(org.springframework.security.web.csrf.
+	 * CsrfTokenRequestHandler)
+	 */
+	@Override
+	public void tokenRequestHandler(CsrfTokenRequestHandler requestHandler) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
+	 * ignoringRequestMatchers(org.springframework.security.web.util.matcher.
+	 * RequestMatcher[])
+	 */
+	@Override
+	public void ignore(RequestMatcher... requestMatchers) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
+	 * ignoringRequestMatchers(java.lang.String[])
+	 */
+	@Override
+	public void ignore(String... patterns) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.security.lambdaconfig.web2.Csrf.Configurer#
+	 * sessionAuthenticationStrategy(org.springframework.security.web.authentication.
+	 * session.SessionAuthenticationStrategy)
+	 */
+	@Override
+	public void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Auto-generated method stub");
+	}
+
+	@Override
+	public void disable() {
+		this.contributionContext.removeContribution();
 	}
 
 }

@@ -16,6 +16,14 @@
 
 package org.springframework.security.lambdaconfig.web2;
 
+/**
+ * A contribution returned from a {@link SecurityContributor} that is used to apply
+ * configuration.
+ *
+ * @author Phillip Webb
+ * @param <T> the type that the contribution supports
+ * @see SecurityContributor
+ */
 @FunctionalInterface
 public interface SecurityContribution<T> {
 

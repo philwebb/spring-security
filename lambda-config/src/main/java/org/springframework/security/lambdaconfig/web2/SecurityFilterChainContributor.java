@@ -16,6 +16,13 @@
 
 package org.springframework.security.lambdaconfig.web2;
 
+/**
+ * A {@link SecurityContributor} used to contribute configuration to a
+ * {@link SecurityFilterChainBuilder}.
+ *
+ * @param <C> the type of configurer used by the contributor
+ * @author Phillip Webb
+ */
 public interface SecurityFilterChainContributor<C> extends SecurityContributor<C, SecurityFilterChainBuilder> {
 
 }
