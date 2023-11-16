@@ -19,9 +19,13 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Josh Cummings
+ * @author Evgeniy Cheban
+ * @author Jerome Wacongne
+ * @author Phillip Webb
  */
-public class Oauth2ResourceServerContributor implements SecurityFilterChainContributor<Oauth2ResourceServerContributor.Configurer> {
+public class Oauth2ResourceServerContributor
+		implements SecurityFilterChainContributor<Oauth2ResourceServerContributor.Configurer> {
 
 	private static final Oauth2ResourceServerContributor INSTANCE = new Oauth2ResourceServerContributor();
 

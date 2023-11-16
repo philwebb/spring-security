@@ -20,6 +20,11 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 
+/**
+ * @author Rob Winch
+ * @author Michael Vitz
+ * @author Phillip Webb
+ */
 final class CsrfContribution extends AbstractSecurityFilterChainContribution implements CsrfContributor.Configurer {
 
 	CsrfContribution(SecurityFilterChainContributionContext contributionContext) {

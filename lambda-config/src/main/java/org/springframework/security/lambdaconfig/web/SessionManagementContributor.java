@@ -19,7 +19,9 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Rob Winch
+ * @author Onur Kagan Ozcan
+ * @author Phillip Webb
  */
 public class SessionManagementContributor
 		implements SecurityFilterChainContributor<SessionManagementContributor.Configurer> {

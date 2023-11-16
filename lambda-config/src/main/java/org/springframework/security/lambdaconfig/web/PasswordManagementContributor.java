@@ -19,7 +19,8 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Evgeniy Cheban
+ * @author Phillip Webb
  */
 public class PasswordManagementContributor
 		implements SecurityFilterChainContributor<PasswordManagementContributor.Configurer> {

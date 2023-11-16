@@ -19,7 +19,9 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Filip Hanik
+ * @author Josh Cummings
+ * @author Phillip Webb
  */
 public class Saml2LoginContributor implements SecurityFilterChainContributor<Saml2LoginContributor.Configurer> {
 

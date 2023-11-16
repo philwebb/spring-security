@@ -19,7 +19,8 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Rob Winch
+ * @author Phillip Webb
  */
 public class AnonymousContributor implements SecurityFilterChainContributor<AnonymousContributor.Configurer> {
 

@@ -23,6 +23,7 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 /**
+ * @author Evgeniy Cheban
  * @author Phillip Webb
  */
 public class AuthorizeRequestsContributor

@@ -19,7 +19,9 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Joe Grandja
+ * @author Parikshit Dutta
+ * @author Phillip Webb
  */
 public class Oauth2ClientContributor implements SecurityFilterChainContributor<Oauth2ClientContributor.Configurer> {
 

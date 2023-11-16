@@ -16,34 +16,10 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-import java.util.function.Consumer;
-
 /**
  * @author Rob Winch
- * @author Phillip Webb
+ * @author Onur Kagan Ozcan
  */
-public class CorsContributor implements SecurityFilterChainContributor<CorsContributor.Configurer> {
-
-	private static final CorsContributor INSTANCE = new CorsContributor();
-
-	public static CorsContributor instance() {
-		return INSTANCE;
-	}
-
-	private CorsContributor() {
-	}
-
-	@Override
-	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
-	}
-
-	/**
-	 * Callback for configuring a {@link CorsContributor}.
-	 */
-	public interface Configurer extends SecurityFilterChainContributor.Configurer {
-
-	}
+class LogoutContribution {
 
 }

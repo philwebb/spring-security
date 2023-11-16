@@ -16,8 +16,6 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-import java.util.function.Consumer;
-
 /**
  * @author Rob Winch
  * @author Tim Ysewyn
@@ -28,28 +26,6 @@ import java.util.function.Consumer;
  * @author Daniel Garnier-Moiroux
  * @author Phillip Webb
  */
-public class HeadersContributor implements SecurityFilterChainContributor<HeadersContributor.Configurer> {
-
-	private static final HeadersContributor INSTANCE = new HeadersContributor();
-
-	public static HeadersContributor instance() {
-		return INSTANCE;
-	}
-
-	private HeadersContributor() {
-	}
-
-	@Override
-	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
-	}
-
-	/**
-	 * Callback for configuring a {@link HeadersContributor}.
-	 */
-	public interface Configurer extends SecurityFilterChainContributor.Configurer {
-
-	}
+public class HeadersContribution {
 
 }

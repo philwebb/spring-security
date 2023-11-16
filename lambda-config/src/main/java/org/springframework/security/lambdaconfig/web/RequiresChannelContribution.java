@@ -16,34 +16,11 @@
 
 package org.springframework.security.lambdaconfig.web;
 
-import java.util.function.Consumer;
-
 /**
- * @author Josh Cummings
+ * @author Rob Winch
+ * @author Onur Kagan Ozcan
  * @author Phillip Webb
  */
-public class OidcLogoutContributor implements SecurityFilterChainContributor<OidcLogoutContributor.Configurer> {
-
-	private static final OidcLogoutContributor INSTANCE = new OidcLogoutContributor();
-
-	public static OidcLogoutContributor instance() {
-		return INSTANCE;
-	}
-
-	private OidcLogoutContributor() {
-	}
-
-	@Override
-	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
-	}
-
-	/**
-	 * Callback for configuring a {@link OidcLogoutContributor}.
-	 */
-	public interface Configurer extends SecurityFilterChainContributor.Configurer {
-
-	}
+public class RequiresChannelContribution {
 
 }

@@ -19,7 +19,9 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Rob Winch
+ * @author Evgeniy Cheban
+ * @author Phillip Webb
  */
 public class HttpBasicContributor implements SecurityFilterChainContributor<HttpBasicContributor.Configurer> {
 

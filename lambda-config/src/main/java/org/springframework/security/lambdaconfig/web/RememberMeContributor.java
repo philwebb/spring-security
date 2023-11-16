@@ -19,7 +19,9 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 
 /**
- * @author pwebb
+ * @author Rob Winch
+ * @author Eddú Meléndez
+ * @author Phillip Webb
  */
 public class RememberMeContributor implements SecurityFilterChainContributor<RememberMeContributor.Configurer> {
 
