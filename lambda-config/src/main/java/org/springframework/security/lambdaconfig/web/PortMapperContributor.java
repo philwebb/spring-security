@@ -38,6 +38,9 @@ public class PortMapperContributor implements SecurityFilterChainContributor<Por
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link PortMapperContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

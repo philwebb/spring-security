@@ -38,6 +38,9 @@ public class FormLoginContributor implements SecurityFilterChainContributor<Form
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link FormLoginContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

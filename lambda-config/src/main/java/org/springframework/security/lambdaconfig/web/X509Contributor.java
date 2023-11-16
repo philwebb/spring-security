@@ -38,6 +38,9 @@ public class X509Contributor implements SecurityFilterChainContributor<X509Contr
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link X509Contributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

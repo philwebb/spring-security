@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class RequiresChannelContributor implements SecurityFilterChainContributor<RequiresChannelContributor.Configurer> {
+public class RequiresChannelContributor
+		implements SecurityFilterChainContributor<RequiresChannelContributor.Configurer> {
 
 	private static final RequiresChannelContributor INSTANCE = new RequiresChannelContributor();
 
@@ -38,6 +39,9 @@ public class RequiresChannelContributor implements SecurityFilterChainContributo
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link RequiresChannelContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

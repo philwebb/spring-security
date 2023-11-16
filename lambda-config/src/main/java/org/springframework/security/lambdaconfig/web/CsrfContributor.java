@@ -43,6 +43,9 @@ public final class CsrfContributor implements SecurityFilterChainContributor<Con
 		return SecurityFilterChainContribution.create(CsrfContribution::new, contributionContext, csrf);
 	}
 
+	/**
+	 * Callback for configuring a {@link CsrfContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 		RequestMatching apply();

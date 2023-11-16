@@ -38,6 +38,9 @@ public class HeadersContributor implements SecurityFilterChainContributor<Header
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link HeadersContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

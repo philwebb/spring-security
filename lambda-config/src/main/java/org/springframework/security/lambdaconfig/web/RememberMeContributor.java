@@ -38,6 +38,9 @@ public class RememberMeContributor implements SecurityFilterChainContributor<Rem
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link RememberMeContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

@@ -38,6 +38,9 @@ public class OidcLogoutContributor implements SecurityFilterChainContributor<Oid
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link OidcLogoutContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

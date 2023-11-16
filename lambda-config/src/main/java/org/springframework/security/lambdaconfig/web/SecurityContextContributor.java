@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class SecurityContextContributor implements SecurityFilterChainContributor<SecurityContextContributor.Configurer> {
+public class SecurityContextContributor
+		implements SecurityFilterChainContributor<SecurityContextContributor.Configurer> {
 
 	private static final SecurityContextContributor INSTANCE = new SecurityContextContributor();
 
@@ -38,6 +39,9 @@ public class SecurityContextContributor implements SecurityFilterChainContributo
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link SecurityContextContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

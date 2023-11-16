@@ -38,6 +38,9 @@ public class JeeContributor implements SecurityFilterChainContributor<JeeContrib
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link JeeContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

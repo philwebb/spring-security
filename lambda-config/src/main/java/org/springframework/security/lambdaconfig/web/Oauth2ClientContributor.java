@@ -38,6 +38,9 @@ public class Oauth2ClientContributor implements SecurityFilterChainContributor<O
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link Oauth2ClientContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

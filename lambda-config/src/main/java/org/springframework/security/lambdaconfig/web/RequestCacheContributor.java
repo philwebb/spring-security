@@ -38,6 +38,9 @@ public class RequestCacheContributor implements SecurityFilterChainContributor<R
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link RequestCacheContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

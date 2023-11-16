@@ -38,6 +38,9 @@ public class Oauth2LoginContributor implements SecurityFilterChainContributor<Oa
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link Oauth2LoginContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

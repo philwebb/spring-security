@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class SessionManagementContributor implements SecurityFilterChainContributor<SessionManagementContributor.Configurer> {
+public class SessionManagementContributor
+		implements SecurityFilterChainContributor<SessionManagementContributor.Configurer> {
 
 	private static final SessionManagementContributor INSTANCE = new SessionManagementContributor();
 
@@ -38,6 +39,9 @@ public class SessionManagementContributor implements SecurityFilterChainContribu
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link SessionManagementContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

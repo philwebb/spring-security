@@ -38,6 +38,9 @@ public class CorsContributor implements SecurityFilterChainContributor<CorsContr
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link CorsContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

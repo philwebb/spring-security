@@ -38,6 +38,9 @@ public class Saml2MetadataContributor implements SecurityFilterChainContributor<
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link Saml2MetadataContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

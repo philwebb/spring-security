@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class ExceptionHandlingContributor implements SecurityFilterChainContributor<ExceptionHandlingContributor.Configurer> {
+public class ExceptionHandlingContributor
+		implements SecurityFilterChainContributor<ExceptionHandlingContributor.Configurer> {
 
 	private static final ExceptionHandlingContributor INSTANCE = new ExceptionHandlingContributor();
 
@@ -38,6 +39,9 @@ public class ExceptionHandlingContributor implements SecurityFilterChainContribu
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link ExceptionHandlingContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

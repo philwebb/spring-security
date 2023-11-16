@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 /**
  * @author pwebb
  */
-public class PasswordManagementContributor implements SecurityFilterChainContributor<PasswordManagementContributor.Configurer> {
+public class PasswordManagementContributor
+		implements SecurityFilterChainContributor<PasswordManagementContributor.Configurer> {
 
 	private static final PasswordManagementContributor INSTANCE = new PasswordManagementContributor();
 
@@ -38,6 +39,9 @@ public class PasswordManagementContributor implements SecurityFilterChainContrib
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link PasswordManagementContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

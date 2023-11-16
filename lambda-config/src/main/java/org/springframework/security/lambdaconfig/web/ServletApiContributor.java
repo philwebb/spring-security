@@ -38,6 +38,9 @@ public class ServletApiContributor implements SecurityFilterChainContributor<Ser
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link ServletApiContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

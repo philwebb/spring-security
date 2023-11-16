@@ -38,6 +38,9 @@ public class LogoutContributor implements SecurityFilterChainContributor<LogoutC
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link LogoutContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

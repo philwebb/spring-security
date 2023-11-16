@@ -38,6 +38,9 @@ public class HttpBasicContributor implements SecurityFilterChainContributor<Http
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link HttpBasicContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

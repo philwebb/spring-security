@@ -38,6 +38,9 @@ public class AnonymousContributor implements SecurityFilterChainContributor<Anon
 		return null;
 	}
 
+	/**
+	 * Callback for configuring an {@link AnonymousContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}

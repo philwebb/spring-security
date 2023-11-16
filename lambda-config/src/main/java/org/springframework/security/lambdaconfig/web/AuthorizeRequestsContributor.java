@@ -25,7 +25,8 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 /**
  * @author Phillip Webb
  */
-public class AuthorizeRequestsContributor implements SecurityFilterChainContributor<AuthorizeRequestsContributor.Configurer> {
+public class AuthorizeRequestsContributor
+		implements SecurityFilterChainContributor<AuthorizeRequestsContributor.Configurer> {
 
 	private static final AuthorizeRequestsContributor INSTANCE = new AuthorizeRequestsContributor();
 
@@ -42,6 +43,9 @@ public class AuthorizeRequestsContributor implements SecurityFilterChainContribu
 		return null;
 	}
 
+	/**
+	 * Callback for configuring an {@link AuthorizeRequestsContributor}.
+	 */
 	interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 		RequestMatching permit();

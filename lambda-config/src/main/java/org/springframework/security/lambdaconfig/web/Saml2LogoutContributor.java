@@ -38,6 +38,9 @@ public class Saml2LogoutContributor implements SecurityFilterChainContributor<Sa
 		return null;
 	}
 
+	/**
+	 * Callback for configuring a {@link Saml2LogoutContributor}.
+	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 	}
