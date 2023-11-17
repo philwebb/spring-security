@@ -35,8 +35,8 @@ public class PortMapperContributor implements SecurityFilterChainContributor<Por
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> portMapper) {
+		return SecurityFilterChainContribution.create(PortMapperContribution::new, contributionContext, portMapper);
 	}
 
 	/**

@@ -37,8 +37,9 @@ public class RequiresChannelContributor
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> requiresChannel) {
+		return SecurityFilterChainContribution.create(RequiresChannelContribution::new, contributionContext,
+				requiresChannel);
 	}
 
 	/**

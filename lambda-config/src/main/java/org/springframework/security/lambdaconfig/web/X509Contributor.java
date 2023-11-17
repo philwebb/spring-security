@@ -35,8 +35,8 @@ public class X509Contributor implements SecurityFilterChainContributor<X509Contr
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> x509) {
+		return SecurityFilterChainContribution.create(X509Contribution::new, contributionContext, x509);
 	}
 
 	/**

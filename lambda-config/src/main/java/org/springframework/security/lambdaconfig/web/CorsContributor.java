@@ -35,8 +35,8 @@ public class CorsContributor implements SecurityFilterChainContributor<CorsContr
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> cors) {
+		return SecurityFilterChainContribution.create(CorsContribution::new, contributionContext, cors);
 	}
 
 	/**

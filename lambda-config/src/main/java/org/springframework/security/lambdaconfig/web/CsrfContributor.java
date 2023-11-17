@@ -50,6 +50,12 @@ public final class CsrfContributor implements SecurityFilterChainContributor<Con
 	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
+		// FIXME Design note: based on
+		// org.springframework.security.config.annotation.web.configurers.CsrfConfigurer<H>
+
+		// FIXME Design note: apply() replaces ignoringRequestMatchers
+		// and requireCsrfProtectionMatcher() in original
+
 		RequestMatching apply();
 
 		void tokenRepository(CsrfTokenRepository csrfTokenRepository);

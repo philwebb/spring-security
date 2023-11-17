@@ -35,8 +35,8 @@ public class Saml2MetadataContributor implements SecurityFilterChainContributor<
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> saml2Metadata) {
+		return SecurityFilterChainContribution.create(Saml2MetadataContribution::new, contributionContext, saml2Metadata);
 	}
 
 	/**

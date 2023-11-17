@@ -35,8 +35,8 @@ public class OidcLogoutContributor implements SecurityFilterChainContributor<Oid
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> oidcLogout) {
+		return SecurityFilterChainContribution.create(OidcLogoutContribution::new, contributionContext, oidcLogout);
 	}
 
 	/**

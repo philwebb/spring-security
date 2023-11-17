@@ -35,8 +35,8 @@ public class RequestCacheContributor implements SecurityFilterChainContributor<R
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> requestCache) {
+		return SecurityFilterChainContribution.create(RequestCacheContribution::new, contributionContext, requestCache);
 	}
 
 	/**

@@ -16,6 +16,9 @@
 
 package org.springframework.security.lambdaconfig.web;
 
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
 /**
  * A {@link SecurityFilterChainContribution} made by the
  * {@link ExceptionHandlingContributor}.
@@ -29,6 +32,16 @@ final class ExceptionHandlingContribution extends AbstractSecurityFilterChainCon
 
 	ExceptionHandlingContribution(SecurityFilterChainContributionContext contributionContext) {
 		super(contributionContext);
+	}
+
+	@Override
+	public RequestMatching addAccessDeniedHandler(AccessDeniedHandler handler) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public RequestMatching addAuthenticationEntryPoint(AuthenticationEntryPoint entryPoint) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

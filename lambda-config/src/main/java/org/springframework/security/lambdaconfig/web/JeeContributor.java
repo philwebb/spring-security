@@ -35,8 +35,8 @@ public class JeeContributor implements SecurityFilterChainContributor<JeeContrib
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> jee) {
+		return SecurityFilterChainContribution.create(JeeContribution::new, contributionContext, jee);
 	}
 
 	/**

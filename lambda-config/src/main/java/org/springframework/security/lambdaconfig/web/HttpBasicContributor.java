@@ -36,8 +36,8 @@ public class HttpBasicContributor implements SecurityFilterChainContributor<Http
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> httpBasic) {
+		return SecurityFilterChainContribution.create(HttpBasicContribution::new, contributionContext, httpBasic);
 	}
 
 	/**

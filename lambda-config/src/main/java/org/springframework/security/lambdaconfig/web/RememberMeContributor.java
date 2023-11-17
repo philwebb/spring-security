@@ -36,8 +36,8 @@ public class RememberMeContributor implements SecurityFilterChainContributor<Rem
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> rememberMe) {
+		return SecurityFilterChainContribution.create(RememberMeContribution::new, contributionContext, rememberMe);
 	}
 
 	/**

@@ -36,8 +36,9 @@ public class PasswordManagementContributor
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> passwordManagement) {
+		return SecurityFilterChainContribution.create(PasswordManagementContribution::new, contributionContext,
+				passwordManagement);
 	}
 
 	/**

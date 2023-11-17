@@ -19,25 +19,61 @@ package org.springframework.security.lambdaconfig.web;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.springframework.lang.Nullable;
+
 /**
+ * A contribution to an {@link SecurityFilterChainBuilder}.
+ *
  * @author Phillip Webb
+ * @see SecurityFilterChainContributor
  */
 public interface SecurityFilterChainContribution {
 
-	default void prepare(SharedObjects sharedObjects) {
+	// FIXME Design note: Similar to
+	// org.springframework.security.config.annotation.SecurityConfigurer<O, B>
+
+	/**
+	 * Initialize the given {@link SharedObjects} instance with any times that other
+	 * contributions may need to access. Initialization of <b>all</b> contributors occurs
+	 * before {@link #contribute(SharedObjects, SecurityFilterChainBuilder) contributions}
+	 * are accepted.
+	 * @param sharedObjects access to the shared objects
+	 */
+	default void initialize(SharedObjects sharedObjects) {
 	}
 
+	/**
+	 * Provide the contribution to the given {@link SecurityFilterChainBuilder}.
+	 * @param sharedObjects previously {@link #initialize(SharedObjects) initialized}
+	 * shared objects
+	 * @param builder the security filter chain builder to contribute to
+	 */
 	void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder);
 
+	/**
+	 * Helper method that can be used to disable the given configurer.
+	 * @param configurer the configurer to disable
+	 */
 	static void disable(SecurityFilterChainContributor.Configurer configurer) {
 		configurer.disable();
 	}
 
+	/**
+	 * Helper method that can be used to create and customize a
+	 * {@link SecurityFilterChainContribution}.
+	 * @param <C> the configurer type
+	 * @param factory factory used to create the contribution
+	 * @param contributionContext the contribution context
+	 * @param customizer the customizer to apply or {@code null}
+	 * @return a new cully customized {@link SecurityFilterChainContribution} instance
+	 */
 	static <C extends SecurityFilterChainContribution> C create(
 			Function<SecurityFilterChainContributionContext, C> factory,
-			SecurityFilterChainContributionContext contributionContext, Consumer<? super C> customizer) {
+			SecurityFilterChainContributionContext contributionContext, @Nullable Consumer<? super C> customizer) {
 		C contribution = factory.apply(contributionContext);
-		customizer.accept(contribution);
+		if (customizer != null) {
+			customizer.accept(contribution);
+		}
 		return contribution;
 	}
 

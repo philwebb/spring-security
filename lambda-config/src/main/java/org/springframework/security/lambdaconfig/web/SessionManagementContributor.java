@@ -37,8 +37,9 @@ public class SessionManagementContributor
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> sessionManagement) {
+		return SecurityFilterChainContribution.create(SessionManagementContribution::new, contributionContext,
+				sessionManagement);
 	}
 
 	/**

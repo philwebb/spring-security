@@ -36,8 +36,8 @@ public class Saml2LoginContributor implements SecurityFilterChainContributor<Sam
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> saml2Login) {
+		return SecurityFilterChainContribution.create(Saml2LoginContribution::new, contributionContext, saml2Login);
 	}
 
 	/**

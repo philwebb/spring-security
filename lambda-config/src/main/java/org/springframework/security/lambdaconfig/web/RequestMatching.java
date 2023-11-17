@@ -28,8 +28,10 @@ import org.springframework.security.web.util.matcher.DispatcherTypeRequestMatche
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
+ * Configuration that can be used to build a {@link RequestMatching} based on matching
+ * and/or ignored patters.
+ *
  * @author Phillip Webb
- * @param <R>
  */
 public interface RequestMatching {
 

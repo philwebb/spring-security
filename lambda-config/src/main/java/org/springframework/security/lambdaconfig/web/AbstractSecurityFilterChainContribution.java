@@ -17,10 +17,15 @@
 package org.springframework.security.lambdaconfig.web;
 
 /**
+ * Abstract base class for a typical {@link SecurityFilterChainContribution}.
+ *
  * @author Phillip Webb
  */
 abstract class AbstractSecurityFilterChainContribution
 		implements SecurityFilterChainContribution, SecurityFilterChainContributor.Configurer {
+
+	// FIXME we need to think about package organization. Perhaps for subclasses a package
+	// per jar that the thing needs?
 
 	private final SecurityFilterChainContributionContext contributionContext;
 
@@ -34,7 +39,7 @@ abstract class AbstractSecurityFilterChainContribution
 
 	@Override
 	public void disable() {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		this.contributionContext.removeContribution();
 	}
 
 }

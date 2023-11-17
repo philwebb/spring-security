@@ -35,8 +35,8 @@ public class LogoutContributor implements SecurityFilterChainContributor<LogoutC
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> logout) {
+		return SecurityFilterChainContribution.create(LogoutContribution::new, contributionContext, logout);
 	}
 
 	/**

@@ -36,8 +36,8 @@ public class FormLoginContributor implements SecurityFilterChainContributor<Form
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> formLogin) {
+		return SecurityFilterChainContribution.create(FormLoginContribution::new, contributionContext, formLogin);
 	}
 
 	/**

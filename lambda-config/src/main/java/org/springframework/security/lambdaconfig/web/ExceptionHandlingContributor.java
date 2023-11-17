@@ -18,6 +18,9 @@ package org.springframework.security.lambdaconfig.web;
 
 import java.util.function.Consumer;
 
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
 /**
  * @author Rob Winch
  * @author Phillip Webb
@@ -36,14 +39,38 @@ public class ExceptionHandlingContributor
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> exceptionHandling) {
+		return SecurityFilterChainContribution.create(ExceptionHandlingContribution::new, contributionContext,
+				exceptionHandling);
 	}
 
 	/**
 	 * Callback for configuring a {@link ExceptionHandlingContributor}.
 	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+
+		// FIXME Design note: based on
+		// org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer<H>
+
+		// void accessDeniedErrorPage(String accessDeniedUrl);
+		// void accessDeniedHandler(AccessDeniedHandler accessDeniedHandler);
+		// void defaultAccessDeniedHandlerFor(AccessDeniedHandler deniedHandler,
+		// RequestMatcher preferredMatcher);
+		// void authenticationEntryPoint(AuthenticationEntryPoint
+		// authenticationEntryPoint);
+		// void defaultAuthenticationEntryPointFor(AuthenticationEntryPoint entryPoint,
+		// RequestMatcher preferredMatcher);
+
+		// The original had quite a bit of logic. If you call accessDeniedHandler
+		// that one gets used always. If you call defaultAccessDeniedHandlerFor
+		// just once, that one is used and the matcher is used. If you call it
+		// more than one then the request matcher is consulted.
+
+		// Same sort of setup with the authenticationEntryPoint.
+
+		RequestMatching addAccessDeniedHandler(AccessDeniedHandler handler);
+
+		RequestMatching addAuthenticationEntryPoint(AuthenticationEntryPoint entryPoint);
 
 	}
 

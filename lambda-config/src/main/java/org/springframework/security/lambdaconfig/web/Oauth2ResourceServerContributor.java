@@ -38,8 +38,9 @@ public class Oauth2ResourceServerContributor
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> oauth2ResourceServer) {
+		return SecurityFilterChainContribution.create(Oauth2ResourceServerContribution::new, contributionContext,
+				oauth2ResourceServer);
 	}
 
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {

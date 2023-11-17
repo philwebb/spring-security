@@ -18,16 +18,38 @@ package org.springframework.security.lambdaconfig.web;
 
 import java.util.function.Consumer;
 
+import org.springframework.lang.Nullable;
+
 /**
+ * Contributes customizable configuration to a {@link HttpSecurityFilterChain}.
+ *
  * @author Phillip Webb
+ * @param <C> the configurer used to customize configuration
  */
 public interface SecurityFilterChainContributor<C> {
 
-	SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<C> customizer);
+	// FIXME We could generalize this if needed. The original config modules has lots of
+	// SecurityConfigurer instances
 
+	// FIXME The original gets passed HttpSercurityBuilder and get get other configureres
+
+	/**
+	 * Return the contribution to be applied to the {@link HttpSecurityFilterChain}.
+	 * @param contributionContext the contribution context
+	 * @param customizer a callback used to customize the contribution
+	 * @return a new {@link SecurityFilterChainContribution}
+	 */
+	SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
+			@Nullable Consumer<C> customizer);
+
+	/**
+	 * Base interface recommended for contributors.
+	 */
 	interface Configurer {
 
+		/**
+		 * Disable configuration from this contributor.
+		 */
 		void disable();
 
 	}

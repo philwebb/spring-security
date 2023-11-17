@@ -41,7 +41,8 @@ public class AuthorizeRequestsContributor
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
 			Consumer<Configurer> authorizations) {
-		return null;
+		return SecurityFilterChainContribution.create(AuthorizeRequestsContribution::new, contributionContext,
+				authorizations);
 	}
 
 	/**

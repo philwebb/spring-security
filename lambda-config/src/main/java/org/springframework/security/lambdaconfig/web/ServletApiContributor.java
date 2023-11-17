@@ -35,8 +35,8 @@ public class ServletApiContributor implements SecurityFilterChainContributor<Ser
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> servletApi) {
+		return SecurityFilterChainContribution.create(ServletApiContribution::new, contributionContext, servletApi);
 	}
 
 	/**

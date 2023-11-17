@@ -41,8 +41,8 @@ public class HeadersContributor implements SecurityFilterChainContributor<Header
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> headers) {
+		return SecurityFilterChainContribution.create(HeadersContribution::new, contributionContext, headers);
 	}
 
 	/**

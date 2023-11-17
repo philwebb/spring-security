@@ -36,8 +36,8 @@ public class Oauth2ClientContributor implements SecurityFilterChainContributor<O
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> oauth2Client) {
+		return SecurityFilterChainContribution.create(Oauth2ClientContribution::new, contributionContext, oauth2Client);
 	}
 
 	/**

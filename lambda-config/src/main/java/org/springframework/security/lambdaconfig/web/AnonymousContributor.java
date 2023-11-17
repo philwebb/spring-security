@@ -35,8 +35,8 @@ public class AnonymousContributor implements SecurityFilterChainContributor<Anon
 
 	@Override
 	public SecurityFilterChainContribution contribute(SecurityFilterChainContributionContext contributionContext,
-			Consumer<Configurer> csrf) {
-		return null;
+			Consumer<Configurer> anonymous) {
+		return SecurityFilterChainContribution.create(AnonymousContribution::new, contributionContext, anonymous);
 	}
 
 	/**
