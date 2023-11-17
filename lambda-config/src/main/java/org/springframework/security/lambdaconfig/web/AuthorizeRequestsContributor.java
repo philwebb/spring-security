@@ -48,7 +48,7 @@ public class AuthorizeRequestsContributor
 	/**
 	 * Callback for configuring an {@link AuthorizeRequestsContributor}.
 	 */
-	interface Configurer extends SecurityFilterChainContributor.Configurer {
+	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
 		RequestMatching permit();
 
@@ -67,6 +67,9 @@ public class AuthorizeRequestsContributor
 		RequestMatching permitIfRemembered();
 
 		RequestMatching permitIfAnonymous();
+
+		// FIXME we could offer permitIf(BiPredicate<Supplier<Authentication>
+		// authentication, RequestAuthorizationContext>
 
 		RequestMatching deny();
 

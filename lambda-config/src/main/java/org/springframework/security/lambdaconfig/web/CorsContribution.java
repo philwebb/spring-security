@@ -31,6 +31,7 @@ final class CorsContribution extends AbstractSecurityFilterChainContribution imp
 
 	@Override
 	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+		throw new UnsupportedOperationException();
 	}
 
 }

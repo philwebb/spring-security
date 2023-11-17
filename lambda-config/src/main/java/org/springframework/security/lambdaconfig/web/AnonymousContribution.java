@@ -33,6 +33,7 @@ final class AnonymousContribution extends AbstractSecurityFilterChainContributio
 
 	@Override
 	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
+		throw new UnsupportedOperationException();
 	}
 
 }

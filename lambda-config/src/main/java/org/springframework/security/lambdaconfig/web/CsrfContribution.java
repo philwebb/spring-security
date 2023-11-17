@@ -36,23 +36,27 @@ final class CsrfContribution extends AbstractSecurityFilterChainContribution imp
 
 	@Override
 	public void tokenRepository(CsrfTokenRepository csrfTokenRepository) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void tokenRequestHandler(CsrfTokenRequestHandler requestHandler) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void sessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public RequestMatching apply() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder instance) {
+		throw new UnsupportedOperationException();
 	}
 
 }
