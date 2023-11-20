@@ -41,7 +41,7 @@ public class CsrfSample {
 	SecurityFilterChain exampleLambda() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.csrf((csrf) -> {
-				csrf.apply().whenMatches(this.myMatcher).ignoring("/foo/**", "/bar/**");
+				csrf.apply().ifMatches(this.myMatcher).ignoring("/foo/**", "/bar/**");
 				csrf.tokenRepository(this.myTokenRepo);
 			});
 		});

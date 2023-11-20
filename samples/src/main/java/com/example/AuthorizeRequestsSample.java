@@ -56,10 +56,10 @@ public class AuthorizeRequestsSample {
 	SecurityFilterChain specificHandlerLambda() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestMustBeAuthenticated().whenMatches("/foo/**");
-				authorizationRules.addThatRequestMustBeFullyAuthenticated().whenMatches("/bar/**");
-				authorizationRules.addThatRequestIsPermitted().whenMatches(DispatcherType.FORWARD);
-				authorizationRules.addThatRequestIsDenied();
+				authorizationRules.ifMatches("/foo/**").thenReturnChecking().isAuthenticated();
+				authorizationRules.ifMatches("/bar/**").thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifMatches(DispatcherType.FORWARD).thenReturnPermitted();
+				authorizationRules.thenReturnDenied();
 			});
 		});
 	}
@@ -75,8 +75,8 @@ public class AuthorizeRequestsSample {
 	SecurityFilterChain customLambda() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestIsChecked(this.manager).whenMatches(HttpMethod.PATCH);
-				authorizationRules.addThatRequestIsChecked(this.manager);
+				authorizationRules.ifMatches(HttpMethod.PATCH).thenReturnChecking(this.manager);
+				authorizationRules.thenReturnChecking(this.manager);
 			});
 		});
 	}

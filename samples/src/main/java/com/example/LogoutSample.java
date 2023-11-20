@@ -41,8 +41,8 @@ public class LogoutSample {
 			chain.logout((logout) -> {
 				logout.permitRequests();
 				logout.url("foo");
-				logout.apply().whenMatches("/foo/**");
-				logout.addSuccessHandler(this.myHandler).whenMatches("/foo/**");
+				logout.apply().ifMatches("/foo/**");
+				logout.addSuccessHandler(this.myHandler).ifMatches("/foo/**");
 			});
 		});
 	}

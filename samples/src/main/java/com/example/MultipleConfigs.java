@@ -28,8 +28,8 @@ public class MultipleConfigs {
 	// @Order(1)
 	SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.apply().whenMatches("/api/**");
-			chain.authorizationRules().addThatRequestMustBeAuthenticated();
+			chain.apply().ifMatches("/api/**");
+			chain.authorizationRules().thenReturnChecking().isAuthenticated();
 			chain.sessionManagement().policy(Policy.DISABLE);
 			chain.httpBasic();
 		});
@@ -38,8 +38,8 @@ public class MultipleConfigs {
 	// @Order(2)
 	SecurityFilterChain h2ConsoleSecurityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.apply().whenMatches("/h2-console/**");
-			chain.authorizationRules().addThatRequestIsPermitted().whenMatches("/h2-console/**");
+			chain.apply().ifMatches("/h2-console/**");
+			chain.authorizationRules().ifMatches("/h2-console/**").thenReturnPermitted();
 			chain.csrf().apply().ignoring("/h2-console/**");
 			chain.headers().frameOptions().disable();
 		});
@@ -49,8 +49,8 @@ public class MultipleConfigs {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizeRequests) -> {
-				authorizeRequests.addThatRequestIsPermitted().whenMatches("/", "/error");
-				authorizeRequests.addThatRequestMustBeAuthenticated();
+				authorizeRequests.ifMatches("/", "/error").thenReturnPermitted();
+				authorizeRequests.thenReturnChecking().isAuthenticated();
 			});
 			chain.formLogin();
 		});

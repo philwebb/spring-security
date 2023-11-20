@@ -52,7 +52,7 @@ public class HeadersSample {
 				headers.crossOriginEmbedder().policy(CrossOriginEmbedderPolicy.REQUIRE_CORP);
 				headers.httpStrictTransportSecurity((hsts) -> {
 					hsts.maxAge(Duration.ofSeconds(1));
-					hsts.apply().whenMatches("/foo/**");
+					hsts.apply().ifMatches("/foo/**");
 				});
 			});
 		});

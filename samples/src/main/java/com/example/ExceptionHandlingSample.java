@@ -55,10 +55,10 @@ public class ExceptionHandlingSample {
 	SecurityFilterChain defaultHandlersLambda() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.exceptionHandling((exceptionHandling) -> {
-				exceptionHandling.addAccessDeniedHandler(this.myHandler1).whenMatches(this.myRequestMatcher1);
-				exceptionHandling.addAccessDeniedHandler(this.myHandler2).whenMatches(this.myRequestMatcher2);
+				exceptionHandling.addAccessDeniedHandler(this.myHandler1).ifMatches(this.myRequestMatcher1);
+				exceptionHandling.addAccessDeniedHandler(this.myHandler2).ifMatches(this.myRequestMatcher2);
 				// Can also do
-				exceptionHandling.addAccessDeniedHandler(this.myHandler1).whenMatches("/foo/**");
+				exceptionHandling.addAccessDeniedHandler(this.myHandler1).ifMatches("/foo/**");
 			});
 		});
 	}

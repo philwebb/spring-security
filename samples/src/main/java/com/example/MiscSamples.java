@@ -52,8 +52,9 @@ public class MiscSamples {
 		return HttpSecurityFilterChain.of((chain) -> {
 			// We don't yet have authentication provider
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestIsPermitted().whenMatches("/", "/error", "favicon.ico");
-				authorizationRules.addThatRequestMustBeAuthenticated();
+				authorizationRules.ifMatches("/", "/error", "favicon.ico").thenReturnPermitted();
+				authorizationRules.thenReturnChecking().isAuthenticated();
+
 			});
 			chain.httpBasic();
 			chain.formLogin();
@@ -86,8 +87,8 @@ public class MiscSamples {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.csrf().disable();
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestIsPermitted().whenMatches(DispatcherType.FORWARD);
-				authorizationRules.addThatRequestMustBeFullyAuthenticated();
+				authorizationRules.ifMatches(DispatcherType.FORWARD).thenReturnPermitted();
+				authorizationRules.thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.formLogin((formLogin) -> {
 				formLogin.page("/login");
@@ -119,12 +120,12 @@ public class MiscSamples {
 	*/
 	// @formatter:on
 
-	SecurityFilterChain springSecurity(AuthorizationManager<RequestAuthorizationContext> opa) throws Exception {
+	SecurityFilterChain springSecurity(AuthorizationManager<RequestAuthorizationContext> opa) {
 		XorCsrfTokenRequestAttributeHandler requestHandler = new XorCsrfTokenRequestAttributeHandler();
 		requestHandler.setCsrfRequestAttributeName("_csrf");
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.csrf().tokenRequestHandler(requestHandler);
-			chain.authorizationRules().addThatRequestIsChecked(opa);
+			chain.authorizationRules().thenReturnChecking(opa);
 			chain.formLogin();
 			chain.httpBasic();
 		});
@@ -177,9 +178,9 @@ public class MiscSamples {
 	SecurityFilterChain stackOverflow() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestIsPermitted().whenMatches("/js/**", "/css/**");
-				authorizationRules.addThatRequestMustBeAuthenticated().whenMatches("/api/**");
-				authorizationRules.addThatRequestMustBeAuthenticated().whenMatches("/", "/index");
+				authorizationRules.ifMatches("/js/**", "/css/**").thenReturnPermitted();
+				authorizationRules.ifMatches("/api/**").thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifMatches("/", "/index").thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.httpBasic();
 			chain.formLogin((formLogin) -> {
@@ -219,8 +220,8 @@ public class MiscSamples {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.x509().principalExtractor("OU=app:(.*?)(?:,|$)");
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestMustHaveRole("ADMIN").whenMatches("/admin/**");
-				authorizationRules.addThatRequestMustBeAuthenticated();
+				authorizationRules.ifMatches("/admin/**").thenReturnChecking().hasRole("ADMIN");
+				authorizationRules.thenReturnChecking().isFullyAuthenticated();
 			});
 		});
 	}
@@ -228,7 +229,7 @@ public class MiscSamples {
 	// Shortcuts
 	SecurityFilterChain shortcuts() {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.authorizationRules().addThatRequestMustBeAuthenticated();
+			chain.authorizationRules().thenReturnChecking().isFullyAuthenticated();
 			chain.csrf().disable();
 		});
 	}
@@ -237,8 +238,8 @@ public class MiscSamples {
 	SecurityFilterChain saml() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestIsPermitted().whenMatches("/error");
-				authorizationRules.addThatRequestMustBeAuthenticated();
+				authorizationRules.ifMatches("/error").thenReturnPermitted();
+				authorizationRules.thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.saml2Login().processingUrl("/saml/SSO");
 			chain.saml2Logout((saml2Logout) -> {
@@ -253,10 +254,13 @@ public class MiscSamples {
 	SecurityFilterChain oauth() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestMustHaveAuthority("SCOPE_message:read").whenMatches(HttpMethod.GET, "/message/**");
-				authorizationRules.addThatRequestMustHaveAuthority("SCOPE_message:write")
-					.whenMatches(HttpMethod.POST, "/message/**");
-				authorizationRules.addThatRequestMustBeAuthenticated();
+				authorizationRules.ifMatches(HttpMethod.GET, "/message/**")
+					.thenReturnChecking()
+					.hasAuthority("SCOPE_message:read");
+				authorizationRules.ifMatches(HttpMethod.POST, "/message/**")
+					.thenReturnChecking()
+					.hasAuthority("SCOPE_message:write");
+				authorizationRules.thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.oauth2ResourceServer().jwt();
 		});
@@ -265,7 +269,7 @@ public class MiscSamples {
 	// https://github.com/spring-projects/spring-security-samples/blob/357d75f63aaea8d7c44e7903bd1c622570a9b725/servlet/java-configuration/max-sessions/src/main/java/example/SecurityConfiguration.java#L22
 	SecurityFilterChain maxSessions() {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.authorizationRules().addThatRequestMustBeAuthenticated();
+			chain.authorizationRules().thenReturnChecking().isFullyAuthenticated();
 			chain.formLogin();
 			chain.sessionManagement().concurrency((concurrency) -> {
 				concurrency.maximumSessions(1);
@@ -278,10 +282,13 @@ public class MiscSamples {
 	SecurityFilterChain oauthOpaque() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestMustHaveAuthority("SCOPE_message:read").whenMatches(HttpMethod.GET, "/message/**");
-				authorizationRules.addThatRequestMustHaveAuthority("SCOPE_message:write")
-					.whenMatches(HttpMethod.POST, "/message/**");
-				authorizationRules.addThatRequestMustBeAuthenticated();
+				authorizationRules.ifMatches(HttpMethod.GET, "/message/**")
+					.thenReturnChecking()
+					.hasAuthority("SCOPE_message:read");
+				authorizationRules.ifMatches(HttpMethod.POST, "/message/**")
+					.thenReturnChecking()
+					.hasAuthority("SCOPE_message:write");
+				authorizationRules.thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.oauth2ResourceServer().opaqueToken((opaqueToken) -> {
 				opaqueToken.introspectionUri("foo");
@@ -294,10 +301,10 @@ public class MiscSamples {
 	SecurityFilterChain geeksforgeeks() {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
-				authorizationRules.addThatRequestMustHaveAnyRole("BASIC", "ADMIN").whenMatches("/basic");
-				authorizationRules.addThatRequestMustHaveRole("ADMIN").whenMatches("/admin");
-				authorizationRules.addThatRequestIsPermitted().whenMatches("/");
-				authorizationRules.addThatRequestMustBeAuthenticated();
+				authorizationRules.ifMatches("/basic").thenReturnChecking().hasAnyRole("BASIC", "ADMIN");
+				authorizationRules.ifMatches("/admin").thenReturnChecking().hasRole("ADMIN");
+				authorizationRules.ifMatches("/").thenReturnPermitted();
+				authorizationRules.thenReturnChecking().isAuthenticated();
 			});
 			chain.formLogin((formLogin) -> {
 				formLogin.permitRequests();
@@ -305,7 +312,7 @@ public class MiscSamples {
 				formLogin.usernameParameter("username");
 			});
 			chain.logout((logout) -> {
-				logout.apply().whenMatches("/logout");
+				logout.apply().ifMatches("/logout");
 				logout.permitRequests();
 			});
 		});

@@ -16,13 +16,14 @@
 
 package org.springframework.security.lambdaconfig.web;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
-import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.lambdaconfig.web.AuthorizationRulesContributor.Configurer;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * A {@link SecurityFilterChainContribution} made by the
@@ -44,73 +45,58 @@ final class AuthorizeRequestsContribution extends AbstractSecurityFilterChainCon
 	}
 
 	@Override
-	public RequestMatching addThatRequestIsPermitted() {
-		return addThatRequestIs(this.PERMIT);
+	public Configurer ifMatches(Patterns patterns) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustHaveRole(String role) {
-		return addThatRequestMustHaveAnyRole(role);
+	public Configurer ifMatches(Collection<? extends RequestMatcher> matchers) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustHaveAnyRole(String... roles) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+	public Configurer ignoring(Patterns patterns) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustHaveAuthority(String authority) {
-		return addThatRequestMustHaveAnyAuthority(authority);
+	public Configurer ignoring(Collection<? extends RequestMatcher> matchers) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustHaveAnyAuthority(String... authorities) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+	public void thenReturnPermitted() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustBeAuthenticated() {
-		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.authenticated());
+	public void thenReturnDenied() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustBeFullyAuthenticated() {
-		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.fullyAuthenticated());
+	public void thenReturn(AuthorizationDecision decision) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustBeRemembered() {
-		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.rememberMe());
+	public void thenReturnChecking(AuthorizationManager<RequestAuthorizationContext> authorizationManager) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestMustBeAnonymous() {
-		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.anonymous());
+	public CheckingConfigurer thenReturnChecking() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public RequestMatching addThatRequestIsDenied() {
-		return addThatRequestIs(this.DENY);
-	}
-
-	@Override
-	public RequestMatching addThatRequestIs(AuthorizationDecision decision) {
-		return addThatRequestIsChecked((authentication, object) -> decision);
-	}
-
-	@Override
-	public RequestMatching addThatRequestIsChecked(AuthorizationManager<RequestAuthorizationContext> manager) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
-
-	@Override
-	public void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizations) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+	public void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		throw new UnsupportedOperationException();
 	}
 
 }

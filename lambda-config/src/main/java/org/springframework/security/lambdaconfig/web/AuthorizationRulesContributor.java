@@ -48,7 +48,7 @@ public class AuthorizationRulesContributor
 	/**
 	 * Callback for configuring an {@link AuthorizationRulesContributor}.
 	 */
-	public interface Configurer extends SecurityFilterChainContributor.Configurer {
+	public interface Configurer extends SecurityFilterChainContributor.Configurer, RequestMatchable<Configurer> {
 
 		// @formatter:off
 		/* FIXME === DESIGN NOTES ===
@@ -67,31 +67,37 @@ public class AuthorizationRulesContributor
 		*/
 		// @formatter:on
 
-		RequestMatching addThatRequestIsPermitted();
+		void thenReturnPermitted();
 
-		RequestMatching addThatRequestMustHaveRole(String role);
+		void thenReturnDenied();
 
-		RequestMatching addThatRequestMustHaveAnyRole(String... roles);
+		void thenReturn(AuthorizationDecision decision);
 
-		RequestMatching addThatRequestMustHaveAuthority(String authority);
+		void thenReturnChecking(AuthorizationManager<RequestAuthorizationContext> authorizationManager);
 
-		RequestMatching addThatRequestMustHaveAnyAuthority(String... authorities);
-
-		RequestMatching addThatRequestMustBeAuthenticated();
-
-		RequestMatching addThatRequestMustBeFullyAuthenticated();
-
-		RequestMatching addThatRequestMustBeRemembered();
-
-		RequestMatching addThatRequestMustBeAnonymous();
-
-		RequestMatching addThatRequestIsDenied();
-
-		RequestMatching addThatRequestIs(AuthorizationDecision decision);
-
-		RequestMatching addThatRequestIsChecked(AuthorizationManager<RequestAuthorizationContext> manager);
+		CheckingConfigurer thenReturnChecking();
 
 		void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests);
+
+		interface CheckingConfigurer {
+
+			RequestMatching hasRole(String role);
+
+			RequestMatching hasAnyRole(String... roles);
+
+			RequestMatching hasAuthority(String authority);
+
+			RequestMatching hasAnyAuthority(String... authorities);
+
+			RequestMatching isAuthenticated();
+
+			RequestMatching isFullyAuthenticated();
+
+			RequestMatching isRemembered();
+
+			RequestMatching isAnonymous();
+
+		}
 
 	}
 
