@@ -21,19 +21,19 @@ import java.util.function.Consumer;
 import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
-import org.springframework.security.lambdaconfig.web.AuthorizeRequestsContributor.Configurer;
+import org.springframework.security.lambdaconfig.web.AuthorizationRulesContributor.Configurer;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 /**
  * A {@link SecurityFilterChainContribution} made by the
- * {@link AuthorizeRequestsContributor}.
+ * {@link AuthorizationRulesContributor}.
  *
  * @author Evgeniy Cheban
  * @author Phillip Webb
- * @see AuthorizeRequestsContributor
+ * @see AuthorizationRulesContributor
  */
 final class AuthorizeRequestsContribution extends AbstractSecurityFilterChainContribution
-		implements AuthorizeRequestsContributor.Configurer {
+		implements AuthorizationRulesContributor.Configurer {
 
 	AuthorizationDecision DENY = new AuthorizationDecision(false);
 
@@ -44,62 +44,62 @@ final class AuthorizeRequestsContribution extends AbstractSecurityFilterChainCon
 	}
 
 	@Override
-	public RequestMatching permit() {
-		return add(this.PERMIT);
+	public RequestMatching addThatRequestIsPermitted() {
+		return addThatRequestIs(this.PERMIT);
 	}
 
 	@Override
-	public RequestMatching permitIfHasRole(String role) {
-		return permitIfHasAnyRole(role);
+	public RequestMatching addThatRequestMustHaveRole(String role) {
+		return addThatRequestMustHaveAnyRole(role);
 	}
 
 	@Override
-	public RequestMatching permitIfHasAnyRole(String... roles) {
+	public RequestMatching addThatRequestMustHaveAnyRole(String... roles) {
 		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
-	public RequestMatching permitIfHasAuthority(String authority) {
-		return permitIfHasAnyAuthority(authority);
+	public RequestMatching addThatRequestMustHaveAuthority(String authority) {
+		return addThatRequestMustHaveAnyAuthority(authority);
 	}
 
 	@Override
-	public RequestMatching permitIfHasAnyAuthority(String... authorities) {
+	public RequestMatching addThatRequestMustHaveAnyAuthority(String... authorities) {
 		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 
 	@Override
-	public RequestMatching permitIfAuthenticated() {
-		return check(AuthenticatedAuthorizationManager.authenticated());
+	public RequestMatching addThatRequestMustBeAuthenticated() {
+		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.authenticated());
 	}
 
 	@Override
-	public RequestMatching permitIfFullyAuthenticated() {
-		return check(AuthenticatedAuthorizationManager.fullyAuthenticated());
+	public RequestMatching addThatRequestMustBeFullyAuthenticated() {
+		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.fullyAuthenticated());
 	}
 
 	@Override
-	public RequestMatching permitIfRemembered() {
-		return check(AuthenticatedAuthorizationManager.rememberMe());
+	public RequestMatching addThatRequestMustBeRemembered() {
+		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.rememberMe());
 	}
 
 	@Override
-	public RequestMatching permitIfAnonymous() {
-		return check(AuthenticatedAuthorizationManager.anonymous());
+	public RequestMatching addThatRequestMustBeAnonymous() {
+		return addThatRequestIsChecked(AuthenticatedAuthorizationManager.anonymous());
 	}
 
 	@Override
-	public RequestMatching deny() {
-		return add(this.DENY);
+	public RequestMatching addThatRequestIsDenied() {
+		return addThatRequestIs(this.DENY);
 	}
 
 	@Override
-	public RequestMatching add(AuthorizationDecision decision) {
-		return check((authentication, object) -> decision);
+	public RequestMatching addThatRequestIs(AuthorizationDecision decision) {
+		return addThatRequestIsChecked((authentication, object) -> decision);
 	}
 
 	@Override
-	public RequestMatching check(AuthorizationManager<RequestAuthorizationContext> manager) {
+	public RequestMatching addThatRequestIsChecked(AuthorizationManager<RequestAuthorizationContext> manager) {
 		throw new UnsupportedOperationException("Auto-generated method stub");
 	}
 

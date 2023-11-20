@@ -29,7 +29,7 @@ public class MultipleConfigs {
 	SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.apply().whenMatches("/api/**");
-			chain.authorizeRequests().permitIfAuthenticated();
+			chain.authorizationRules().addThatRequestMustBeAuthenticated();
 			chain.sessionManagement().policy(Policy.DISABLE);
 			chain.httpBasic();
 		});
@@ -39,7 +39,7 @@ public class MultipleConfigs {
 	SecurityFilterChain h2ConsoleSecurityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.apply().whenMatches("/h2-console/**");
-			chain.authorizeRequests().permit().whenMatches("/h2-console/**");
+			chain.authorizationRules().addThatRequestIsPermitted().whenMatches("/h2-console/**");
 			chain.csrf().apply().ignoring("/h2-console/**");
 			chain.headers().frameOptions().disable();
 		});
@@ -48,9 +48,9 @@ public class MultipleConfigs {
 	// @Order(3)
 	SecurityFilterChain securityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.authorizeRequests((authorizeRequests) -> {
-				authorizeRequests.permit().whenMatches("/", "/error");
-				authorizeRequests.permitIfAuthenticated();
+			chain.authorizationRules((authorizeRequests) -> {
+				authorizeRequests.addThatRequestIsPermitted().whenMatches("/", "/error");
+				authorizeRequests.addThatRequestMustBeAuthenticated();
 			});
 			chain.formLogin();
 		});

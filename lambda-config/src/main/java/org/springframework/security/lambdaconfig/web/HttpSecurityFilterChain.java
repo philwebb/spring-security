@@ -169,21 +169,21 @@ public interface HttpSecurityFilterChain extends SecurityFilterChain {
 		}
 
 		/**
-		 * Add or update {@link AuthorizeRequestsContributor authorize requests}
+		 * Add or update {@link AuthorizationRulesContributor authorization rules}
 		 * configuration for the chain.
 		 * @return a configurer to apply the configuration
 		 */
-		default AuthorizeRequestsContributor.Configurer authorizeRequests() {
-			return configure(AuthorizeRequestsContributor.instance());
+		default AuthorizationRulesContributor.Configurer authorizationRules() {
+			return configure(AuthorizationRulesContributor.instance());
 		}
 
 		/**
-		 * Add or update {@link AuthorizeRequestsContributor authorize requests}
+		 * Add or update {@link AuthorizationRulesContributor authorization rules}
 		 * configuration for the chain.
-		 * @param authorizeRequests the callback used to apply the configuration
+		 * @param authorizationRules the callback used to apply the configuration
 		 */
-		default void authorizeRequests(Consumer<AuthorizeRequestsContributor.Configurer> authorizeRequests) {
-			configure(AuthorizeRequestsContributor.instance(), authorizeRequests);
+		default void authorizationRules(Consumer<AuthorizationRulesContributor.Configurer> authorizationRules) {
+			configure(AuthorizationRulesContributor.instance(), authorizationRules);
 		}
 
 		/**

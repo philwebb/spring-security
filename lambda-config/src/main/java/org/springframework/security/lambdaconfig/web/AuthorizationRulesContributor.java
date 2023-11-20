@@ -26,16 +26,16 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
  * @author Evgeniy Cheban
  * @author Phillip Webb
  */
-public class AuthorizeRequestsContributor
-		implements SecurityFilterChainContributor<AuthorizeRequestsContributor.Configurer> {
+public class AuthorizationRulesContributor
+		implements SecurityFilterChainContributor<AuthorizationRulesContributor.Configurer> {
 
-	private static final AuthorizeRequestsContributor INSTANCE = new AuthorizeRequestsContributor();
+	private static final AuthorizationRulesContributor INSTANCE = new AuthorizationRulesContributor();
 
-	public static AuthorizeRequestsContributor instance() {
+	public static AuthorizationRulesContributor instance() {
 		return INSTANCE;
 	}
 
-	private AuthorizeRequestsContributor() {
+	private AuthorizationRulesContributor() {
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class AuthorizeRequestsContributor
 	}
 
 	/**
-	 * Callback for configuring an {@link AuthorizeRequestsContributor}.
+	 * Callback for configuring an {@link AuthorizationRulesContributor}.
 	 */
 	public interface Configurer extends SecurityFilterChainContributor.Configurer {
 
@@ -67,29 +67,29 @@ public class AuthorizeRequestsContributor
 		*/
 		// @formatter:on
 
-		RequestMatching permit();
+		RequestMatching addThatRequestIsPermitted();
 
-		RequestMatching permitIfHasRole(String role);
+		RequestMatching addThatRequestMustHaveRole(String role);
 
-		RequestMatching permitIfHasAnyRole(String... roles);
+		RequestMatching addThatRequestMustHaveAnyRole(String... roles);
 
-		RequestMatching permitIfHasAuthority(String authority);
+		RequestMatching addThatRequestMustHaveAuthority(String authority);
 
-		RequestMatching permitIfHasAnyAuthority(String... authorities);
+		RequestMatching addThatRequestMustHaveAnyAuthority(String... authorities);
 
-		RequestMatching permitIfAuthenticated();
+		RequestMatching addThatRequestMustBeAuthenticated();
 
-		RequestMatching permitIfFullyAuthenticated();
+		RequestMatching addThatRequestMustBeFullyAuthenticated();
 
-		RequestMatching permitIfRemembered();
+		RequestMatching addThatRequestMustBeRemembered();
 
-		RequestMatching permitIfAnonymous();
+		RequestMatching addThatRequestMustBeAnonymous();
 
-		RequestMatching deny();
+		RequestMatching addThatRequestIsDenied();
 
-		RequestMatching add(AuthorizationDecision decision);
+		RequestMatching addThatRequestIs(AuthorizationDecision decision);
 
-		RequestMatching check(AuthorizationManager<RequestAuthorizationContext> manager);
+		RequestMatching addThatRequestIsChecked(AuthorizationManager<RequestAuthorizationContext> manager);
 
 		void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests);
 
