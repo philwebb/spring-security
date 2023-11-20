@@ -59,7 +59,7 @@ public class AuthorizeRequestsSample {
 				authorizationRules.ifMatches("/foo/**").thenReturnChecking().isAuthenticated();
 				authorizationRules.ifMatches("/bar/**").thenReturnChecking().isFullyAuthenticated();
 				authorizationRules.ifMatches(DispatcherType.FORWARD).thenReturnPermitted();
-				authorizationRules.thenReturnDenied();
+				authorizationRules.ifNotMatched().thenReturnDenied();
 			});
 		});
 	}
@@ -76,7 +76,7 @@ public class AuthorizeRequestsSample {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
 				authorizationRules.ifMatches(HttpMethod.PATCH).thenReturnChecking(this.manager);
-				authorizationRules.thenReturnChecking(this.manager);
+				authorizationRules.ifNotMatched().thenReturnChecking(this.manager);
 			});
 		});
 	}

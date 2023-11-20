@@ -48,15 +48,14 @@ public class AuthorizationRulesContributor
 	/**
 	 * Callback for configuring an {@link AuthorizationRulesContributor}.
 	 */
-	public interface Configurer extends SecurityFilterChainContributor.Configurer, RequestMatchable<Configurer> {
+	public interface Configurer
+			extends SecurityFilterChainContributor.Configurer, RequestMatchable<RequestMatchableReturns> {
 
 		// @formatter:off
 		/* FIXME === DESIGN NOTES ===
 
 		Based on org.springframework.security.config.annotation.web.configurers.
 		AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry<H>
-
-		All method calls are additive but naming them addPermitIf... feels a bit clunky
 
 		There's scope to add permitIf methods that take a Predicate
 
@@ -67,37 +66,47 @@ public class AuthorizationRulesContributor
 		*/
 		// @formatter:on
 
+		Returns ifNotMatched();
+
+		void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests);
+
+	}
+
+	public interface RequestMatchableReturns extends RequestMatchable<RequestMatchableReturns>, Returns {
+
+	}
+
+	public interface Returns {
+
 		void thenReturnPermitted();
 
 		void thenReturnDenied();
 
-		void thenReturn(AuthorizationDecision decision);
+		void thenReturnDecision(AuthorizationDecision decision);
 
 		void thenReturnChecking(AuthorizationManager<RequestAuthorizationContext> authorizationManager);
 
-		CheckingConfigurer thenReturnChecking();
+		Checking thenReturnChecking();
 
-		void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests);
+	}
 
-		interface CheckingConfigurer {
+	public interface Checking {
 
-			RequestMatching hasRole(String role);
+		Checking hasRole(String role);
 
-			RequestMatching hasAnyRole(String... roles);
+		Checking hasAnyRole(String... roles);
 
-			RequestMatching hasAuthority(String authority);
+		Checking hasAuthority(String authority);
 
-			RequestMatching hasAnyAuthority(String... authorities);
+		Checking hasAnyAuthority(String... authorities);
 
-			RequestMatching isAuthenticated();
+		Checking isAuthenticated();
 
-			RequestMatching isFullyAuthenticated();
+		Checking isFullyAuthenticated();
 
-			RequestMatching isRemembered();
+		Checking isRemembered();
 
-			RequestMatching isAnonymous();
-
-		}
+		Checking isAnonymous();
 
 	}
 

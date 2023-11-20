@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.lambdaconfig.web.AuthorizationRulesContributor.Configurer;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.lambdaconfig.web.AuthorizationRulesContributor.RequestMatchableReturns;
+import org.springframework.security.lambdaconfig.web.AuthorizationRulesContributor.Returns;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
@@ -45,57 +45,37 @@ final class AuthorizeRequestsContribution extends AbstractSecurityFilterChainCon
 	}
 
 	@Override
-	public Configurer ifMatches(Patterns patterns) {
+	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Configurer ifMatches(Collection<? extends RequestMatcher> matchers) {
+	public RequestMatchableReturns ifMatches(Patterns patterns) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Configurer ignoring(Patterns patterns) {
+	public RequestMatchableReturns ifMatches(Collection<? extends RequestMatcher> matchers) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Configurer ignoring(Collection<? extends RequestMatcher> matchers) {
+	public RequestMatchableReturns ignoring(Patterns patterns) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void thenReturnPermitted() {
+	public RequestMatchableReturns ignoring(Collection<? extends RequestMatcher> matchers) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void thenReturnDenied() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void thenReturn(AuthorizationDecision decision) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void thenReturnChecking(AuthorizationManager<RequestAuthorizationContext> authorizationManager) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public CheckingConfigurer thenReturnChecking() {
+	public Returns ifNotMatched() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void forServletPath(String servletPath, Consumer<Configurer> servletAuthorizeRequests) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void contribute(SharedObjects sharedObjects, SecurityFilterChainBuilder builder) {
 		throw new UnsupportedOperationException();
 	}
 

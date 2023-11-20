@@ -29,7 +29,7 @@ public class MultipleConfigs {
 	SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.apply().ifMatches("/api/**");
-			chain.authorizationRules().thenReturnChecking().isAuthenticated();
+			chain.authorizationRules().ifNotMatched().thenReturnChecking().isAuthenticated();
 			chain.sessionManagement().policy(Policy.DISABLE);
 			chain.httpBasic();
 		});
@@ -50,7 +50,7 @@ public class MultipleConfigs {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizeRequests) -> {
 				authorizeRequests.ifMatches("/", "/error").thenReturnPermitted();
-				authorizeRequests.thenReturnChecking().isAuthenticated();
+				authorizeRequests.ifNotMatched().thenReturnChecking().isAuthenticated();
 			});
 			chain.formLogin();
 		});

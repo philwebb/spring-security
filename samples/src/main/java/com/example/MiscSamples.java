@@ -53,7 +53,7 @@ public class MiscSamples {
 			// We don't yet have authentication provider
 			chain.authorizationRules((authorizationRules) -> {
 				authorizationRules.ifMatches("/", "/error", "favicon.ico").thenReturnPermitted();
-				authorizationRules.thenReturnChecking().isAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isAuthenticated();
 
 			});
 			chain.httpBasic();
@@ -88,7 +88,7 @@ public class MiscSamples {
 			chain.csrf().disable();
 			chain.authorizationRules((authorizationRules) -> {
 				authorizationRules.ifMatches(DispatcherType.FORWARD).thenReturnPermitted();
-				authorizationRules.thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.formLogin((formLogin) -> {
 				formLogin.page("/login");
@@ -125,7 +125,7 @@ public class MiscSamples {
 		requestHandler.setCsrfRequestAttributeName("_csrf");
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.csrf().tokenRequestHandler(requestHandler);
-			chain.authorizationRules().thenReturnChecking(opa);
+			chain.authorizationRules().ifNotMatched().thenReturnChecking(opa);
 			chain.formLogin();
 			chain.httpBasic();
 		});
@@ -221,7 +221,7 @@ public class MiscSamples {
 			chain.x509().principalExtractor("OU=app:(.*?)(?:,|$)");
 			chain.authorizationRules((authorizationRules) -> {
 				authorizationRules.ifMatches("/admin/**").thenReturnChecking().hasRole("ADMIN");
-				authorizationRules.thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			});
 		});
 	}
@@ -229,7 +229,7 @@ public class MiscSamples {
 	// Shortcuts
 	SecurityFilterChain shortcuts() {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.authorizationRules().thenReturnChecking().isFullyAuthenticated();
+			chain.authorizationRules().ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			chain.csrf().disable();
 		});
 	}
@@ -239,7 +239,7 @@ public class MiscSamples {
 		return HttpSecurityFilterChain.of((chain) -> {
 			chain.authorizationRules((authorizationRules) -> {
 				authorizationRules.ifMatches("/error").thenReturnPermitted();
-				authorizationRules.thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.saml2Login().processingUrl("/saml/SSO");
 			chain.saml2Logout((saml2Logout) -> {
@@ -260,7 +260,7 @@ public class MiscSamples {
 				authorizationRules.ifMatches(HttpMethod.POST, "/message/**")
 					.thenReturnChecking()
 					.hasAuthority("SCOPE_message:write");
-				authorizationRules.thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.oauth2ResourceServer().jwt();
 		});
@@ -269,7 +269,7 @@ public class MiscSamples {
 	// https://github.com/spring-projects/spring-security-samples/blob/357d75f63aaea8d7c44e7903bd1c622570a9b725/servlet/java-configuration/max-sessions/src/main/java/example/SecurityConfiguration.java#L22
 	SecurityFilterChain maxSessions() {
 		return HttpSecurityFilterChain.of((chain) -> {
-			chain.authorizationRules().thenReturnChecking().isFullyAuthenticated();
+			chain.authorizationRules().ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			chain.formLogin();
 			chain.sessionManagement().concurrency((concurrency) -> {
 				concurrency.maximumSessions(1);
@@ -288,7 +288,7 @@ public class MiscSamples {
 				authorizationRules.ifMatches(HttpMethod.POST, "/message/**")
 					.thenReturnChecking()
 					.hasAuthority("SCOPE_message:write");
-				authorizationRules.thenReturnChecking().isFullyAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isFullyAuthenticated();
 			});
 			chain.oauth2ResourceServer().opaqueToken((opaqueToken) -> {
 				opaqueToken.introspectionUri("foo");
@@ -304,7 +304,7 @@ public class MiscSamples {
 				authorizationRules.ifMatches("/basic").thenReturnChecking().hasAnyRole("BASIC", "ADMIN");
 				authorizationRules.ifMatches("/admin").thenReturnChecking().hasRole("ADMIN");
 				authorizationRules.ifMatches("/").thenReturnPermitted();
-				authorizationRules.thenReturnChecking().isAuthenticated();
+				authorizationRules.ifNotMatched().thenReturnChecking().isAuthenticated();
 			});
 			chain.formLogin((formLogin) -> {
 				formLogin.permitRequests();
