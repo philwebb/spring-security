@@ -200,6 +200,17 @@ class InetAddressMatchersTests {
 			assertThat(matcher.matches(address)).isEqualTo(expected);
 		}
 
+		@Test
+		void buildWhenMultipleIncludes() {
+			InetAddressMatcher matcher = InetAddressMatchers.builder()
+				.includeAddresses(List.of("192.168.1.100"))
+				.includeAddresses(List.of("192.168.1.101"))
+				.build();
+			assertThat(matcher.matches("192.168.1.102")).isFalse();
+			assertThat(matcher.matches("192.168.1.101")).isTrue();
+			assertThat(matcher.matches("192.168.1.100")).isTrue();
+		}
+
 	}
 
 	@Nested

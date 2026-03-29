@@ -51,7 +51,7 @@ public final class InetAddressMatchers {
 	 * @return a {@link Builder} configured to match external addresses
 	 */
 	public static Builder matchExternal() {
-		return builder().matchAll(ExternalInetAddressMatcher.getInstance());
+		return builder().matchAll(ExternalInetAddressMatcher.instance);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public final class InetAddressMatchers {
 	 * @return a {@link Builder} configured to match internal addresses
 	 */
 	public static Builder matchInternal() {
-		return builder().matchAll(InternalInetAddressMatcher.getInstance());
+		return builder().matchAll(InternalInetAddressMatcher.instance);
 	}
 
 	/**
@@ -224,123 +224,6 @@ public final class InetAddressMatchers {
 		@Override
 		public String toString() {
 			return "ExcludeListInetAddressMatcher[\"" + this.excludeList + "\"]";
-		}
-
-	}
-
-	/**
-	 * An {@link InetAddressMatcher} that matches internal (private) addresses.
-	 * <p>
-	 * Internal addresses include loopback addresses (127.0.0.0/8 for IPv4, ::1 for IPv6),
-	 * private IPv4 address ranges (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16), and IPv6
-	 * Unique Local Addresses (fc00::/7).
-	 *
-	 * @author Gábor Vaspöri
-	 * @author Kian Jamali
-	 * @author Rossen Stoyanchev
-	 * @author Rob Winch
-	 */
-	static final class InternalInetAddressMatcher implements InetAddressMatcher {
-
-		private static final InternalInetAddressMatcher INSTANCE = new InternalInetAddressMatcher();
-
-		static InternalInetAddressMatcher getInstance() {
-			return INSTANCE;
-		}
-
-		private InternalInetAddressMatcher() {
-		}
-
-		@Override
-		public boolean matches(@Nullable InetAddress address) {
-			if (address == null) {
-				return false;
-			}
-			if (address.isLoopbackAddress() || address.isLinkLocalAddress() || address.isSiteLocalAddress()) {
-				return true;
-			}
-
-			byte[] rawAddress = address.getAddress();
-
-			if (rawAddress.length == 16) {
-				// Convert signed bytes to unsigned ints for easier matching logic
-				int[] iAddr = new int[rawAddress.length];
-				for (int i = 0; i < rawAddress.length; i++) {
-					iAddr[i] = Byte.toUnsignedInt(rawAddress[i]);
-				}
-
-				/*
-				 * IPv6, check for Unique Local Addresses. We cannot rely on
-				 * Inet6Address.isSiteLocalAddress() here because the JVM implementation
-				 * dictates that fec0::/10 is the only site-local IPv6 address space,
-				 * based on the outdated RFC 2373. That RFC was deprecated by the IETF in
-				 * 2004 in favor of fc00::/7 (RFC 4193). To keep our private network
-				 * checking accurate to modern subnets, we maintain manual parsing.
-				 */
-				if (iAddr[0] == 0xfc || iAddr[0] == 0xfd) {
-					return true;
-				}
-
-				// IPv4/IPv6 translation, 64:ff9b
-				if (iAddr[0] == 0x00 && iAddr[1] == 0x64 && iAddr[2] == 0xff && iAddr[3] == 0x9b) {
-					try {
-						InetAddress ipv4Part = InetAddress.getByAddress(
-								new byte[] { rawAddress[12], rawAddress[13], rawAddress[14], rawAddress[15] });
-
-						if (ipv4Part.isLoopbackAddress() || ipv4Part.isLinkLocalAddress()
-								|| ipv4Part.isSiteLocalAddress()) {
-							return true;
-						}
-					}
-					catch (java.net.UnknownHostException ex) {
-						// Should not happen for 4-byte array
-					}
-				}
-			}
-
-			return false;
-		}
-
-		@Override
-		public String toString() {
-			return "InternalInetAddressMatcher";
-		}
-
-	}
-
-	/**
-	 * An {@link InetAddressMatcher} that matches external (public) addresses.
-	 * <p>
-	 * External addresses are any addresses that are not internal (private) addresses.
-	 * This matcher delegates to {@link InternalInetAddressMatcher} and negates the
-	 * result.
-	 *
-	 * @author Gábor Vaspöri
-	 * @author Kian Jamali
-	 * @author Rossen Stoyanchev
-	 * @author Rob Winch
-	 */
-	static final class ExternalInetAddressMatcher implements InetAddressMatcher {
-
-		private static final ExternalInetAddressMatcher INSTANCE = new ExternalInetAddressMatcher();
-
-		static ExternalInetAddressMatcher getInstance() {
-			return INSTANCE;
-		}
-
-		private final InternalInetAddressMatcher internalMatcher = InternalInetAddressMatcher.getInstance();
-
-		private ExternalInetAddressMatcher() {
-		}
-
-		@Override
-		public boolean matches(@Nullable InetAddress address) {
-			return !this.internalMatcher.matches(address);
-		}
-
-		@Override
-		public String toString() {
-			return "ExternalInetAddressMatcher";
 		}
 
 	}
