@@ -17,7 +17,9 @@
 package org.springframework.security.util.matcher;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.jspecify.annotations.Nullable;
 
@@ -29,6 +31,7 @@ import org.springframework.util.Assert;
  * @author Luke Taylor
  * @author Steve Riesenberg
  * @author Andrey Litvitski
+ * @author Rob Winch
  * @author Phillip Webb
  * @param address the address
  * @param subnetMaskSize the subnet mask size (the number of bits)
@@ -85,6 +88,47 @@ record IpInetAddress(InetAddress address, int subnetMaskSize) {
 
 	private static IpInetAddress of(String ip, int subnetMaskSize) {
 		return new IpInetAddress(IpInetAddressParser.parse(ip), subnetMaskSize);
+	}
+
+	static @Nullable InetAddress parseIpAddress(@Nullable String address) {
+		return IpInetAddressParser.parse(address);
+	}
+
+	private static Pattern IPV4 = Pattern.compile("^\\d{1,3}(?:\\.\\d{1,3}){0,3}(?:/\\d{1,2})?$");
+
+	/**
+	 * Parses the given address string into an {@link InetAddress}.
+	 * @param address the IP address string to parse
+	 * @return the parsed {@link InetAddress}
+	 * @throws IllegalArgumentException if the address cannot be parsed or appears to be a
+	 * hostname
+	 */
+	static InetAddress parse(String address) {
+		assertNotHostName(address);
+		try {
+			return InetAddress.getByName(address);
+		}
+		catch (UnknownHostException ex) {
+			throw new IllegalArgumentException("Failed to parse address '" + address + "'", ex);
+		}
+	}
+
+	static void assertNotHostName(String ipAddress) {
+		Assert.isTrue(isIpAddress(ipAddress),
+				() -> String.format("ipAddress %s doesn't look like an IP Address. Is it a host name?", ipAddress));
+	}
+
+	private static boolean isIpAddress(String ipAddress) {
+		if (!org.springframework.util.StringUtils.hasText(ipAddress)) {
+			return false;
+		}
+		// @formatter:off
+		return IPV4.matcher(ipAddress).matches()
+			|| ipAddress.charAt(0) == '['
+			|| ipAddress.charAt(0) == ':'
+			|| Character.digit(ipAddress.charAt(0), 16) != -1
+			&& ipAddress.indexOf(':') > 0;
+		// @formatter:on
 	}
 
 }

@@ -17,6 +17,7 @@
 package org.springframework.security.util.matcher;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 
 import org.jspecify.annotations.Nullable;
 
@@ -31,8 +32,11 @@ import org.jspecify.annotations.Nullable;
  * @author Kian Jamali
  * @author Rossen Stoyanchev
  * @author Rob Winch
+ * @author Phillip Webb
  */
 final class InternalInetAddressMatcher implements InetAddressMatcher {
+
+	private static final byte[] NAT64_PREFIX = { (byte) 0x00, (byte) 0x64, (byte) 0xff, (byte) 0x9b };
 
 	static final InternalInetAddressMatcher instance = new InternalInetAddressMatcher();
 
@@ -44,8 +48,7 @@ final class InternalInetAddressMatcher implements InetAddressMatcher {
 		if (address == null) {
 			return false;
 		}
-		return address.isLoopbackAddress() || address.isLinkLocalAddress() || address.isSiteLocalAddress()
-				|| isSiteLocalIpv6Address(address.getAddress());
+		return isLocal(address) || isSiteLocalIpv6Address(address.getAddress());
 	}
 
 	/**
@@ -59,37 +62,27 @@ final class InternalInetAddressMatcher implements InetAddressMatcher {
 	 * @return if the addess is site local
 	 */
 	private boolean isSiteLocalIpv6Address(byte[] address) {
-		if (address.length != 16) { return false;
+		if (address.length != 16) {
+			return false;
 		}
-		if (address[0] == (byte) 0xfc || address[0] == (byte) 0xfd) {
-			return true;
-		}
-
-			// IPv4/IPv6 translation, 64:ff9b
-			if (iAddr[0] == 0x00 && iAddr[1] == 0x64 && iAddr[2] == 0xff && iAddr[3] == 0x9b) {
-				try {
-					InetAddress ipv4Part = InetAddress
-						.getByAddress(new byte[] { address[12], address[13], address[14], address[15] });
-
-					if (ipv4Part.isLoopbackAddress() || ipv4Part.isLinkLocalAddress()
-							|| ipv4Part.isSiteLocalAddress()) {
-						return true;
-					}
-				}
-				catch (java.net.UnknownHostException ex) {
-					// Should not happen for 4-byte array
-				}
-			}
-		}return false;
-
+		return address[0] == (byte) 0xfc || address[0] == (byte) 0xfd || isNat64Local(address);
 	}
 
-	private int[] toUnsignedInts(byte[] bytes) {
-		int[] ints = new int[bytes.length];
-		for (int i = 0; i < bytes.length; i++) {
-			ints[i] = Byte.toUnsignedInt(bytes[i]);
+	private boolean isNat64Local(byte[] address) {
+		if (!Arrays.equals(address, 0, NAT64_PREFIX.length, NAT64_PREFIX, 0, NAT64_PREFIX.length)) {
+			return false;
 		}
-		return ints;
+		try {
+			// IPv4/IPv6 translation, 64:ff9b
+			return isLocal(InetAddress.getByAddress(Arrays.copyOfRange(address, 12, 16)));
+		}
+		catch (java.net.UnknownHostException ex) {
+			return false; // Should not happen for 4-byte array
+		}
+	}
+
+	private boolean isLocal(@Nullable InetAddress address) {
+		return address.isLoopbackAddress() || address.isLinkLocalAddress() || address.isSiteLocalAddress();
 	}
 
 }

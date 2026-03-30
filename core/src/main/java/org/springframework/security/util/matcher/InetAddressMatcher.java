@@ -39,7 +39,7 @@ public interface InetAddressMatcher {
 	 * @return {@code true} if the address matches, {@code false} otherwise
 	 */
 	default boolean matches(@Nullable String address) {
-		return matches((address != null) ? IpInetAddressParser.parse(address) : null);
+		return matches(IpInetAddress.parseIpAddress(address));
 	}
 
 	/**
