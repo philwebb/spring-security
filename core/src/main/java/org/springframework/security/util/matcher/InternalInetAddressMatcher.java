@@ -44,34 +44,32 @@ final class InternalInetAddressMatcher implements InetAddressMatcher {
 		if (address == null) {
 			return false;
 		}
-		if (address.isLoopbackAddress() || address.isLinkLocalAddress() || address.isSiteLocalAddress()) {
-			return true;
-		}
-		return matchesRaw(address.getAddress());
+		return address.isLoopbackAddress() || address.isLinkLocalAddress() || address.isSiteLocalAddress()
+				|| isSiteLocalIpv6Address(address.getAddress());
 	}
 
-	private boolean matchesRaw(byte[] rawAddress) {
-		if (rawAddress.length == 16) {
-			// Convert signed bytes to unsigned ints for easier matching logic
-			int[] iAddr = toUnsignedInts(rawAddress);
-
-			/*
-			 * IPv6, check for Unique Local Addresses. We cannot rely on
-			 * Inet6Address.isSiteLocalAddress() here because the JVM implementation
-			 * dictates that fec0::/10 is the only site-local IPv6 address space, based on
-			 * the outdated RFC 2373. That RFC was deprecated by the IETF in 2004 in favor
-			 * of fc00::/7 (RFC 4193). To keep our private network checking accurate to
-			 * modern subnets, we maintain manual parsing.
-			 */
-			if (iAddr[0] == 0xfc || iAddr[0] == 0xfd) {
-				return true;
-			}
+	/**
+	 * Check for Unique Local IPv6 Addresses. We cannot rely on
+	 * {@code Inet6Address.isSiteLocalAddress()} because the JVM implementation dictates
+	 * that {@code fec0::/10} is the only site-local IPv6 address space, based on the
+	 * outdated RFC 2373. That RFC was deprecated by the IETF in 2004 in favor of
+	 * {@code fc00::/7} (RFC 4193). To keep our private network checking accurate to
+	 * modern subnets, we maintain manual parsing.
+	 * @param address the address to check
+	 * @return if the addess is site local
+	 */
+	private boolean isSiteLocalIpv6Address(byte[] address) {
+		if (address.length != 16) { return false;
+		}
+		if (address[0] == (byte) 0xfc || address[0] == (byte) 0xfd) {
+			return true;
+		}
 
 			// IPv4/IPv6 translation, 64:ff9b
 			if (iAddr[0] == 0x00 && iAddr[1] == 0x64 && iAddr[2] == 0xff && iAddr[3] == 0x9b) {
 				try {
 					InetAddress ipv4Part = InetAddress
-						.getByAddress(new byte[] { rawAddress[12], rawAddress[13], rawAddress[14], rawAddress[15] });
+						.getByAddress(new byte[] { address[12], address[13], address[14], address[15] });
 
 					if (ipv4Part.isLoopbackAddress() || ipv4Part.isLinkLocalAddress()
 							|| ipv4Part.isSiteLocalAddress()) {
@@ -82,9 +80,8 @@ final class InternalInetAddressMatcher implements InetAddressMatcher {
 					// Should not happen for 4-byte array
 				}
 			}
-		}
+		}return false;
 
-		return false;
 	}
 
 	private int[] toUnsignedInts(byte[] bytes) {

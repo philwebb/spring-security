@@ -57,7 +57,7 @@ public interface InetAddressMatcher {
 	 * @return a new composed matcher instance
 	 */
 	default InetAddressMatcher and(String... addresses) {
-		return and(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::asMatcher).toList());
+		return and(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::matcher).toList());
 	}
 
 	/**
@@ -93,7 +93,7 @@ public interface InetAddressMatcher {
 	 * @return a new composed matcher instance
 	 */
 	default InetAddressMatcher andNot(String... addresses) {
-		return andNot(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::asMatcher).toList());
+		return andNot(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::matcher).toList());
 	}
 
 	/**
@@ -131,7 +131,7 @@ public interface InetAddressMatcher {
 	 * @return a new composed matcher instance
 	 */
 	default InetAddressMatcher or(String... addresses) {
-		return or(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::asMatcher).toList());
+		return or(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::matcher).toList());
 	}
 
 	/**

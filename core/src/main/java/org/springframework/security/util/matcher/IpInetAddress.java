@@ -44,18 +44,14 @@ record IpInetAddress(InetAddress address, int subnetMaskSize) {
 				() -> String.format("'address' [%s] is too short for bitmask of length %d", address, subnetMaskSize));
 	}
 
-	InetAddressMatcher asMatcher() {
-		return this::matches;
-	}
-
-	boolean matches(@Nullable InetAddress address) {
-		if (address == null) {
-			return false;
-		}
-		if (this.subnetMaskSize > 0) {
-			return Arrays.equals(maskedRawAddress(this.address), maskedRawAddress(address));
-		}
-		return address.equals(this.address);
+	InetAddressMatcher matcher() {
+		return (address) -> {
+			if (address == null) {
+				return false;
+			}
+			return (this.subnetMaskSize == 0) ? address.equals(this.address)
+					: Arrays.equals(maskedRawAddress(this.address), maskedRawAddress(address));
+		};
 	}
 
 	private byte[] maskedRawAddress(@Nullable InetAddress address) {

@@ -141,19 +141,19 @@ class IpInetAddressTests {
 	@Test
 	void asMatcherMatchesWhenStringIpv4MatchReturnsTrue() {
 		IpInetAddress ipAddress = IpInetAddress.of("192.168.1.1");
-		assertThat(ipAddress.asMatcher().matches("192.168.1.1")).isTrue();
+		assertThat(ipAddress.matcher().matches("192.168.1.1")).isTrue();
 	}
 
 	@Test
 	void asMatcherMatchesWhenStringIpv4NoMatchReturnsFalse() {
 		IpInetAddress ipAddress = IpInetAddress.of("192.168.1.1");
-		assertThat(ipAddress.asMatcher().matches("192.168.1.2")).isFalse();
+		assertThat(ipAddress.matcher().matches("192.168.1.2")).isFalse();
 	}
 
 	@Test
 	void asMatcherMatchesWhenStringNullThenFalse() {
 		IpInetAddress ipAddress = IpInetAddress.of("192.168.1.1");
-		assertThat(ipAddress.asMatcher().matches((String) null)).isFalse();
+		assertThat(ipAddress.matcher().matches((String) null)).isFalse();
 	}
 
 }
