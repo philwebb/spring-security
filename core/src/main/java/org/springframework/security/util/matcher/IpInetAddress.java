@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * An IP address with support of CIDR notation.
@@ -38,6 +39,8 @@ import org.springframework.util.Assert;
  * @since 7.1
  */
 record IpInetAddress(InetAddress address, int subnetMaskSize) {
+
+	private static Pattern IPV4 = Pattern.compile("^\\d{1,3}(?:\\.\\d{1,3}){0,3}(?:/\\d{1,2})?$");
 
 	IpInetAddress {
 		Assert.notNull(address, "'address' must not be null");
@@ -76,25 +79,29 @@ record IpInetAddress(InetAddress address, int subnetMaskSize) {
 	}
 
 	static IpInetAddress of(String address) {
-		Assert.hasText(address, "'address' cannot be empty");
+		Assert.hasText(address, "'address' must not be empty");
 		int slash = address.indexOf('/');
 		if (slash == -1) {
 			return of(address, 0);
 		}
 		String ip = address.substring(0, slash);
 		String subnetMaskSize = address.substring(slash + 1);
-		return of(ip, Integer.parseInt(subnetMaskSize));
+		return of(ip, parseSubnetMaskSize(subnetMaskSize));
+	}
+
+	private static int parseSubnetMaskSize(String subnetMaskSize) {
+		try {
+			return Integer.parseInt(subnetMaskSize);
+		}
+		catch (NumberFormatException ex) {
+			throw new IllegalArgumentException("'address' subnet mask must be a number", ex);
+		}
 	}
 
 	private static IpInetAddress of(String ip, int subnetMaskSize) {
-		return new IpInetAddress(IpInetAddressParser.parse(ip), subnetMaskSize);
+		Assert.hasText(ip, "'ip' must not be empty");
+		return new IpInetAddress(parseIpAddress(ip), subnetMaskSize);
 	}
-
-	static @Nullable InetAddress parseIpAddress(@Nullable String address) {
-		return IpInetAddressParser.parse(address);
-	}
-
-	private static Pattern IPV4 = Pattern.compile("^\\d{1,3}(?:\\.\\d{1,3}){0,3}(?:/\\d{1,2})?$");
 
 	/**
 	 * Parses the given address string into an {@link InetAddress}.
@@ -103,32 +110,32 @@ record IpInetAddress(InetAddress address, int subnetMaskSize) {
 	 * @throws IllegalArgumentException if the address cannot be parsed or appears to be a
 	 * hostname
 	 */
-	static InetAddress parse(String address) {
-		assertNotHostName(address);
+	static @Nullable InetAddress parseIpAddress(@Nullable String address) {
+		if (address == null) {
+			return null;
+		}
+		Assert.isTrue(isLikelyIpAddress(address),
+				() -> "'address' [%s] must be an IP address and not a host name".formatted(address));
 		try {
 			return InetAddress.getByName(address);
 		}
 		catch (UnknownHostException ex) {
-			throw new IllegalArgumentException("Failed to parse address '" + address + "'", ex);
+			throw new IllegalArgumentException("'address' [%s] must be parsable to an InetAddress".formatted(address),
+					ex);
 		}
 	}
 
-	static void assertNotHostName(String ipAddress) {
-		Assert.isTrue(isIpAddress(ipAddress),
-				() -> String.format("ipAddress %s doesn't look like an IP Address. Is it a host name?", ipAddress));
+	private static boolean isLikelyIpAddress(String address) {
+		return StringUtils.hasText(address) && (IPV4.matcher(address).matches() || isLikelyIpv6Address(address));
 	}
 
-	private static boolean isIpAddress(String ipAddress) {
-		if (!org.springframework.util.StringUtils.hasText(ipAddress)) {
-			return false;
-		}
-		// @formatter:off
-		return IPV4.matcher(ipAddress).matches()
-			|| ipAddress.charAt(0) == '['
-			|| ipAddress.charAt(0) == ':'
-			|| Character.digit(ipAddress.charAt(0), 16) != -1
-			&& ipAddress.indexOf(':') > 0;
-		// @formatter:on
+	private static boolean isLikelyIpv6Address(String address) {
+		char firstChar = address.charAt(0);
+		return (firstChar == '[' || firstChar == ':') || (isHexDigit(firstChar) && address.contains(":"));
+	}
+
+	private static boolean isHexDigit(char ch) {
+		return Character.digit(ch, 16) != -1;
 	}
 
 }
