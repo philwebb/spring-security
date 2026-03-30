@@ -17,14 +17,13 @@
 package org.springframework.security.util.matcher;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.jspecify.annotations.Nullable;
 
-import org.springframework.util.Assert;
-
 /**
- * Matches an {@link InetAddress}.
+ * Strategy interface used to match an {@link InetAddress}.
  *
  * @author Rossen Stoyanchev
  * @author Rob Winch
@@ -35,6 +34,15 @@ import org.springframework.util.Assert;
 public interface InetAddressMatcher {
 
 	/**
+	 * Whether the given IP address string matches.
+	 * @param address the IP address string to check (may be {@code null})
+	 * @return {@code true} if the address matches, {@code false} otherwise
+	 */
+	default boolean matches(@Nullable String address) {
+		return matches((address != null) ? IpInetAddressParser.parse(address) : null);
+	}
+
+	/**
 	 * Whether the given address matches.
 	 * @param address the {@link InetAddress} to check (may be {@code null})
 	 * @return {@code true} if the address matches, {@code false} otherwise
@@ -42,113 +50,222 @@ public interface InetAddressMatcher {
 	boolean matches(@Nullable InetAddress address);
 
 	/**
-	 * Whether the given address string matches.
-	 * @param address the IP address string to check (may be {@code null})
-	 * @return {@code true} if the address matches, {@code false} otherwise
+	 * Return a composed matcher that represents a short-circuiting logical AND of this
+	 * matcher and other IP addresses.
+	 * @param addresses the addresses that will be logically-ANDed with this matcher in
+	 * any form supported by {@link #of(String...)}
+	 * @return a new composed matcher instance
 	 */
-	default boolean matches(@Nullable String address) {
-		return (address != null) ? matches(InetAddressParser.parseAddress(address)) : false;
+	default InetAddressMatcher and(String... addresses) {
+		return and(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::asMatcher).toList());
 	}
 
 	/**
-	 * Returns a new matcher that represents the logical negation of this matcher.
+	 * Return a composed matcher that represents a short-circuiting logical AND of this
+	 * matcher and other matchers.
+	 * @param matchers the matchers that will be logically-ANDed with this matcher
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher and(InetAddressMatcher... matchers) {
+		return and(Arrays.asList(matchers));
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical AND of this
+	 * matcher and other matchers.
+	 * @param matchers the matchers that will be logically-ANDed with this matcher
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher and(Collection<? extends InetAddressMatcher> matchers) {
+		InetAddressMatcher result = this;
+		for (InetAddressMatcher matcher : matchers) {
+			InetAddressMatcher ours = result;
+			result = (address) -> ours.matches(address) && matcher.matches(address);
+		}
+		return result;
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical AND of this
+	 * matcher and other {@link #negate() negated} IP addresses.
+	 * @param addresses the addresses that will be {@link #negate() negated} and
+	 * logically-ANDed with this matcher in any form supported by {@link #of(String...)}
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher andNot(String... addresses) {
+		return andNot(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::asMatcher).toList());
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical AND of this
+	 * matcher and other {@link #negate() negated} IP addresses.
+	 * @param matchers the matchers that will be {@link #negate() negated} and
+	 * logically-ANDed with this matcher
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher andNot(InetAddressMatcher... matchers) {
+		return andNot(Arrays.asList(matchers));
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical AND of this
+	 * matcher and other {@link #negate() negated} IP addresses.
+	 * @param matchers the matchers that will be {@link #negate() negated} and
+	 * logically-ANDed with this matcher
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher andNot(Collection<? extends InetAddressMatcher> matchers) {
+		InetAddressMatcher result = this;
+		for (InetAddressMatcher matcher : matchers) {
+			InetAddressMatcher ours = result;
+			result = (address) -> ours.matches(address) && !matcher.matches(address);
+		}
+		return result;
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical OR of this
+	 * matcher and other IP addresses.
+	 * @param addresses the addresses that will be logically-ORed with this matcher in any
+	 * form supported by {@link #of(String...)}
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher or(String... addresses) {
+		return or(Arrays.stream(addresses).map(IpInetAddress::of).map(IpInetAddress::asMatcher).toList());
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical OR of this
+	 * matcher and other matchers.
+	 * @param matchers the matchers that will be logically-ORed with this matcher
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher or(InetAddressMatcher... matchers) {
+		return or(Arrays.asList(matchers));
+	}
+
+	/**
+	 * Return a composed matcher that represents a short-circuiting logical OR of this
+	 * matcher and other matchers.
+	 * @param matchers the matchers that will be logically-ORed with this matcher
+	 * @return a new composed matcher instance
+	 */
+	default InetAddressMatcher or(Collection<? extends InetAddressMatcher> matchers) {
+		InetAddressMatcher result = this;
+		for (InetAddressMatcher matcher : matchers) {
+			InetAddressMatcher ours = result;
+			result = (address) -> ours.matches(address) || matcher.matches(address);
+		}
+		return result;
+	}
+
+	/**
+	 * Return a new matcher that represents the logical negation of this matcher.
 	 * @return the negated matcher
 	 */
 	default InetAddressMatcher negate() {
-		return new NegatedInetAddressMatcher(this);
+		return (address) -> !matches(address);
 	}
 
 	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to include all
-	 * addresses.
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers
+	 * Return a matcher that will match external (non-private) IP addresses. External
+	 * addresses are all non-{@link #internalAddresses() internal addresses}
+	 * @return a matcher for external IP addresses
+	 * @see #internalAddresses()
 	 */
-	static IncludeExcludeInetAddressMatcher all() {
-		return of((address) -> true);
+	static InetAddressMatcher externalAddresses() {
+		return not(internalAddresses());
 	}
 
 	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to match external
-	 * (non-private) IP addresses.
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to match internal
-	 * addresses
-	 * @see #ofInternalAddresses()
-	 */
-	static IncludeExcludeInetAddressMatcher ofExternalAddresses() {
-		return of(ExternalInetAddressMatcher.instance);
-	}
-
-	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to match internal
-	 * (private) IP addresses.
+	 * Return a matcher that will match internal (private) IP addresses.
 	 * <p>
 	 * Internal addresses include loopback addresses ({@code 127.0.0.0/8} for IPv4,
 	 * {@code ::1} for IPv6), private IPv4 address ranges ({@code 10.0.0.0/8},
 	 * {@code 172.16.0.0/12}, {@code 192.168.0.0/16}), and IPv6 Unique Local Addresses
 	 * ({@code fc00::/7}).
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to match internal
-	 * addresses
-	 * @see #ofExternalAddresses()
+	 * @return a matcher for external IP addresses
+	 * @see #externalAddresses()
 	 */
-	static IncludeExcludeInetAddressMatcher ofInternalAddresses() {
-		return of(InternalInetAddressMatcher.instance);
+	static InetAddressMatcher internalAddresses() {
+		return InternalInetAddressMatcher.instance;
 	}
 
 	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to match the given IP
-	 * addresses.
-	 * @param addresses the IP addresses to match. Each element mat be a specific IP
-	 * address, or a subnet specified using CIDR notation (e.g., {@code 192.168.1.0/24})
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to match the given
-	 * addresses
-	 */
-	static IncludeExcludeInetAddressMatcher of(String... addresses) {
-		return of().including(addresses);
-	}
-
-	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers.
-	 * @param matchers the matchers to include
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers
-	 */
-	static IncludeExcludeInetAddressMatcher of(InetAddressMatcher... matchers) {
-		return of().including(matchers);
-	}
-
-	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers.
-	 * @param matchers the matchers to include
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers
-	 */
-	static IncludeExcludeInetAddressMatcher of(Collection<? extends InetAddressMatcher> matchers) {
-		return of().including(matchers);
-	}
-
-	/**
-	 * Return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers.
-	 * @param matchers the matchers to include
-	 * @return an {@link IncludeExcludeInetAddressMatcher} configured to include the given
-	 * matchers
-	 */
-	static IncludeExcludeInetAddressMatcher of() {
-		return IncludeExcludeInetAddressMatcher.instance;
-	}
-
-	/**
-	 * Returns a matcher that is the negation of the supplied matcher.
-	 * @param matcher the matcher to negate
-	 * @return the negated matcher
+	 * Return a matcher that is the negation of all the given addresses.
+	 * @param addresses the addresses to negate in any form supported by
+	 * {@link #of(String...)}
+	 * @return a negated matcher
 	 * @see #negate()
 	 */
-	static InetAddressMatcher not(InetAddressMatcher matcher) {
-		Assert.notNull(matcher, "'matcher' must not ne null");
-		return matcher.negate();
+	static InetAddressMatcher not(String... addresses) {
+		return all().andNot(addresses);
+	}
+
+	/**
+	 * Return a matcher that is the negation of all the given matchers.
+	 * @param matchers the matchers to negate
+	 * @return a negated matcher
+	 * @see #negate()
+	 */
+	static InetAddressMatcher not(InetAddressMatcher... matchers) {
+		return all().andNot(matchers);
+	}
+
+	/**
+	 * Return a matcher that is the negation of all the given matchers.
+	 * @param matchers the matchers to negate
+	 * @return a negated matcher
+	 * @see #negate()
+	 */
+	static InetAddressMatcher not(Collection<? extends InetAddressMatcher> matchers) {
+		return all().andNot(matchers);
+	}
+
+	/**
+	 * Return a matcher that matches any of the given IP addresses. Address may be either
+	 * a full IP address (e.g. {@code 192.168.1.1}) or an IP address block spcified using
+	 * CIDR notations (for example {@code 192.168.1.0/24}). Both IPv4 and IPv6 addresses
+	 * are supported.
+	 * @param addresses the IP addresses to match
+	 * @return a matcher that matches any of the given addresses
+	 */
+	static InetAddressMatcher of(String... addresses) {
+		return none().or(addresses);
+	}
+
+	/**
+	 * Return a matcher that matches any of the given matchers.
+	 * @param matchers the matchers to include
+	 * @return a matcher that matches any of the matchers
+	 */
+	static InetAddressMatcher of(InetAddressMatcher... matchers) {
+		return none().or(matchers);
+	}
+
+	/**
+	 * Return a matcher that matches any of the given matchers.
+	 * @param matchers the matchers to include
+	 * @return a matcher that matches any of the matchers
+	 */
+	static InetAddressMatcher of(Collection<? extends InetAddressMatcher> matchers) {
+		return none().or(matchers);
+	}
+
+	/**
+	 * Return a matcher that matches all addresses.
+	 * @return a matcher that matches all
+	 */
+	static InetAddressMatcher all() {
+		return (address) -> true;
+	}
+
+	/**
+	 * Return a matcher that matches no addresses.
+	 * @return a matcher that matches none
+	 */
+	static InetAddressMatcher none() {
+		return (address) -> false;
 	}
 
 }

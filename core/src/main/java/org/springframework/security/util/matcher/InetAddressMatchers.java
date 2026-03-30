@@ -51,7 +51,8 @@ public final class InetAddressMatchers {
 	 * @return a {@link Builder} configured to match external addresses
 	 */
 	public static Builder matchExternal() {
-		return builder().matchAll(ExternalInetAddressMatcher.instance);
+		return builder(); // FIXME
+							// builder().matchAll(ExternalInetAddressMatcher.instance);
 	}
 
 	/**

@@ -95,9 +95,4 @@ final class InternalInetAddressMatcher implements InetAddressMatcher {
 		return ints;
 	}
 
-	@Override
-	public String toString() {
-		return "InternalInetAddressMatcher";
-	}
-
 }

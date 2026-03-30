@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  * @author Rob Winch
  * @since 7.1
  */
-final class InetAddressParser {
+final class IpInetAddressParser {
 
 	private static Pattern IPV4 = Pattern.compile("^\\d{1,3}(?:\\.\\d{1,3}){0,3}(?:/\\d{1,2})?$");
 
@@ -42,7 +42,7 @@ final class InetAddressParser {
 	 * @throws IllegalArgumentException if the address cannot be parsed or appears to be a
 	 * hostname
 	 */
-	static InetAddress parseAddress(String address) {
+	static InetAddress parse(String address) {
 		assertNotHostName(address);
 		try {
 			return InetAddress.getByName(address);
@@ -70,7 +70,7 @@ final class InetAddressParser {
 		// @formatter:on
 	}
 
-	private InetAddressParser() {
+	private IpInetAddressParser() {
 	}
 
 }

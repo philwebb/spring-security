@@ -33,20 +33,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Rob Winch
  * @author pwebb
  */
-class IncludeExcludeInetAddressMatcherTests {
+class InetAddressMatcher2Tests {
 
 	@Test
-	void includingAddressesWhenNullThrowsIllegalArgumentException() {
-		// FIXME and the exclusing
-	}
-
-	@ParameterizedTest
-	@ValueSource(strings = { "192.168.1.1", "192.168.1.2" })
-	void includingAddressesWhenSingleAddressThenMatchesOnlyThatAddress(String testAddress) throws Exception {
+	void includingAddressesWhenSingleAddressThenMatchesOnlyThatAddress() throws Exception {
 		InetAddressMatcher matcher = InetAddressMatcher.of("192.168.1.1");
-		InetAddress address = InetAddress.getByName(testAddress);
-		boolean expected = testAddress.equals("192.168.1.1");
-		assertThat(matcher.matches(address)).isEqualTo(expected);
+		assertThat(matcher.matches(InetAddress.getByName("192.168.1.1"))).isTrue();
+		assertThat(matcher.matches(InetAddress.getByName("192.168.1.2"))).isFalse();
 	}
 
 	@ParameterizedTest
@@ -70,7 +63,7 @@ class IncludeExcludeInetAddressMatcherTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "192.168.1.1", "192.168.1.2" })
 	void excludeAddressesWhenSingleAddressThenBlocksOnlyThatAddress(String testAddress) throws Exception {
-		InetAddressMatcher matcher = InetAddressMatcher.all().excluding("192.168.1.1");
+		InetAddressMatcher matcher = InetAddressMatcher.not("192.168.1.1");
 		InetAddress address = InetAddress.getByName(testAddress);
 		boolean expected = !testAddress.equals("192.168.1.1");
 		assertThat(matcher.matches(address)).isEqualTo(expected);
@@ -79,7 +72,7 @@ class IncludeExcludeInetAddressMatcherTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "192.168.1.1", "10.0.0.1", "8.8.8.8" })
 	void excludeAddressesWhenMultipleAddressesThenBlocksAll(String testAddress) throws Exception {
-		InetAddressMatcher matcher = InetAddressMatcher.all().excluding("192.168.1.1", "10.0.0.1");
+		InetAddressMatcher matcher = InetAddressMatcher.not("192.168.1.1", "10.0.0.1");
 		InetAddress address = InetAddress.getByName(testAddress);
 		boolean expected = !testAddress.equals("192.168.1.1") && !testAddress.equals("10.0.0.1");
 		assertThat(matcher.matches(address)).isEqualTo(expected);
@@ -88,7 +81,7 @@ class IncludeExcludeInetAddressMatcherTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "192.168.1.1", "192.168.1.255", "192.168.2.1" })
 	void excludeAddressesWhenCidrNotationThenBlocksSubnet(String testAddress) throws Exception {
-		InetAddressMatcher matcher = InetAddressMatcher.all().excluding("192.168.1.0/24");
+		InetAddressMatcher matcher = InetAddressMatcher.not("192.168.1.0/24");
 		InetAddress address = InetAddress.getByName(testAddress);
 		boolean expected = !testAddress.startsWith("192.168.1.");
 		assertThat(matcher.matches(address)).isEqualTo(expected);
@@ -122,7 +115,7 @@ class IncludeExcludeInetAddressMatcherTests {
 	void matchAllWhenMultipleMatchersThenAppliesAndLogic2(String testAddress) throws Exception {
 		InetAddressMatcher startsWithTen = (address) -> address.getHostAddress().startsWith("10.");
 		InetAddressMatcher endsWithOne = (address) -> address.getHostAddress().endsWith(".1");
-		InetAddressMatcher matcher = InetAddressMatcher.of(startsWithTen, endsWithOne);
+		InetAddressMatcher matcher = startsWithTen.andNot(endsWithOne);
 		InetAddress address = InetAddress.getByName(testAddress);
 		boolean expected = testAddress.startsWith("10.") && testAddress.endsWith(".1");
 		assertThat(matcher.matches(address)).isEqualTo(expected);
@@ -131,7 +124,7 @@ class IncludeExcludeInetAddressMatcherTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "192.168.1.1", "192.168.1.100", "192.168.2.1" })
 	void buildWhenMultipleMatchersThenAppliesAndLogic(String testAddress) throws Exception {
-		InetAddressMatcher matcher = InetAddressMatcher.of("192.168.1.0/24").excluding("192.168.1.100");
+		InetAddressMatcher matcher = InetAddressMatcher.of("192.168.1.0/24").andNot("192.168.1.100");
 		InetAddress address = InetAddress.getByName(testAddress);
 		boolean expected = testAddress.startsWith("192.168.1.") && !testAddress.equals("192.168.1.100");
 		assertThat(matcher.matches(address)).isEqualTo(expected);
@@ -139,7 +132,7 @@ class IncludeExcludeInetAddressMatcherTests {
 
 	@Test
 	void buildWhenMultipleIncludes() {
-		InetAddressMatcher matcher = InetAddressMatcher.of().including("192.168.1.100").including("192.168.1.101");
+		InetAddressMatcher matcher = InetAddressMatcher.of("192.168.1.100").and("192.168.1.101");
 		assertThat(matcher.matches("192.168.1.102")).isFalse();
 		assertThat(matcher.matches("192.168.1.101")).isTrue();
 		assertThat(matcher.matches("192.168.1.100")).isTrue();
@@ -161,13 +154,13 @@ class IncludeExcludeInetAddressMatcherTests {
 	@Test
 	void matchesWhenAddressInListThenReturnsFalse() throws Exception {
 		String addressString = "192.168.1.1";
-		InetAddressMatcher matcher = InetAddressMatcher.all().excluding(addressString);
+		InetAddressMatcher matcher = InetAddressMatcher.not(addressString);
 		assertThat(matcher.matches(InetAddress.getByName(addressString))).isFalse();
 	}
 
 	@Test
 	void matchesWhenAddressNotInListThenReturnsTrue() throws Exception {
-		InetAddressMatcher matcher = InetAddressMatcher.all().excluding("192.168.1.1");
+		InetAddressMatcher matcher = InetAddressMatcher.not("192.168.1.1");
 		assertThat(matcher.matches(InetAddress.getByName("192.168.1.2"))).isTrue();
 	}
 

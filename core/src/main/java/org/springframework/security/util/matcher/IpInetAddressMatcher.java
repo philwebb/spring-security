@@ -59,7 +59,7 @@ final class IpInetAddressMatcher implements InetAddressMatcher {
 			requiredAddress = ipAddress;
 			nMaskBits = -1;
 		}
-		this.requiredAddress = InetAddressParser.parseAddress(requiredAddress);
+		this.requiredAddress = IpInetAddressParser.parse(requiredAddress);
 		this.nMaskBits = nMaskBits;
 		Assert.isTrue(this.requiredAddress.getAddress().length * 8 >= this.nMaskBits, () -> String
 			.format("IP address %s is too short for bitmask of length %d", requiredAddress, this.nMaskBits));
