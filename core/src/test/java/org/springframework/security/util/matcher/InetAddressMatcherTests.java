@@ -484,6 +484,17 @@ class InetAddressMatcherTests {
 			assertThat(matcher).doesNotMatch("192.168.1.2");
 		}
 
+		@Test
+		void testName() {
+			InetAddressMatcher matcher = InetAddressMatcher.internalAddresses()
+				.and("8.8.8.8", "8.8.4.4")
+				.andNot("192.168.2.0/24");
+			assertThat(matcher).matches("192.168.1.1");
+			assertThat(matcher).matches("8.8.8.8");
+			assertThat(matcher).matches("8.8.4.4");
+			assertThat(matcher).doesNotMatch("192.168.2.1");
+		}
+
 	}
 
 	@Nested
