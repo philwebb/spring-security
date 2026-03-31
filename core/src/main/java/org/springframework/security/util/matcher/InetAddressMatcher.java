@@ -174,7 +174,7 @@ public interface InetAddressMatcher {
 	 * @see #internalAddresses()
 	 */
 	static InetAddressMatcher externalAddresses() {
-		return not(internalAddresses());
+		return of((address) -> address != null).andNot(internalAddresses());
 	}
 
 	/**

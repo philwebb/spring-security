@@ -61,14 +61,17 @@ record IpInetAddress(InetAddress address, int subnetMaskSize) {
 	}
 
 	private byte[] maskedRawAddress(@Nullable InetAddress address) {
-		byte[] rawAddress = address.getAddress();
-		int start = (this.subnetMaskSize / 8);
-		byte firstMask = (byte) (0xFF << (8 - (this.subnetMaskSize % 8)));
-		for (int i = start; i < rawAddress.length; i++) {
-			byte mask = (i == start) ? firstMask : (byte) 0x00;
-			rawAddress[i] = (byte) (rawAddress[i] & mask);
+		byte[] raw = address.getAddress();
+		int remainder = this.subnetMaskSize % 8;
+		int offset = this.subnetMaskSize / 8;
+		if (offset < raw.length && remainder != 0) {
+			raw[offset] &= (byte) (0xFF << (8 - remainder));
+			offset++;
 		}
-		return rawAddress;
+		if (offset < raw.length) {
+			Arrays.fill(raw, offset, raw.length, (byte) 0x00);
+		}
+		return raw;
 	}
 
 	@Override

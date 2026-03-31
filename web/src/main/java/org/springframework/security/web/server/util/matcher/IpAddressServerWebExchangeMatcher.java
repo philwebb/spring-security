@@ -16,12 +16,9 @@
 
 package org.springframework.security.web.server.util.matcher;
 
-import java.util.List;
-
 import reactor.core.publisher.Mono;
 
 import org.springframework.security.util.matcher.InetAddressMatcher;
-import org.springframework.security.util.matcher.InetAddressMatchers;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -34,7 +31,7 @@ import org.springframework.web.server.ServerWebExchange;
  */
 public final class IpAddressServerWebExchangeMatcher implements ServerWebExchangeMatcher {
 
-	private final InetAddressMatcher ipAddressMatcher;
+	private final InetAddressMatcher matcher;
 
 	/**
 	 * Takes a specific IP address or a range specified using the IP/Netmask (e.g.
@@ -44,7 +41,7 @@ public final class IpAddressServerWebExchangeMatcher implements ServerWebExchang
 	 */
 	public IpAddressServerWebExchangeMatcher(String ipAddress) {
 		Assert.hasText(ipAddress, "IP address cannot be empty");
-		this.ipAddressMatcher = InetAddressMatchers.builder().includeAddresses(List.of(ipAddress)).build();
+		this.matcher = InetAddressMatcher.of(ipAddress);
 	}
 
 	@Override
@@ -52,7 +49,7 @@ public final class IpAddressServerWebExchangeMatcher implements ServerWebExchang
 		// @formatter:off
 		return Mono.justOrEmpty(exchange.getRequest().getRemoteAddress())
 				.map((remoteAddress) -> remoteAddress.isUnresolved() ? remoteAddress.getHostString() : remoteAddress.getAddress().getHostAddress())
-				.map(this.ipAddressMatcher::matches)
+				.map(this.matcher::matches)
 				.flatMap((matches) -> matches ? MatchResult.match() : MatchResult.notMatch())
 				.switchIfEmpty(MatchResult.notMatch());
 		// @formatter:on
@@ -60,7 +57,7 @@ public final class IpAddressServerWebExchangeMatcher implements ServerWebExchang
 
 	@Override
 	public String toString() {
-		return "IpAddressServerWebExchangeMatcher{ipAddressMatcher=" + this.ipAddressMatcher + '}';
+		return "IpAddressServerWebExchangeMatcher{ipAddressMatcher=" + this.matcher + '}';
 	}
 
 }
