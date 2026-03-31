@@ -32,6 +32,10 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  */
 class InetAddressMatcherTests {
 
+	private static InetAddressMatcherAssert assertThat(InetAddressMatcher matcher) {
+		return new InetAddressMatcherAssert(matcher);
+	}
+
 	@Nested
 	class MatchString {
 
@@ -490,10 +494,6 @@ class InetAddressMatcherTests {
 	@Nested
 	class None {
 
-	}
-
-	private InetAddressMatcherAssert assertThat(InetAddressMatcher matcher) {
-		return new InetAddressMatcherAssert(matcher);
 	}
 
 }
