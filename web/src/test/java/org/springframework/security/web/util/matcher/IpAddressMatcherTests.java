@@ -104,27 +104,27 @@ public class IpAddressMatcherTests {
 		String ipv6AddressWithTooLongMask = "fe80::21f:5bff:fe33:bd68/129";
 		assertThatIllegalArgumentException().isThrownBy(() -> new IpAddressMatcher(ipv6AddressWithTooLongMask))
 			.withMessage(String.format("IP address %s is too short for bitmask of length %d",
-					"fe80::21f:5bff:fe33:bd68", 129));
+					"fe80:0:0:0:21f:5bff:fe33:bd68", 129));
 	}
 
 	@Test
 	public void invalidAddressThenIllegalArgumentException() {
 		assertThatIllegalArgumentException().isThrownBy(() -> new IpAddressMatcher("invalid-ip"))
-			.withMessage("ipAddress invalid-ip doesn't look like an IP Address. Is it a host name?");
+			.withMessage("'address' [invalid-ip] must be an IP address and not a host name");
 	}
 
 	// gh-15172
 	@Test
 	public void hexadecimalDomainNameThenIllegalArgumentException() {
 		assertThatException().isThrownBy(() -> new IpAddressMatcher("deadbeef.abc"))
-			.withMessage("ipAddress deadbeef.abc doesn't look like an IP Address. Is it a host name?");
+			.withMessage("'address' [deadbeef.abc] must be an IP address and not a host name");
 	}
 
 	// gh-15172
 	@Test
 	public void numericDomainNameThenIllegalArgumentException() {
 		assertThatException().isThrownBy(() -> new IpAddressMatcher("123.156.7.18.org"))
-			.withMessage("ipAddress 123.156.7.18.org doesn't look like an IP Address. Is it a host name?");
+			.withMessage("'address' [123.156.7.18.org] must be an IP address and not a host name");
 	}
 
 	// gh-15527
@@ -144,20 +144,20 @@ public class IpAddressMatcherTests {
 	@Test
 	public void constructorWhenRequiredAddressIsNullThenThrowsIllegalArgumentException() {
 		assertThatIllegalArgumentException().isThrownBy(() -> new IpAddressMatcher(null))
-			.withMessage("ipAddress cannot be empty");
+			.withMessage("'address' must not be empty");
 	}
 
 	// gh-15527
 	@Test
 	public void constructorWhenRequiredAddressIsEmptyThenThrowsIllegalArgumentException() {
 		assertThatIllegalArgumentException().isThrownBy(() -> new IpAddressMatcher(""))
-			.withMessage("ipAddress cannot be empty");
+			.withMessage("'address' must not be empty");
 	}
 
 	@Test
 	public void isIpAddressWhenEmptyOrBlankThenThrowsIllegalArgumentException() {
 		assertThatIllegalArgumentException().isThrownBy(() -> new IpAddressMatcher("   "))
-			.withMessage("ipAddress cannot be empty");
+			.withMessage("'address' must not be empty");
 	}
 
 	// gh-16795
@@ -179,7 +179,7 @@ public class IpAddressMatcherTests {
 	public void constructorRejectsInvalidIpv4WithX() {
 		String badIp = "10x1x1x1";
 		assertThatIllegalArgumentException().isThrownBy(() -> new IpAddressMatcher(badIp))
-			.withMessage("ipAddress 10x1x1x1 doesn't look like an IP Address. Is it a host name?");
+			.withMessage("'address' [10x1x1x1] must be an IP address and not a host name");
 	}
 
 }

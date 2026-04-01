@@ -136,7 +136,7 @@ public class IpAddressServerWebExchangeMatcherTests {
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> new IpAddressServerWebExchangeMatcher(ipv6AddressWithTooLongMask))
 			.withMessage(String.format("IP address %s is too short for bitmask of length %d",
-					"fe80::21f:5bff:fe33:bd68", 129));
+					"fe80:0:0:0:21f:5bff:fe33:bd68", 129));
 	}
 
 	private static ServerWebExchange exchange(String ipAddress) throws UnknownHostException {

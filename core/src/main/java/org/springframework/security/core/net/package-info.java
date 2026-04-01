@@ -15,9 +15,9 @@
  */
 
 /**
- * General utility classes for matching IP addresses.
+ * Core classes and interfaces for to networking applications.
  */
 @NullMarked
-package org.springframework.security.util.matcher;
+package org.springframework.security.core.net;
 
 import org.jspecify.annotations.NullMarked;
